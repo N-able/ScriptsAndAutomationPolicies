@@ -1,0 +1,16 @@
+'###########################################
+'# Written by Mark Mays - KKI Technologies #
+'# Free to use for N-Able Parnters         #
+'###########################################
+
+
+
+' Text File Name: Workstation.txt
+' Description: This text file sets the following parameters to work along with the Agent_Install.bat file
+'
+'		key="Key code" --- paste the agent key from the UI here
+'               MAINDIR="install path" - This is the path where you want the agent to be installed to.
+
+
+KEY=aHR0cHM6Ly9tb25pdG9yaW5nLmtraXRlY2hub2xvZ2llcy5jb206NDQzfDUyMzM0fDF8MA==
+MAINDIR=%PROGRAMFILES%\nable_agent\

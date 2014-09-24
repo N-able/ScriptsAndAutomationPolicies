@@ -1,0 +1,23 @@
+<Policy ID="{b1959492-0b46-4e6c-8998-ae16d10f21a8}" Name="Enable and Reset Firewall" Description="VGhpcyBlbmFibGVzIHRoZSBmaXJld2FsbCBpZiBpdCBpcyBkaXNhYmxlZCBhbmQgcmVzZXRzIGFsbCBpdGVtcyB0byBpdHMgZGVmYXVsdCBzZXR0aW5ncy4=" Version="1.4.0.10">
+  <Object ID="{c6ca6a4e-7b2b-42ad-a923-9949a3334bef}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sap sads" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>363,291</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="320,299" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:EnableWindowsFirewall AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Enable Windows Firewall" sap:VirtualizedContainerService.HintSize="300,51" Moniker="cdb236cb-f87f-4f2f-ad9b-64d5ab261ca7" Result="[EnableWindowsFirewall_Result_9]" ScriptDirectory="goog" TypeName="EnableWindowsFirewall" m_bTextLinkChange="False" />
+        <p:ResetFirewallDefaults AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Reset Firewall Defaults" sap:VirtualizedContainerService.HintSize="300,51" Moniker="7255b9ca-b80f-45c0-8a51-5024d98b21c4" Result="[ResetFirewallDefaults_Result_10]" ScriptDirectory="goog" TypeName="ResetFirewallDefaults" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="EnableWindowsFirewall_Result_9" />
+        <Variable x:TypeArguments="x:Double" Name="ResetFirewallDefaults_Result_10" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

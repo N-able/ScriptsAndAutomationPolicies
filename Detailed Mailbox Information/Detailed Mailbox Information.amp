@@ -1,0 +1,88 @@
+<Policy ID="{6ab0876f-396f-4240-ab68-fc5ab4b42db6}" Name="Detailed Mailbox Information" Description="Rm9yIGEgc3BlY2lmaWMgZW1haWwgYWRkcmVzcywgcmV0cmlldmUgRW1haWwgQWRkcmVzcyBPd25lciwgTWFpbGJveCBRdW90YSwgTWFpbGJveCBGb2xkZXIgU3RhdGlzaXRjcywgTWFpbGJveCBGb3J3YXJkaW5nIEluZm9ybWF0aW9uIGFuZCBNYWlsYm94IFBlcm1pc3Npb25zLg==" Version="1.5.0.13">
+  <Object ID="{dcb9945f-fde6-4841-876d-71cdf28f106d}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;Email&quot; Label=&quot;Email Address&quot; ParameterType=&quot;string&quot; Value=&quot;jsmith@ABC.com&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Email</d2p1:m_Item1>
+        <d2p1:m_Item2>91c2fda4-d806-4d02-9673-6b82720ab1b7</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.EmailAddressOwner, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Email</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Email</d2p1:m_Item1>
+        <d2p1:m_Item2>5f5d7981-a2ff-46a4-ac25-b5027217e792</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.GetMailboxQuotas, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Email</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Email</d2p1:m_Item1>
+        <d2p1:m_Item2>6addd71a-f1a9-47c6-9492-8f4be6d03f23</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.MailboxFolderStatistics, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Email</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Email</d2p1:m_Item1>
+        <d2p1:m_Item2>1a0aa064-bdef-4b92-ba8f-9fd0b03ea342</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.MailboxForwardingInformation, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Email</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Email</d2p1:m_Item1>
+        <d2p1:m_Item2>34edb046-b684-4f5a-a14a-7b6345304fbf</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.MailboxPermissions, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Email</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>379,711</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="339,671" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:EmailAddressOwner Email_Item="{x:Null}" Email_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Email Address Owner" DistinguishedName="[EmailAddressOwner_DistinguishedName_33]" Email="[Email]" EmailAddresses="[EmailAddressOwner_EmailAddresses_34]" Email_DisplayArg="StartObject.Email" FirstName="[EmailAddressOwner_FirstName_35]" sap:VirtualizedContainerService.HintSize="319,67" Identity="[EmailAddressOwner_Identity_37]" LastName="[EmailAddressOwner_LastName_36]" Moniker="91c2fda4-d806-4d02-9673-6b82720ab1b7" OrganizationalUnit="[EmailAddressOwner_OrganizationalUnit_38]" OutPut_64="[EmailAddressOwner_OutPut_64_32]" RecipientType="[EmailAddressOwner_RecipientType_40]" Result="[EmailAddressOwner_Result_42]" SamAccountName="[EmailAddressOwner_SamAccountName_39]" ScriptDirectory="goog" TypeName="EmailAddressOwner" WhenCreated="[EmailAddressOwner_WhenCreated_41]" m_bTextLinkChange="False" />
+        <p:GetMailboxQuotas Email_Item="{x:Null}" Email_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Get Mailbox Quotas" Email="[Email]" Email_DisplayArg="StartObject.Email" sap:VirtualizedContainerService.HintSize="319,67" IssueWarningQuota="[GetMailboxQuotas_IssueWarningQuota_18]" MailboxDisplayName="[GetMailboxQuotas_MailboxDisplayName_12]" MailboxSize="[GetMailboxQuotas_MailboxSize_15]" MaxReceiveSize="[GetMailboxQuotas_MaxReceiveSize_13]" MaxSendSize="[GetMailboxQuotas_MaxSendSize_14]" Moniker="5f5d7981-a2ff-46a4-ac25-b5027217e792" OutPut_64="[GetMailboxQuotas_OutPut_64_11]" ProhibitSendQuota="[GetMailboxQuotas_ProhibitSendQuota_16]" ProhibitSendReceiveQuota="[GetMailboxQuotas_ProhibitSendReceiveQuota_17]" Result="[GetMailboxQuotas_Result_20]" RulesQuota="[GetMailboxQuotas_RulesQuota_19]" ScriptDirectory="goog" TypeName="GetMailboxQuotas" m_bTextLinkChange="False" />
+        <p:MailboxFolderStatistics Computer="{x:Null}" Computer_DisplayArg="{x:Null}" Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Email_Item="{x:Null}" Email_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Mailbox Folder Statistics" Email="[Email]" Email_DisplayArg="StartObject.Email" Folder="All" FolderStatistics="[MailboxFolderStatistics_FolderStatistics_9]" sap:VirtualizedContainerService.HintSize="319,86" Moniker="6addd71a-f1a9-47c6-9492-8f4be6d03f23" OutPut_64="[MailboxFolderStatistics_OutPut_64_8]" Result="[MailboxFolderStatistics_Result_10]" ScriptDirectory="goog" TypeName="MailboxFolderStatistics" m_bTextLinkChange="False" />
+        <p:MailboxForwardingInformation Email_Item="{x:Null}" Email_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DeliverandForward="[MailboxForwardingInformation_DeliverandForward_24]" DisplayName="Mailbox Forwarding Information" Email="[Email]" Email_DisplayArg="StartObject.Email" ForwardToName="[MailboxForwardingInformation_ForwardToName_23]" sap:VirtualizedContainerService.HintSize="319,67" IsMailboxForwarded="[MailboxForwardingInformation_IsMailboxForwarded_22]" Moniker="1a0aa064-bdef-4b92-ba8f-9fd0b03ea342" OutPut_64="[MailboxForwardingInformation_OutPut_64_21]" Result="[MailboxForwardingInformation_Result_25]" ScriptDirectory="goog" TypeName="MailboxForwardingInformation" m_bTextLinkChange="False" />
+        <p:MailboxPermissions Email_Item="{x:Null}" Email_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Mailbox Permissions" Email="[Email]" Email_DisplayArg="StartObject.Email" sap:VirtualizedContainerService.HintSize="319,67" MailboxPermissionList="[MailboxPermissions_MailboxPermissionList_30]" Moniker="34edb046-b684-4f5a-a14a-7b6345304fbf" OutPut_64="[MailboxPermissions_OutPut_64_29]" Result="[MailboxPermissions_Result_31]" ScriptDirectory="goog" TypeName="MailboxPermissions" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="MailboxFolderStatistics_OutPut_64_8" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="MailboxFolderStatistics_FolderStatistics_9" />
+        <Variable x:TypeArguments="x:Double" Name="MailboxFolderStatistics_Result_10" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_OutPut_64_11" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_MailboxDisplayName_12" />
+        <Variable x:TypeArguments="x:Double" Name="GetMailboxQuotas_MaxReceiveSize_13" />
+        <Variable x:TypeArguments="x:Double" Name="GetMailboxQuotas_MaxSendSize_14" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_MailboxSize_15" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_ProhibitSendQuota_16" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_ProhibitSendReceiveQuota_17" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_IssueWarningQuota_18" />
+        <Variable x:TypeArguments="x:String" Name="GetMailboxQuotas_RulesQuota_19" />
+        <Variable x:TypeArguments="x:Double" Name="GetMailboxQuotas_Result_20" />
+        <Variable x:TypeArguments="x:String" Name="MailboxForwardingInformation_OutPut_64_21" />
+        <Variable x:TypeArguments="x:String" Name="MailboxForwardingInformation_IsMailboxForwarded_22" />
+        <Variable x:TypeArguments="x:String" Name="MailboxForwardingInformation_ForwardToName_23" />
+        <Variable x:TypeArguments="x:String" Name="MailboxForwardingInformation_DeliverandForward_24" />
+        <Variable x:TypeArguments="x:Double" Name="MailboxForwardingInformation_Result_25" />
+        <Variable x:TypeArguments="x:String" Name="MailboxPermissions_OutPut_64_29" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="MailboxPermissions_MailboxPermissionList_30" />
+        <Variable x:TypeArguments="x:Double" Name="MailboxPermissions_Result_31" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_OutPut_64_32" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_DistinguishedName_33" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_EmailAddresses_34" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_FirstName_35" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_LastName_36" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_Identity_37" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_OrganizationalUnit_38" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_SamAccountName_39" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_RecipientType_40" />
+        <Variable x:TypeArguments="x:String" Name="EmailAddressOwner_WhenCreated_41" />
+        <Variable x:TypeArguments="x:Double" Name="EmailAddressOwner_Result_42" />
+        <Variable x:TypeArguments="x:String" Default="jsmith@ABC.com" Name="Email" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

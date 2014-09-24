@@ -1,0 +1,15 @@
+
+The 'ChangeApplianceID.vbs' script must be run via the Probe in N-central.  It accepts a single
+parameter which is the new appliance ID code.
+
+ChangeApplianceID.vbs /new:[APPLIANCE_ID_CODE]
+
+
+The agent will be stopped and started during execution, so the script will NOT work if you run
+it using the agent.
+
+
+
+Written by Tim Wiser, Orchid IT  (twiser@orchidit.com)
+13th August 2012
+

@@ -1,0 +1,56 @@
+<Policy ID="{fd00ff9a-38c0-4c2d-9fc6-fb435b289a6e}" Name="Set Power Plan and Screensaver" Description="U2V0IFBvd2VyIFBsYW4gdG8gQmFsYW5jZWQsIGFuZCBzZWxlY3QgU2NyZWVuc2F2ZXIgdG8gYmUgM0QgdGV4dCwgYW5kIGFsbG93IGN1c3RvbSB0ZXh0" Version="1.4.0.10">
+  <Object ID="{3f53b8d9-1c68-4202-9e23-95f4be88f23e}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;ForceLoginOnExit&quot; Label=&quot;Enter &amp;quot;enable&amp;quot; to force login screen when exiting screensaver, or &amp;quot;disable&amp;quot; to not force it&quot; ParameterType=&quot;string&quot; Value=&quot;enable&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.ForceLoginOnExit</d2p1:m_Item1>
+        <d2p1:m_Item2>f9cc64db-5bc1-499d-bafd-d7adc5f2978c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>544,706</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="504,666" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:SetPowerPlan AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Set Power plan" sap:VirtualizedContainerService.HintSize="484,65" Moniker="c276f7f6-d0c9-41bf-bbe6-0ed317634ea0" Powerplan="Balanced" Result="[SetPowerPlan_Result_2]" ScriptDirectory="goog" TypeName="SetPowerPlan" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="484,404" Moniker="f9cc64db-5bc1-499d-bafd-d7adc5f2978c" Result="[IfElse_Result_4]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="enable" ValueString_DisplayArg="enable" VariableString="[ForceLoginOnExit]" VariableString_DisplayArg="StartObject.ForceLoginOnExit" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="225,244" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SetScreensaverSettings ThreeDText="{x:Null}" ThreeDText_DisplayArg="{x:Null}" ThreeDText_Item="{x:Null}" ThreeDText_ItemProp="{x:Null}" Wait_Item="{x:Null}" Wait_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayLoginOnResume="False" DisplayName="Set Screensaver Settings" sap:VirtualizedContainerService.HintSize="205,122" Moniker="5dd91cdf-87d5-49a4-9800-d0ece9adb170" Result="[SetScreensaverSettings_Result_7]" Screensaver="Blank" ScriptDirectory="goog" TypeName="SetScreensaverSettings" Wait="10" Wait_DisplayArg="10" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SetScreensaverSettings_Result_7" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="225,244" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SetScreensaverSettings ThreeDText="{x:Null}" ThreeDText_Item="{x:Null}" ThreeDText_ItemProp="{x:Null}" Wait_Item="{x:Null}" Wait_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayLoginOnResume="True" DisplayName="Set Screensaver Settings" sap:VirtualizedContainerService.HintSize="205,122" Moniker="eae4f9ca-2a15-4e7d-8910-ce583210321f" Result="[SetScreensaverSettings_Result_5]" Screensaver="Blank" ScriptDirectory="goog" ThreeDText_DisplayArg="" TypeName="SetScreensaverSettings" Wait="10" Wait_DisplayArg="10" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SetScreensaverSettings_Result_5" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="SetPowerPlan_Result_2" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_4" />
+        <Variable x:TypeArguments="x:String" Default="enable" Name="ForceLoginOnExit" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

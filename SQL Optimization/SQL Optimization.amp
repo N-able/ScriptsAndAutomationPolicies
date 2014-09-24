@@ -1,0 +1,95 @@
+<Policy ID="{75e025fd-bd2c-49d5-a682-288f92e5acbc}" Name="SQL Maintenance and Diagnostic" Description="LSBTUUwgRGF0YWJhc2UgRGVmcmFnbWVudGF0aW9uIExldmVsDQotIEludGVncml0eSBvZiB0aGUgY2F0YWxvZyANCi0gSW50ZWdyaXR5IG9mIHRoZSBkYXRhYmFzZSANCi0gQXZlcmFnZSBmcmFnbWVudGF0aW9uIG9mIHRoZSBpbmRleGVzDQotIFJlYnVpbGRzIHRoZSBpbmRleGVzIA0KLSBSZW9yZ2FuaXplcyB0aGUgaW5kZXhlcw==" Version="1.5.0.15">
+  <Object ID="{fc5c5634-9371-4a58-afe4-9319bdfaa9ab}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>8d5b8612-8ff7-4d20-a100-f798cb371a49</d2p1:m_Item1>
+        <d2p1:m_Item2>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item1>
+        <d2p1:m_Item2>96721f76-7eea-45f9-96b8-c37ede72d5f4</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SQLDatabaseDefragmentationLevel, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Database</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item1>
+        <d2p1:m_Item2>c74c6c1b-78a7-4261-bfbe-de09d56da48c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SQLIntegrityCheckCatalog, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Database</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item1>
+        <d2p1:m_Item2>389f051d-5320-42bb-97b8-ad2a07ce1563</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SQLIntegrityCheckDB, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Database</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item1>
+        <d2p1:m_Item2>0eb39c09-e027-4942-a461-4a9d94f96ada</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SQLIntegrityCheckDBAllocations, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Database</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item1>
+        <d2p1:m_Item2>3ec6de90-7394-4075-921f-83c3b22378dc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SQLRebuildTableIndexes, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Database</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9132185a-3a4d-4225-a782-4cd54c04a34d</d2p1:m_Item1>
+        <d2p1:m_Item2>e12e4c2e-9792-4a5b-abbf-366744219878</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SQLReorgTableIndexes, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Database</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>470,1425</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="430,1385" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:ListSQLDatabases Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" InstanceName="{x:Null}" InstanceName_DisplayArg="{x:Null}" InstanceName_Item="{x:Null}" InstanceName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DatabaseList="[ListSQLDatabases_DatabaseList_69]" DisplayName="List SQL Databases" sap:VirtualizedContainerService.HintSize="410,73" Moniker="8d5b8612-8ff7-4d20-a100-f798cb371a49" Result="[ListSQLDatabases_Result_70]" ScriptDirectory="goog" TypeName="ListSQLDatabases" m_bTextLinkChange="False" />
+        <p:ForEachLoop ItemProperty="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" CollectionDisplayName="DatabaseList" CollectionName="[ListSQLDatabases_DatabaseList_69]" DisplayName="ForEach" sap:VirtualizedContainerService.HintSize="410,1115" ItemValue="[ForEachLoop_ItemValue_71]" LinkedTypeName="ListSQLDatabases" Moniker="9132185a-3a4d-4225-a782-4cd54c04a34d" ObjectName="List SQL Databases" Result="[ForEachLoop_Result_72]" ScriptDirectory="goog" TypeName="ForEachLoop" m_bTextLinkChange="False">
+          <p:ForEachLoop.Each>
+            <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="396,997">
+              <p:ForEachSequence.Activities>
+                <p:SQLDatabaseDefragmentationLevel Database="{x:Null}" Server_Item="{x:Null}" Server_ItemProp="{x:Null}" Table="{x:Null}" Table_DisplayArg="{x:Null}" Table_Item="{x:Null}" Table_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Database_DisplayArg="ForEach.ListSQLDatabases.DatabaseList.Database" Database_Item="[ForEachLoop_ItemValue_71]" Database_ItemProp="Database" DisplayName="SQL Database Defragmentation Level" sap:VirtualizedContainerService.HintSize="376,123" IndexDefragList="[SQLDatabaseDefragmentationLevel_IndexDefragList_73]" Moniker="96721f76-7eea-45f9-96b8-c37ede72d5f4" Result="[SQLDatabaseDefragmentationLevel_Result_74]" ScriptDirectory="goog" Server="localhost" Server_DisplayArg="localhost" TypeName="SQLDatabaseDefragmentationLevel" m_bTextLinkChange="False" />
+                <p:SQLIntegrityCheckCatalog Database="{x:Null}" Server_Item="{x:Null}" Server_ItemProp="{x:Null}" ActionResult="[SQLIntegrityCheckCatalog_ActionResult_75]" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Database_DisplayArg="ForEach.ListSQLDatabases.DatabaseList.Database" Database_Item="[ForEachLoop_ItemValue_71]" Database_ItemProp="Database" DisplayName="SQL Integrity CheckCatalog" sap:VirtualizedContainerService.HintSize="376,102" Moniker="c74c6c1b-78a7-4261-bfbe-de09d56da48c" Result="[SQLIntegrityCheckCatalog_Result_76]" ScriptDirectory="goog" Server="localhost" Server_DisplayArg="localhost" TypeName="SQLIntegrityCheckCatalog" m_bTextLinkChange="False" />
+                <p:SQLIntegrityCheckDB Database="{x:Null}" Server_Item="{x:Null}" Server_ItemProp="{x:Null}" ActionResult="[SQLIntegrityCheckDB_ActionResult_77]" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Database_DisplayArg="ForEach.ListSQLDatabases.DatabaseList.Database" Database_Item="[ForEachLoop_ItemValue_71]" Database_ItemProp="Database" DisplayName="SQL Integrity CheckDB" sap:VirtualizedContainerService.HintSize="376,102" Moniker="389f051d-5320-42bb-97b8-ad2a07ce1563" Result="[SQLIntegrityCheckDB_Result_78]" ScriptDirectory="goog" Server="localhost" Server_DisplayArg="localhost" TypeName="SQLIntegrityCheckDB" m_bTextLinkChange="False" />
+                <p:SQLIntegrityCheckDBAllocations Database="{x:Null}" Server_Item="{x:Null}" Server_ItemProp="{x:Null}" ActionResult="[SQLIntegrityCheckDBAllocations_ActionResult_79]" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Database_DisplayArg="ForEach.ListSQLDatabases.DatabaseList.Database" Database_Item="[ForEachLoop_ItemValue_71]" Database_ItemProp="Database" DisplayName="SQL Integrity CheckDBAllocations" sap:VirtualizedContainerService.HintSize="376,102" Moniker="0eb39c09-e027-4942-a461-4a9d94f96ada" Result="[SQLIntegrityCheckDBAllocations_Result_80]" ScriptDirectory="goog" Server="localhost" Server_DisplayArg="localhost" TypeName="SQLIntegrityCheckDBAllocations" m_bTextLinkChange="False" />
+                <p:SQLRebuildTableIndexes Database="{x:Null}" Server_Item="{x:Null}" Server_ItemProp="{x:Null}" Table="{x:Null}" Table_DisplayArg="{x:Null}" Table_Item="{x:Null}" Table_ItemProp="{x:Null}" ActionResult="[SQLRebuildTableIndexes_ActionResult_81]" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Database_DisplayArg="ForEach.ListSQLDatabases.DatabaseList.Database" Database_Item="[ForEachLoop_ItemValue_71]" Database_ItemProp="Database" DisplayName="SQL Rebuild Table Indexes" sap:VirtualizedContainerService.HintSize="376,123" Moniker="3ec6de90-7394-4075-921f-83c3b22378dc" Result="[SQLRebuildTableIndexes_Result_82]" ScriptDirectory="goog" Server="localhost" Server_DisplayArg="localhost" TypeName="SQLRebuildTableIndexes" m_bTextLinkChange="False" />
+                <p:SQLReorgTableIndexes Database="{x:Null}" Server_Item="{x:Null}" Server_ItemProp="{x:Null}" Table="{x:Null}" Table_DisplayArg="{x:Null}" Table_Item="{x:Null}" Table_ItemProp="{x:Null}" ActionResult="[SQLReorgTableIndexes_ActionResult_83]" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Database_DisplayArg="ForEach.ListSQLDatabases.DatabaseList.Database" Database_Item="[ForEachLoop_ItemValue_71]" Database_ItemProp="Database" DisplayName="SQL Reorganize Table Indexes" sap:VirtualizedContainerService.HintSize="376,123" Moniker="e12e4c2e-9792-4a5b-abbf-366744219878" Result="[SQLReorgTableIndexes_Result_84]" ScriptDirectory="goog" Server="localhost" Server_DisplayArg="localhost" TypeName="SQLReorgTableIndexes" m_bTextLinkChange="False" />
+              </p:ForEachSequence.Activities>
+              <p:ForEachSequence.Variables>
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SQLDatabaseDefragmentationLevel_IndexDefragList_73" />
+                <Variable x:TypeArguments="x:Double" Name="SQLDatabaseDefragmentationLevel_Result_74" />
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SQLIntegrityCheckCatalog_ActionResult_75" />
+                <Variable x:TypeArguments="x:Double" Name="SQLIntegrityCheckCatalog_Result_76" />
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SQLIntegrityCheckDB_ActionResult_77" />
+                <Variable x:TypeArguments="x:Double" Name="SQLIntegrityCheckDB_Result_78" />
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SQLIntegrityCheckDBAllocations_ActionResult_79" />
+                <Variable x:TypeArguments="x:Double" Name="SQLIntegrityCheckDBAllocations_Result_80" />
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SQLRebuildTableIndexes_ActionResult_81" />
+                <Variable x:TypeArguments="x:Double" Name="SQLRebuildTableIndexes_Result_82" />
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SQLReorgTableIndexes_ActionResult_83" />
+                <Variable x:TypeArguments="x:Double" Name="SQLReorgTableIndexes_Result_84" />
+              </p:ForEachSequence.Variables>
+            </p:ForEachSequence>
+          </p:ForEachLoop.Each>
+        </p:ForEachLoop>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="ListSQLDatabases_DatabaseList_69" />
+        <Variable x:TypeArguments="x:Double" Name="ListSQLDatabases_Result_70" />
+        <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_71" />
+        <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_72" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

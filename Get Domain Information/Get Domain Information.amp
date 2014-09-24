@@ -1,0 +1,28 @@
+<Policy ID="{aec13a50-a3f0-4223-b3f8-173500694c48}" Name="Get Domain Information" Description="R2V0IERvbWFpbiBJbmZvcm1hdGlvbg==" Version="1.3.0.14">
+  <Object ID="{00e11377-438b-4abd-8509-843c03fb50fe}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>458,466</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="418,426" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RunScript RunAsCLU="{x:Null}" genArgEvent="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.3.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Run Script" sap:VirtualizedContainerService.HintSize="398,269" Moniker="9c623b7f-153f-4c11-bb2c-3d0f03dd1a96" Result="[RunScript_Result_0]" ScriptDirectory="goog" TypeName="RunScript" m_bTextLinkChange="False" script="IyBHZXQgRG9tYWluIGluZm9ybWF0aW9uICANCltTeXN0ZW0uRGlyZWN0b3J5U2VydmljZXMuQWN0aXZlRGlyZWN0b3J5LkRvbWFpbl06OkdldEN1cnJlbnREb21haW4oKSAgIA0KW1N5c3RlbS5EaXJlY3RvcnlTZXJ2aWNlcy5BY3RpdmVEaXJlY3RvcnkuRm9yZXN0XTo6R2V0Q3VycmVudEZvcmVzdCgpDQoNCg==">
+          <p:RunScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Result_0" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

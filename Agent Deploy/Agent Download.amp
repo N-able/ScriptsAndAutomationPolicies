@@ -1,0 +1,173 @@
+<Policy ID="{b0fe1143-a252-4c79-be6e-a06d8cc57817}" Name="Agent Download" Description="RG93bmxvYWQgdGhlIEFnZW50IGFuZCBjb3B5IGl0IHRvIHRoZSBORVRMT0dPTiBmb2xkZXIgZm9yIGRlcGxveW1lbnQgdmlhIEdQTw==" Version="1.5.0.15">
+  <Object ID="{37ffa5e7-db40-4080-b1ab-8acdb6f27dac}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;Version&quot; Label=&quot;Version&quot; ParameterType=&quot;string&quot; Value=&quot;9.2.0.380&quot; /&gt;&lt;Parameter ParameterName=&quot;Server&quot; Label=&quot;Server&quot; ParameterType=&quot;string&quot; Value=&quot;server.tld&quot; /&gt;&lt;Parameter ParameterName=&quot;localpath&quot; Label=&quot;Temp Local Path&quot; ParameterType=&quot;string&quot; Value=&quot;c:\folder&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Version</d2p1:m_Item1>
+        <d2p1:m_Item2>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>version</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item1>
+        <d2p1:m_Item2>863be784-fa49-42fb-865c-0d87c080ae77</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DownloadFileFromURL, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>RemoteFileURL</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Server</d2p1:m_Item1>
+        <d2p1:m_Item2>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>server</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.localpath</d2p1:m_Item1>
+        <d2p1:m_Item2>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>local</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item1>
+        <d2p1:m_Item2>863be784-fa49-42fb-865c-0d87c080ae77</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DownloadFileFromURL, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SaveAsFileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item1>
+        <d2p1:m_Item2>6b404480-9d6b-4cbc-9aeb-91313d936122</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item1>
+        <d2p1:m_Item2>7da2c19e-7b0e-42f8-84b4-2cbcaf0c4e5a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CopyFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item1>
+        <d2p1:m_Item2>7da2c19e-7b0e-42f8-84b4-2cbcaf0c4e5a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CopyFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CopyName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Version</d2p1:m_Item1>
+        <d2p1:m_Item2>326ace62-4f8c-48f7-95df-0cfb8d770c09</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>version</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b9f689de-7bdd-4ac3-89ee-ba21706c7fc3</d2p1:m_Item1>
+        <d2p1:m_Item2>326ace62-4f8c-48f7-95df-0cfb8d770c09</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>netlogon</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>502,1349</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="462,1309" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RunScript RunAsCLU="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Create Strings" sap:VirtualizedContainerService.HintSize="442,269" Moniker="b9f689de-7bdd-4ac3-89ee-ba21706c7fc3" Result="[RunScript_Result_1]" ScriptDirectory="goog" TypeName="RunScript" genArgEvent="81d27e60-713e-40e2-8e0b-623358053a61" m_bTextLinkChange="False" script="JCVpZCV1cmwlaWQlID0gImh0dHBzOi8vIiArICQlaWQlc2VydmVyJWlkJSArICIvZG93bmxvYWQvIiArICQlaWQldmVyc2lvbiVpZCUgKyAiL3dpbm50L04tY2VudHJhbC9XaW5kb3dzQWdlbnRTZXR1cC5leGUiDQoNCiQlaWQlbHBhdGglaWQlID0gJCVpZCVsb2NhbCVpZCUgKyAiXFdpbmRvd3NBZ2VudFNldHVwLmV4ZSINCg0KJHN2b2wgPSBnZXQtV21pT2JqZWN0IC1jbGFzcyBXaW4zMl9TaGFyZSB8ID8geyRfLm5hbWUgLWVxICJzeXN2b2wifQ0KaWYgKCAkc3ZvbCAtbmUgJG51bGwgKQ0Kew0KJCVpZCVuZXRsb2dvbiVpZCUgPSAkc3ZvbC5wYXRoICsgIlwiICsgKChnY2kgJHN2b2wucGF0aCkubmFtZSkgKyAiXHNjcmlwdHMiDQoNCmlmICghKHRlc3QtcGF0aCAkJWlkJW5ldGxvZ29uJWlkJSkpDQp7DQokJWlkJW5ldGxvZ29uJWlkJSA9ICRmYWxzZQ0KfQ0KfQ0KZWxzZQ0Kew0KJCVpZCVuZXRsb2dvbiVpZCUgPSAkZmFsc2UNCn0=">
+          <p:RunScript.InArgs>
+            <p:InArg ItemProp="{x:Null}" x:Key="version" ArgType="string" DisplayArg="StartObject.Version" DisplayName="version" Name="version" isRequired="True" isRequiredDisplay="Yes">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[Version]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object" />
+              </p:InArg.Item>
+            </p:InArg>
+            <p:InArg ItemProp="{x:Null}" x:Key="server" ArgType="string" DisplayArg="StartObject.Server" DisplayName="server" Name="server" isRequired="True" isRequiredDisplay="Yes">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[Server]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object" />
+              </p:InArg.Item>
+            </p:InArg>
+            <p:InArg ItemProp="{x:Null}" x:Key="local" ArgType="string" DisplayArg="StartObject.localpath" DisplayName="local" Name="local" isRequired="True" isRequiredDisplay="Yes">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[localpath]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object" />
+              </p:InArg.Item>
+            </p:InArg>
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <p:OutArg x:Key="url" ArgType="string" DisplayName="url" Name="url">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_url_2]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="lpath" ArgType="string" DisplayName="lpath" Name="lpath">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_lpath_4]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="netlogon" ArgType="string" DisplayName="netlogon" Name="netlogon">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_netlogon_17]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+        <p:DownloadFileFromURL RemoteFileURL_Item="{x:Null}" RemoteFileURL_ItemProp="{x:Null}" SaveAsFileName_Item="{x:Null}" SaveAsFileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Download Agent" sap:VirtualizedContainerService.HintSize="442,126" Moniker="863be784-fa49-42fb-865c-0d87c080ae77" OverwriteExistingFile="True" RemoteFileURL="[RunScript_url_2]" RemoteFileURL_DisplayArg="CreateStrings.url" Result="[DownloadFileFromURL_Result_0]" SaveAsFileName="[RunScript_lpath_4]" SaveAsFileName_DisplayArg="CreateStrings.lpath" ScriptDirectory="goog" TypeName="DownloadFileFromURL" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Condition="does not equal" DisplayName="If NETLOGON exists" sap:VirtualizedContainerService.HintSize="442,677" Moniker="6b404480-9d6b-4cbc-9aeb-91313d936122" Result="[IfObject_Result_18]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" VariableString="[RunScript_netlogon_17]" VariableString_DisplayArg="CreateStrings.netlogon" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="418,517" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:CopyFile CopyName_Item="{x:Null}" CopyName_ItemProp="{x:Null}" FileName_Item="{x:Null}" FileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" CopyName="[RunScript_netlogon_17]" CopyName_DisplayArg="CreateStrings.netlogon" DisplayName="Copy File" FileName="[RunScript_lpath_4]" FileName_DisplayArg="CreateStrings.lpath" sap:VirtualizedContainerService.HintSize="398,86" Moniker="7da2c19e-7b0e-42f8-84b4-2cbcaf0c4e5a" Result="[CopyFile_Result_19]" ScriptDirectory="goog" TypeName="CopyFile" m_bTextLinkChange="False" />
+                  <p:RunScript RunAsCLU="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Modify config batch" sap:VirtualizedContainerService.HintSize="398,269" Moniker="326ace62-4f8c-48f7-95df-0cfb8d770c09" Result="[RunScript_Result_20]" ScriptDirectory="goog" TypeName="RunScript" genArgEvent="e8c06d71-23b2-4deb-bcdf-d1f93d93cdab" m_bTextLinkChange="False" script="JHN0ciA9ICcibWluVmVyc2lvbj0nICsgJCVpZCV2ZXJzaW9uJWlkJSArICciJw0KJGZpbGUgPSAkJWlkJW5ldGxvZ29uJWlkJSArICJcYWdlbnRwYXJhbS5iYXQiDQoNCihnZXQtY29udGVudCAkZmlsZSkgfCAlIHskXyAtcmVwbGFjZSAnIm1pblZlcnNpb249LioiJywgJHN0cn0gfCBzZXQtY29udGVudCAkZmlsZQ==">
+                    <p:RunScript.InArgs>
+                      <p:InArg ItemProp="{x:Null}" x:Key="version" ArgType="string" DisplayArg="StartObject.Version" DisplayName="version" Name="version" isRequired="True" isRequiredDisplay="Yes">
+                        <p:InArg.Arg>
+                          <InArgument x:TypeArguments="x:String">[Version]</InArgument>
+                        </p:InArg.Arg>
+                        <p:InArg.Item>
+                          <InArgument x:TypeArguments="x:Object" />
+                        </p:InArg.Item>
+                      </p:InArg>
+                      <p:InArg ItemProp="{x:Null}" x:Key="netlogon" ArgType="string" DisplayArg="CreateStrings.netlogon" DisplayName="netlogon" Name="netlogon" isRequired="True" isRequiredDisplay="Yes">
+                        <p:InArg.Arg>
+                          <InArgument x:TypeArguments="x:String">[RunScript_netlogon_17]</InArgument>
+                        </p:InArg.Arg>
+                        <p:InArg.Item>
+                          <InArgument x:TypeArguments="x:Object" />
+                        </p:InArg.Item>
+                      </p:InArg>
+                    </p:RunScript.InArgs>
+                    <p:RunScript.OutArgs>
+                      <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+                    </p:RunScript.OutArgs>
+                  </p:RunScript>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="CopyFile_Result_19" />
+                  <Variable x:TypeArguments="x:Double" Name="RunScript_Result_20" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="DownloadFileFromURL_Result_0" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Result_1" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_url_2" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_lpath_4" />
+        <Variable x:TypeArguments="x:String" Default="c:\folder" Name="localpath" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_netlogon_17" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_18" />
+        <Variable x:TypeArguments="x:String" Default="9.2.0.380" Name="Version" />
+        <Variable x:TypeArguments="x:String" Default="server.tld" Name="Server" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

@@ -1,0 +1,115 @@
+<Policy ID="{3e5eda20-863e-4d13-ba61-ccd63e50859b}" Name="Add or Delete DNS Record" Description="QWRkIG9yIERlbGV0ZSBzcGVjaWZpYyBETlMgUmVjb3Jk" Version="1.5.0.13">
+  <Object ID="{04b27103-50ea-4d33-9d6d-b9a932ad4658}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;Zone&quot; Label=&quot;DNS Zone&quot; ParameterType=&quot;string&quot; Value=&quot;Forward Lookup Zone or Reverse Lookup Zone&quot; /&gt;&lt;Parameter ParameterName=&quot;Name&quot; Label=&quot;DNS Record Name&quot; ParameterType=&quot;string&quot; Value=&quot;firewall&quot; /&gt;&lt;Parameter ParameterName=&quot;IP&quot; Label=&quot;IP Address for DNS Record&quot; ParameterType=&quot;string&quot; Value=&quot;192.168.1.1&quot; /&gt;&lt;Parameter ParameterName=&quot;Action&quot; Label=&quot;Add or Delete DNS Record&quot; ParameterType=&quot;string&quot; Value=&quot;Add or Delete&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Action</d2p1:m_Item1>
+        <d2p1:m_Item2>e957e2b5-6c36-41cb-87f5-37250cb5c02c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Action</d2p1:m_Item1>
+        <d2p1:m_Item2>f4365580-13d0-4a54-a9ec-0c5f7014f97c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Zone</d2p1:m_Item1>
+        <d2p1:m_Item2>f5907813-d650-4984-90ba-f90ee8350ee1</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ARecordCreate, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Zone</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Name</d2p1:m_Item1>
+        <d2p1:m_Item2>f5907813-d650-4984-90ba-f90ee8350ee1</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ARecordCreate, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Name</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.IP</d2p1:m_Item1>
+        <d2p1:m_Item2>f5907813-d650-4984-90ba-f90ee8350ee1</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ARecordCreate, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>IPAddress</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.IP</d2p1:m_Item1>
+        <d2p1:m_Item2>ab56dac2-c60b-488e-94ec-ca51347ca2d7</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ARecordDelete, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>DomainName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.IP</d2p1:m_Item1>
+        <d2p1:m_Item2>ab56dac2-c60b-488e-94ec-ca51347ca2d7</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ARecordDelete, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>IPAddress</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9ff3b7db-cdb1-4ed8-b2cd-289401a5f24a</d2p1:m_Item1>
+        <d2p1:m_Item2>ab56dac2-c60b-488e-94ec-ca51347ca2d7</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ARecordDelete, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>DomainName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>903,1010</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="863,970" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="843,813" Moniker="e957e2b5-6c36-41cb-87f5-37250cb5c02c" Result="[IfElse_Result_27]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="Add" ValueString_DisplayArg="Add" VariableString="[Action]" VariableString_DisplayArg="StartObject.Action" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="489,653" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="469,531" Moniker="f4365580-13d0-4a54-a9ec-0c5f7014f97c" Result="[IfObject_Result_30]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="Delete" ValueString_DisplayArg="Delete" VariableString="[Action]" VariableString_DisplayArg="StartObject.Action" m_bTextLinkChange="False">
+                    <p:IfObject.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="445,371" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:GetRegistryValue Key_Item="{x:Null}" Key_ItemProp="{x:Null}" Property_Item="{x:Null}" Property_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" BaseKey="HKLM" DisplayName="Get Registry Value" sap:VirtualizedContainerService.HintSize="425,115" Key="SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" Key_DisplayArg="SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" Moniker="9ff3b7db-cdb1-4ed8-b2cd-289401a5f24a" Property="Domain" Property_DisplayArg="Domain" Result="[GetRegistryValue_Result_33]" ScriptDirectory="goog" TypeName="GetRegistryValue" Value="[GetRegistryValue_Value_32]" m_bTextLinkChange="False" />
+                            <p:ARecordDelete DomainName_Item="{x:Null}" DomainName_ItemProp="{x:Null}" IPAddress_Item="{x:Null}" IPAddress_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="A Record Delete" DomainName="[GetRegistryValue_Value_32]" DomainName_DisplayArg="GetRegistryValue.Value" sap:VirtualizedContainerService.HintSize="425,94" IPAddress="[IP]" IPAddress_DisplayArg="StartObject.IP" Moniker="ab56dac2-c60b-488e-94ec-ca51347ca2d7" Result="[ARecordDelete_Result_31]" ScriptDirectory="goog" TypeName="ARecordDelete" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="ARecordDelete_Result_31" />
+                            <Variable x:TypeArguments="x:String" Name="GetRegistryValue_Value_32" />
+                            <Variable x:TypeArguments="x:Double" Name="GetRegistryValue_Result_33" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfObject.IfOption>
+                  </p:IfObject>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="IfObject_Result_30" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="320,653" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:ARecordCreate IPAddress_Item="{x:Null}" IPAddress_ItemProp="{x:Null}" Name_Item="{x:Null}" Name_ItemProp="{x:Null}" Zone_Item="{x:Null}" Zone_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="A Record Create" sap:VirtualizedContainerService.HintSize="300,123" IPAddress="[IP]" IPAddress_DisplayArg="StartObject.IP" Moniker="f5907813-d650-4984-90ba-f90ee8350ee1" Name="[Name]" Name_DisplayArg="StartObject.Name" Result="[ARecordCreate_Result_28]" ScriptDirectory="goog" TypeName="ARecordCreate" Zone="[Zone]" Zone_DisplayArg="StartObject.Zone" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="ARecordCreate_Result_28" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_27" />
+        <Variable x:TypeArguments="x:String" Default="Forward Lookup Zone or Reverse Lookup Zone" Name="Zone" />
+        <Variable x:TypeArguments="x:String" Default="firewall" Name="Name" />
+        <Variable x:TypeArguments="x:String" Default="192.168.1.1" Name="IP" />
+        <Variable x:TypeArguments="x:String" Default="Add or Delete" Name="Action" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

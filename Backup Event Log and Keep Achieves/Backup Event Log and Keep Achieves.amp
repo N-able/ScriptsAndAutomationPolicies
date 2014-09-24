@@ -1,0 +1,136 @@
+<Policy ID="{bacb9d3c-8bfa-458c-93be-38bd55d2aa0c}" Name="Backup Event Log" Description="Q2hlY2sgaWYgYSBkZXN0aW5hdGlvbiBmb2xkZXIgZXhpc3RzIGFuZCBpZiBub3QgY3JlYXRlIHRoZSBkZXN0aW5hdGlvbiBmb2xkZXIuICBJZiB0aGUgZGVzdGluYXRpb24gZm9sZGVyIGRvZXMgYWxyZWFkeSBleGlzdCwgcmVuYW1lIHRoZSBleGlzdGluZyBkZXN0aW5hdGlvbiBmb2xkZXIgdG8gdGhlIGZvbGRlciBjcmVhdGlvbiBkYXRlIGFuZCBjcmVhdGUgdGhlIGRlc3RpbmF0aW9uIGZvbGRlci4gIEJhY2t1cCBFdmVudCBMb2cu" Version="1.2.0.11">
+  <Object ID="{bc67c1dd-5186-4ac1-a0dd-1578536790b8}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;DestFolder&quot; Label=&quot;Backtup Destination Folder&quot; ParameterType=&quot;string&quot; Value=&quot;C:\Backup1&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>4882cf35-0825-4429-b8c0-b9180a8128bc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.BackupEventLog, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Path</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>cd699cc5-5b35-410b-af3e-f7a353c2d29d</d2p1:m_Item1>
+        <d2p1:m_Item2>b799712d-88fc-472d-baa4-e76e461bc9dc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>815855af-1536-4d58-b6dc-000cf1c516bd</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateFolder, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>a8c2d504-1d83-4fb8-b0a8-5bc84b8e722a</d2p1:m_Item1>
+        <d2p1:m_Item2>002fca6d-9d8c-412b-9999-bcaf5fdfb567</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RenameFolder, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>NewName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>abcf557d-de84-49b6-b5c6-8c110750f886</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateFolder, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>002fca6d-9d8c-412b-9999-bcaf5fdfb567</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RenameFolder, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>a8c2d504-1d83-4fb8-b0a8-5bc84b8e722a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>destfolder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>cd699cc5-5b35-410b-af3e-f7a353c2d29d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FolderExists, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>0d197229-798e-4d48-95c2-6062cca7b645</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CompressFolder, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>810,1243</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="770,1203" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:FolderExists Folder_ItemProp="{x:Null}" Conditional="[FolderExists_Conditional_3]" DisplayName="Folder Exists" Folder="[DestFolder]" Folder_DisplayArg="StartObject.DestFolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="750,57" Moniker="cd699cc5-5b35-410b-af3e-f7a353c2d29d" Result="[FolderExists_Result_4]" ScriptDirectory="goog" TypeName="FolderExists" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate_DisplayArg="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_ItemProp="{x:Null}" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="750,852" Moniker="b799712d-88fc-472d-baa4-e76e461bc9dc" Result="[IfElse_Result_5]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueDate="{x:Null}" ValueDate_Item="{x:Null}" ValueNum="{x:Null}" ValueNum_Item="{x:Null}" ValueString="True" ValueString_DisplayArg="True" ValueString_Item="{x:Null}" VariableDate="{x:Null}" VariableDate_Item="{x:Null}" VariableNum="{x:Null}" VariableNum_Item="{x:Null}" VariableString="[FolderExists_Conditional_3]" VariableString_DisplayArg="FolderExists.Conditional" VariableString_Item="{x:Null}" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="298,692" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:CreateFolder Folder_ItemProp="{x:Null}" DisplayName="Create Folder" Folder="[DestFolder]" FolderInfo="[CreateFolder_FolderInfo_12]" FolderInfo_Item="[CreateFolder_FolderInfo_Item_13]" Folder_DisplayArg="StartObject.DestFolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="278,57" Moniker="abcf557d-de84-49b6-b5c6-8c110750f886" Result="[CreateFolder_Result_14]" ScriptDirectory="goog" TypeName="CreateFolder" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="CreateFolder_FolderInfo_12" />
+                  <Variable x:TypeArguments="x:Object" Name="CreateFolder_FolderInfo_Item_13" />
+                  <Variable x:TypeArguments="x:Double" Name="CreateFolder_Result_14" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="418,692" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:CompressFolder Computer_ItemProp="{x:Null}" Folder_ItemProp="{x:Null}" Computer="localhost" Computer_DisplayArg="localhost" Computer_Item="{x:Null}" DisplayName="Compress Folder" Folder="[DestFolder]" Folder_DisplayArg="StartObject.DestFolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="398,89" Moniker="0d197229-798e-4d48-95c2-6062cca7b645" Recurse="True" Result="[CompressFolder_Result_1]" ScriptDirectory="goog" TypeName="CompressFolder" m_bTextLinkChange="False" />
+                  <p:RunScript DisplayName="Run Script" sap:VirtualizedContainerService.HintSize="398,218" Moniker="a8c2d504-1d83-4fb8-b0a8-5bc84b8e722a" Result="[RunScript_Result_6]" ScriptDirectory="goog" TypeName="RunScript" genArgEvent="33cdc146-d342-4ac9-b542-e6410ebdc065" m_bTextLinkChange="False" script="JCVpZCVGb2xkZXJNb2REYXRlJWlkJSA9IChHZXQtSXRlbSAkJWlkJWRlc3Rmb2xkZXIlaWQlKS5MYXN0V3JpdGVUaW1lLnRvU3RyaW5nKCJkZC1NTS15eXl5IEhILW1tLXNzIik=">
+                    <p:RunScript.InArgs>
+                      <p:InArg ItemProp="{x:Null}" x:Key="destfolder" ArgType="string" DisplayArg="StartObject.DestFolder" DisplayName="destfolder" Name="destfolder" isRequired="True" isRequiredDisplay="Yes">
+                        <p:InArg.Arg>
+                          <InArgument x:TypeArguments="x:String">[DestFolder]</InArgument>
+                        </p:InArg.Arg>
+                        <p:InArg.Item>
+                          <InArgument x:TypeArguments="x:Object" />
+                        </p:InArg.Item>
+                      </p:InArg>
+                    </p:RunScript.InArgs>
+                    <p:RunScript.OutArgs>
+                      <p:OutArg x:Key="FolderModDate" ArgType="string" DisplayName="FolderModDate" Name="FolderModDate">
+                        <p:OutArg.Arg>
+                          <OutArgument x:TypeArguments="x:String">[RunScript_FolderModDate_7]</OutArgument>
+                        </p:OutArg.Arg>
+                      </p:OutArg>
+                    </p:RunScript.OutArgs>
+                  </p:RunScript>
+                  <p:RenameFolder Folder_ItemProp="{x:Null}" NewName_ItemProp="{x:Null}" DisplayName="Rename Folder" Folder="[DestFolder]" Folder_DisplayArg="StartObject.DestFolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="398,86" Moniker="002fca6d-9d8c-412b-9999-bcaf5fdfb567" NewName="[RunScript_FolderModDate_7]" NewName_DisplayArg="RunScript.FolderModDate" NewName_Item="{x:Null}" Result="[RenameFolder_Result_8]" ScriptDirectory="goog" TypeName="RenameFolder" m_bTextLinkChange="False" />
+                  <p:CreateFolder Folder_ItemProp="{x:Null}" DisplayName="Create Folder" Folder="[DestFolder]" FolderInfo="[CreateFolder_FolderInfo_9]" FolderInfo_Item="[CreateFolder_FolderInfo_Item_10]" Folder_DisplayArg="StartObject.DestFolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="398,57" Moniker="815855af-1536-4d58-b6dc-000cf1c516bd" Result="[CreateFolder_Result_11]" ScriptDirectory="goog" TypeName="CreateFolder" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="RunScript_Result_6" />
+                  <Variable x:TypeArguments="x:String" Name="RunScript_FolderModDate_7" />
+                  <Variable x:TypeArguments="x:Double" Name="RenameFolder_Result_8" />
+                  <Variable x:TypeArguments="x:String" Name="CreateFolder_FolderInfo_9" />
+                  <Variable x:TypeArguments="x:Object" Name="CreateFolder_FolderInfo_Item_10" />
+                  <Variable x:TypeArguments="x:Double" Name="CreateFolder_Result_11" />
+                  <Variable x:TypeArguments="x:Double" Name="CompressFolder_Result_1" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+        <p:BackupEventLog Computer_ItemProp="{x:Null}" Path_ItemProp="{x:Null}" Computer="localhost" Computer_DisplayArg="localhost" Computer_Item="{x:Null}" DisplayName="Backup All Event Logs" sap:VirtualizedContainerService.HintSize="750,57" Moniker="4882cf35-0825-4429-b8c0-b9180a8128bc" Path="[DestFolder]" Path_DisplayArg="StartObject.DestFolder" Path_Item="{x:Null}" Result="[BackupEventLog_Result_15]" ScriptDirectory="goog" TypeName="BackupEventLog" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_3" />
+        <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_4" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_5" />
+        <Variable x:TypeArguments="x:Double" Name="BackupEventLog_Result_15" />
+        <Variable x:TypeArguments="x:String" Default="C:\Backup1" Name="DestFolder" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

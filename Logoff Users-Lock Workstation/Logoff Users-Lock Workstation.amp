@@ -1,0 +1,24 @@
+<Policy ID="{b148bd16-5d72-4a09-8910-37598e46fd2d}" Name="Logoff Users-Lock Workstation" Description="TG9nb2ZmIGFsbCB1c2VycyBhbmQgbG9jayBkZXZpY2U=" Version="1.5.0.13">
+  <Object ID="{752c1a84-7985-429a-ba91-62bd7a1b4ce5}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>360,339</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="320,299" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:LogOffAllUsers AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Log Off All Users" sap:VirtualizedContainerService.HintSize="300,51" Moniker="7473d6bd-be68-4710-907f-386863e8550c" Result="[LogOffAllUsers_Result_60]" ScriptDirectory="goog" TypeName="LogOffAllUsers" m_bTextLinkChange="False" />
+        <p:LockWorkstation AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Lock Workstation" sap:VirtualizedContainerService.HintSize="300,51" Moniker="b8cc4997-09cb-4f7c-ac2e-7493432edd8e" Result="[LockWorkstation_Result_62]" ResultString="[LockWorkstation_ResultString_61]" ScriptDirectory="goog" TypeName="LockWorkstation" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="LogOffAllUsers_Result_60" />
+        <Variable x:TypeArguments="x:String" Name="LockWorkstation_ResultString_61" />
+        <Variable x:TypeArguments="x:Double" Name="LockWorkstation_Result_62" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

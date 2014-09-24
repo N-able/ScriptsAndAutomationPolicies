@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{373f8966-f7cb-4fe4-8f60-1941cfa5a88f}" Name="Map User Network Drive" Description="TWFwIFVzZXIgU3BlY2lmaWMgTmV0d29yayBEcml2ZSBmb3IgQ3VycmVudCBMb2dnZWQgb24gVXNlcg==" Version="1.6.0.33" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="23">
+  <Object ID="{75fb85dd-8700-4fc8-845e-aa41df1fec9c}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;Server&quot; Label=&quot;Server&quot; ParameterType=&quot;string&quot; Value=&quot;&amp;lt;Server&amp;gt;&quot; /&gt;&lt;Parameter ParameterName=&quot;Share&quot; Label=&quot;Share&quot; ParameterType=&quot;string&quot; Value=&quot;&amp;lt;Share&amp;gt;&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>7c9ec1d0-f338-4811-a2d6-18ca5c6338d6</d2p1:m_Item1>
+        <d2p1:m_Item2>685ab9a8-17e9-49ff-a6d0-e522aebf7cd4</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateMappedDrive, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>UserName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>54ca60e8-1988-4d50-a2c7-9bf43a6c6357</d2p1:m_Item1>
+        <d2p1:m_Item2>685ab9a8-17e9-49ff-a6d0-e522aebf7cd4</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateMappedDrive, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Share</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>6264df59-9ca3-42d8-bf40-b830d2ea5d39</d2p1:m_Item1>
+        <d2p1:m_Item2>54ca60e8-1988-4d50-a2c7-9bf43a6c6357</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b18a75fb-f503-4243-80ac-dd71b905544b</d2p1:m_Item1>
+        <d2p1:m_Item2>7c9ec1d0-f338-4811-a2d6-18ca5c6338d6</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Server</d2p1:m_Item1>
+        <d2p1:m_Item2>9d88f3e5-b961-418d-8d6d-a2fca790f6a0</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Share</d2p1:m_Item1>
+        <d2p1:m_Item2>9d88f3e5-b961-418d-8d6d-a2fca790f6a0</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9d88f3e5-b961-418d-8d6d-a2fca790f6a0</d2p1:m_Item1>
+        <d2p1:m_Item2>54ca60e8-1988-4d50-a2c7-9bf43a6c6357</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>443,1171</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="403,1131" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:GetLoggedOnUsers Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" Computer_Item="{x:Null}" DisplayName="Get Logged On Users" sap:VirtualizedContainerService.HintSize="383,59" Moniker="b18a75fb-f503-4243-80ac-dd71b905544b" Result="[GetLoggedOnUsers_Result_7]" ScriptDirectory="Unused" TypeName="GetLoggedOnUsers" Users="[GetLoggedOnUsers_Users_6]" m_bTextLinkChange="False" />
+        <p:GetEnvironmentVariable Computer_ItemProp="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" Computer_Item="{x:Null}" DisplayName="Get Environment Variable" sap:VirtualizedContainerService.HintSize="383,98" Moniker="6264df59-9ca3-42d8-bf40-b830d2ea5d39" Result="[GetEnvironmentVariable_Result_15]" ScriptDirectory="Unused" Type="Process" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_14]" Variable="username" Variable_DisplayArg="username" Variable_Item="{x:Null}" m_bTextLinkChange="False" />
+        <p:FormatString Input0_ItemProp="{x:Null}" Input1_ItemProp="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null" DisplayName="Format String" FormattedString="[FormatString_FormattedString_19]" sap:VirtualizedContainerService.HintSize="383,123" Input0="[Server]" Input0_DisplayArg="StartObject.Server" Input0_Item="{x:Null}" Input1="[Share]" Input1_DisplayArg="StartObject.Share" Input1_Item="{x:Null}" Moniker="9d88f3e5-b961-418d-8d6d-a2fca790f6a0" Result="[FormatString_Result_20]" ScriptDirectory="Unused" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" Text_Item="{x:Null}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:ForEachLoop ItemProperty="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null" CollectionDisplayName="Users" CollectionName="[GetLoggedOnUsers_Users_6]" DisplayName="ForEach" sap:VirtualizedContainerService.HintSize="383,574" ItemValue="[ForEachLoop_ItemValue_10]" LinkedTypeName="GetLoggedOnUsers" Moniker="7c9ec1d0-f338-4811-a2d6-18ca5c6338d6" ObjectName="Get Logged On Users" Result="[ForEachLoop_Result_11]" ScriptDirectory="Unused" TypeName="ForEachLoop" m_bTextLinkChange="False">
+          <p:ForEachLoop.Each>
+            <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="369,456">
+              <p:ForEachSequence.Activities>
+                <p:FormatString Input0_ItemProp="{x:Null}" Input1_ItemProp="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null" DisplayName="Format String" FormattedString="[FormatString_FormattedString_16]" sap:VirtualizedContainerService.HintSize="349,123" Input0="[FormatString_FormattedString_19]" Input0_DisplayArg="FormatString.FormattedString" Input0_Item="{x:Null}" Input1="[GetEnvironmentVariable_Value_14]" Input1_DisplayArg="GetEnvironmentVariable.Value" Input1_Item="{x:Null}" Moniker="54ca60e8-1988-4d50-a2c7-9bf43a6c6357" Result="[FormatString_Result_17]" ScriptDirectory="Unused" Text="\\{0}\{1}" Text_DisplayArg="\\{0}\{1}" Text_Item="{x:Null}" TypeName="FormatString" m_bTextLinkChange="False" />
+                <p:CreateMappedDrive Drive_ItemProp="{x:Null}" Password_DisplayArg="{x:Null}" Password_ItemProp="{x:Null}" Share_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.33, Culture=neutral, PublicKeyToken=null" DisplayName="Create Mapped Drive" Drive="U:" Drive_DisplayArg="U:" Drive_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="349,171" Moniker="685ab9a8-17e9-49ff-a6d0-e522aebf7cd4" Password="{x:Null}" Password_Item="{x:Null}" Persist="False" Result="[CreateMappedDrive_Result_18]" ScriptDirectory="Unused" Share="[FormatString_FormattedString_16]" Share_DisplayArg="FormatString.FormattedString" Share_Item="{x:Null}" TypeName="CreateMappedDrive" UserName="{x:Null}" UserName_DisplayArg="ForEach.GetLoggedOnUsers.Users.UserName" UserName_Item="[ForEachLoop_ItemValue_10]" UserName_ItemProp="UserName" m_bTextLinkChange="False" />
+              </p:ForEachSequence.Activities>
+              <p:ForEachSequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_16" />
+                <Variable x:TypeArguments="x:Double" Name="FormatString_Result_17" />
+                <Variable x:TypeArguments="x:Double" Name="CreateMappedDrive_Result_18" />
+              </p:ForEachSequence.Variables>
+            </p:ForEachSequence>
+          </p:ForEachLoop.Each>
+        </p:ForEachLoop>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="GetLoggedOnUsers_Users_6" />
+        <Variable x:TypeArguments="x:Double" Name="GetLoggedOnUsers_Result_7" />
+        <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_10" />
+        <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_11" />
+        <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_14" />
+        <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_15" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_19" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_20" />
+        <Variable x:TypeArguments="x:String" Default="&lt;Server&gt;" Name="Server" />
+        <Variable x:TypeArguments="x:String" Default="&lt;Share&gt;" Name="Share" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

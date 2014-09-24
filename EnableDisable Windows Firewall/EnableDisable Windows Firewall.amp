@@ -1,0 +1,124 @@
+<Policy ID="{d6aa9526-6dc2-43bc-8693-82be89ca24d6}" Name="EnableDisable Windows Firewall" Description="RW5hYmxlIG9yIERpc2FibGUgV2luZG93cyBGaXJld2FsbCBvbiBkZXZpY2Uu" Version="1.5.0.13">
+  <Object ID="{07f83643-cc0b-4a83-b7ea-9b2c8fee540d}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;FW&quot; Label=&quot;Enable or Disable Windows Firewall&quot; ParameterType=&quot;string&quot; Value=&quot;Enable or Disable&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.FW</d2p1:m_Item1>
+        <d2p1:m_Item2>a530db80-de5f-48a0-a791-bd09bd7bf89c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>7b00d623-0b51-4965-b967-d9c35da4cb90</d2p1:m_Item1>
+        <d2p1:m_Item2>0d24e533-ed42-4380-8a3b-112b625d4782</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>eca94828-1fed-45ec-bf8a-211ad690be58</d2p1:m_Item1>
+        <d2p1:m_Item2>c87d38b8-0f44-40c0-b4cc-d3c76640bd1e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1264,909</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="1224,869" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="1204,712" Moniker="a530db80-de5f-48a0-a791-bd09bd7bf89c" Result="[IfElse_Result_17]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="Enable" ValueString_DisplayArg="Enable" VariableString="[FW]" VariableString_DisplayArg="StartObject.FW" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="585,552" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:FirewallStatus AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Firewall Status" sap:VirtualizedContainerService.HintSize="565,51" Moniker="eca94828-1fed-45ec-bf8a-211ad690be58" Result="[FirewallStatus_Result_27]" ScriptDirectory="goog" Status="[FirewallStatus_Status_26]" TypeName="FirewallStatus" m_bTextLinkChange="False" />
+                  <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="565,339" Moniker="c87d38b8-0f44-40c0-b4cc-d3c76640bd1e" Result="[IfElse_Result_25]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="Disabled" ValueString_DisplayArg="Disabled" VariableString="[FirewallStatus_Status_26]" VariableString_DisplayArg="FirewallStatus.Status" m_bTextLinkChange="False">
+                    <p:IfElse.ElseOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="220,179" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:DisableWindowsFirewall AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Disable Windows Firewall" sap:VirtualizedContainerService.HintSize="200,51" Moniker="e92a4682-7e4f-402e-8711-e2860891de2f" Result="[DisableWindowsFirewall_Result_30]" ScriptDirectory="goog" TypeName="DisableWindowsFirewall" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="DisableWindowsFirewall_Result_30" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.ElseOption>
+                    <p:IfElse.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="311,179" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="291,57" LogMessage="[Log_LogMessage_28]" Message="Windows Firewall already Disabled" Message_DisplayArg="Windows Firewall already Disabled" Moniker="16e51d84-6f95-4138-84b6-0f51cb63ae58" Result="[Log_Result_29]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:String" Name="Log_LogMessage_28" />
+                            <Variable x:TypeArguments="x:Double" Name="Log_Result_29" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.IfOption>
+                  </p:IfElse>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="IfElse_Result_25" />
+                  <Variable x:TypeArguments="x:String" Name="FirewallStatus_Status_26" />
+                  <Variable x:TypeArguments="x:Double" Name="FirewallStatus_Result_27" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="585,552" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:FirewallStatus AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Firewall Status" sap:VirtualizedContainerService.HintSize="565,51" Moniker="7b00d623-0b51-4965-b967-d9c35da4cb90" Result="[FirewallStatus_Result_19]" ScriptDirectory="goog" Status="[FirewallStatus_Status_18]" TypeName="FirewallStatus" m_bTextLinkChange="False" />
+                  <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="565,339" Moniker="0d24e533-ed42-4380-8a3b-112b625d4782" Result="[IfElse_Result_20]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="Enabled" ValueString_DisplayArg="Enabled" VariableString="[FirewallStatus_Status_18]" VariableString_DisplayArg="FirewallStatus.Status" m_bTextLinkChange="False">
+                    <p:IfElse.ElseOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="220,179" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:EnableWindowsFirewall AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Enable Windows Firewall" sap:VirtualizedContainerService.HintSize="200,51" Moniker="75ef8376-be14-495b-9dec-0bc2d0760ea0" Result="[EnableWindowsFirewall_Result_24]" ScriptDirectory="goog" TypeName="EnableWindowsFirewall" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="EnableWindowsFirewall_Result_24" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.ElseOption>
+                    <p:IfElse.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="311,179" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="291,57" LogMessage="[Log_LogMessage_21]" Message="Windows Firewall already Enabled" Message_DisplayArg="Windows Firewall already Enabled" Moniker="3481bf39-9c12-4188-b5d8-6a5e7031ab32" Result="[Log_Result_22]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:String" Name="Log_LogMessage_21" />
+                            <Variable x:TypeArguments="x:Double" Name="Log_Result_22" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.IfOption>
+                  </p:IfElse>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="FirewallStatus_Status_18" />
+                  <Variable x:TypeArguments="x:Double" Name="FirewallStatus_Result_19" />
+                  <Variable x:TypeArguments="x:Double" Name="IfElse_Result_20" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_17" />
+        <Variable x:TypeArguments="x:String" Default="Enable or Disable" Name="FW" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

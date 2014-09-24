@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{df4dea5e-e4c7-4970-88bc-b656931aa4de}" Name="Upload Agent Logs" Description="Q29tcHJlc3NlcyB0aGUgQWdlbnRcTG9ncyBmb2xkZXIgYW5kIHVwbG9hZHMgaXQgdG8gdGhlIE4tQ2VudHJhbCBGVFAgc2VydmVyLg==" Version="1.6.1.7" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="9999">
+  <Object ID="{ce691bcf-022a-4a4e-a215-818194bfd48f}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;RemoteFile&quot; Label=&quot;Case Number&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Password&quot; Label=&quot;Password&quot; ParameterType=&quot;password&quot; Value=&quot;&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>76e3a048-b726-47bd-ae12-ec93791ba105</d2p1:m_Item1>
+        <d2p1:m_Item2>b9c3edfd-1c56-4629-9b7b-1d315b41b548</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item1>
+        <d2p1:m_Item2>51ad0935-91da-42f7-81d6-75323e6fbb4a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item1>
+        <d2p1:m_Item2>af984aa1-1e3d-4a69-bcc1-e076d2fc5a7e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateZipFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item1>
+        <d2p1:m_Item2>4d4c71ff-305f-494b-935f-64e6f4a534bd</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFolder, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item1>
+        <d2p1:m_Item2>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46e1e046-5eea-4eb0-8d26-98688269541d</d2p1:m_Item1>
+        <d2p1:m_Item2>51ad0935-91da-42f7-81d6-75323e6fbb4a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46e1e046-5eea-4eb0-8d26-98688269541d</d2p1:m_Item1>
+        <d2p1:m_Item2>af984aa1-1e3d-4a69-bcc1-e076d2fc5a7e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateZipFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>62164b23-1f3a-4a67-bbd6-2351c3d7b980</d2p1:m_Item1>
+        <d2p1:m_Item2>46e1e046-5eea-4eb0-8d26-98688269541d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item1>
+        <d2p1:m_Item2>ec632b3c-1dc8-4f68-8105-15cc7998ec0e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CopyFolder, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Destination</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item1>
+        <d2p1:m_Item2>621b486d-87a2-4242-b0a9-29ed8f9fcacc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CopyFolder, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Destination</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.RemoteFile</d2p1:m_Item1>
+        <d2p1:m_Item2>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46e1e046-5eea-4eb0-8d26-98688269541d</d2p1:m_Item1>
+        <d2p1:m_Item2>ed5bce68-dac2-4fca-809a-2840a10f23de</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.UploadFileToFTP, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>LocalFile</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>1bb47fd8-96ef-43f2-92c8-4025270166ec</d2p1:m_Item1>
+        <d2p1:m_Item2>ec632b3c-1dc8-4f68-8105-15cc7998ec0e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CopyFolder, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FolderName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>62164b23-1f3a-4a67-bbd6-2351c3d7b980</d2p1:m_Item1>
+        <d2p1:m_Item2>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.RemoteFile</d2p1:m_Item1>
+        <d2p1:m_Item2>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item1>
+        <d2p1:m_Item2>46e1e046-5eea-4eb0-8d26-98688269541d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>6670a425-f422-48c1-85cb-ddada004e7c9</d2p1:m_Item1>
+        <d2p1:m_Item2>e4c284d4-f3b6-41ad-b601-fc1bfa9ebc58</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>1649a49a-3b1b-4ae3-8b0f-644ed17fccb7</d2p1:m_Item1>
+        <d2p1:m_Item2>e4c284d4-f3b6-41ad-b601-fc1bfa9ebc58</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.RemoteFile</d2p1:m_Item1>
+        <d2p1:m_Item2>af984aa1-1e3d-4a69-bcc1-e076d2fc5a7e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateZipFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>7de23dea-ca93-43ab-966d-8f04d80237ee</d2p1:m_Item1>
+        <d2p1:m_Item2>1bb47fd8-96ef-43f2-92c8-4025270166ec</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>1649a49a-3b1b-4ae3-8b0f-644ed17fccb7</d2p1:m_Item1>
+        <d2p1:m_Item2>1bb47fd8-96ef-43f2-92c8-4025270166ec</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e4c284d4-f3b6-41ad-b601-fc1bfa9ebc58</d2p1:m_Item1>
+        <d2p1:m_Item2>621b486d-87a2-4242-b0a9-29ed8f9fcacc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CopyFolder, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FolderName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item1>
+        <d2p1:m_Item2>ed5bce68-dac2-4fca-809a-2840a10f23de</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.UploadFileToFTP, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>RemoteFile</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>bb35e3a3-08f9-42f5-8a5a-fbb178bac004</d2p1:m_Item1>
+        <d2p1:m_Item2>ed5bce68-dac2-4fca-809a-2840a10f23de</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.UploadFileToFTP, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>LocalFile</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>46f47c16-f9bb-443b-97a0-55f177934ba5</d2p1:m_Item1>
+        <d2p1:m_Item2>af984aa1-1e3d-4a69-bcc1-e076d2fc5a7e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateZipFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Files</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Password</d2p1:m_Item1>
+        <d2p1:m_Item2>ed5bce68-dac2-4fca-809a-2840a10f23de</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.UploadFileToFTP, PolicyExecutionEngine, Version=1.6.1.7, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Password</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>744,2424</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="704,2384" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:GetOSArchitecture Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Get OS Architecture" sap:VirtualizedContainerService.HintSize="684,57" Moniker="76e3a048-b726-47bd-ae12-ec93791ba105" Result="[GetOSArchitecture_Result_5]" ScriptDirectory="goog" TypeName="GetOSArchitecture" Value="[GetOSArchitecture_Value_4]" m_bTextLinkChange="False" />
+        <p:GetEnvironmentVariable Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Get SysTemp" sap:VirtualizedContainerService.HintSize="684,98" Moniker="62164b23-1f3a-4a67-bbd6-2351c3d7b980" Result="[GetEnvironmentVariable_Result_8]" ScriptDirectory="goog" Type="Machine" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_7]" Variable="Temp" Variable_DisplayArg="Temp" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="TempCaseFolder" FormattedString="[FormatString_FormattedString_43]" sap:VirtualizedContainerService.HintSize="684,123" Input0="[GetEnvironmentVariable_Value_7]" Input0_DisplayArg="GetSysTemp.Value" Input1="[RemoteFile]" Input1_DisplayArg="StartObject.RemoteFile" Moniker="46f47c16-f9bb-443b-97a0-55f177934ba5" Result="[FormatString_Result_44]" ScriptDirectory="goog" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="ZipName" FormattedString="[FormatString_FormattedString_54]" sap:VirtualizedContainerService.HintSize="684,123" Input0="[RemoteFile]" Input0_DisplayArg="StartObject.RemoteFile" Input1=".zip" Input1_DisplayArg=".zip" Moniker="bb35e3a3-08f9-42f5-8a5a-fbb178bac004" Result="[FormatString_Result_55]" ScriptDirectory="goog" Text="{}{0}{1}" Text_DisplayArg="{}{0}{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="FullPathZipName" FormattedString="[FormatString_FormattedString_61]" sap:VirtualizedContainerService.HintSize="684,123" Input0="[GetEnvironmentVariable_Value_7]" Input0_DisplayArg="GetSysTemp.Value" Input1="[FormatString_FormattedString_54]" Input1_DisplayArg="ZipName.FormattedString" Moniker="46e1e046-5eea-4eb0-8d26-98688269541d" Result="[FormatString_Result_62]" ScriptDirectory="goog" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1="{x:Null}" Input1_DisplayArg="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="AgentLogFolder" FormattedString="[FormatString_FormattedString_16]" sap:VirtualizedContainerService.HintSize="684,123" Input0="N-able Technologies\Windows Agent\log" Input0_DisplayArg="N-able Technologies\Windows Agent\log" Moniker="1649a49a-3b1b-4ae3-8b0f-644ed17fccb7" Result="[FormatString_Result_17]" ScriptDirectory="goog" Text="{}{0}" Text_DisplayArg="{}{0}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Condition="contains" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="684,669" Moniker="b9c3edfd-1c56-4629-9b7b-1d315b41b548" Result="[IfElse_Result_6]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="64" ValueString_DisplayArg="64" VariableString="[GetOSArchitecture_Value_4]" VariableString_DisplayArg="GetOSArchitecture.Value" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else  x86" sap:VirtualizedContainerService.HintSize="325,509" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:GetEnvironmentVariable Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="ProgramFiles" sap:VirtualizedContainerService.HintSize="305,98" Moniker="7de23dea-ca93-43ab-966d-8f04d80237ee" Result="[GetEnvironmentVariable_Result_12]" ScriptDirectory="goog" Type="Process" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_11]" Variable="ProgramFiles" Variable_DisplayArg="ProgramFiles" m_bTextLinkChange="False" />
+                  <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="x86AgentLogPath" FormattedString="[FormatString_FormattedString_37]" sap:VirtualizedContainerService.HintSize="305,123" Input0="[GetEnvironmentVariable_Value_11]" Input0_DisplayArg="ProgramFiles.Value" Input1="[FormatString_FormattedString_16]" Input1_DisplayArg="AgentLogFolder.FormattedString" Moniker="1bb47fd8-96ef-43f2-92c8-4025270166ec" Result="[FormatString_Result_38]" ScriptDirectory="goog" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+                  <p:CopyFolder Destination_Item="{x:Null}" Destination_ItemProp="{x:Null}" FolderName_Item="{x:Null}" FolderName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Destination="[FormatString_FormattedString_43]" Destination_DisplayArg="TempCaseFolder.FormattedString" DisplayName="Copy Folder" FolderName="[FormatString_FormattedString_37]" FolderName_DisplayArg="x86AgentLogPath.FormattedString" sap:VirtualizedContainerService.HintSize="305,86" Moniker="ec632b3c-1dc8-4f68-8105-15cc7998ec0e" Result="[CopyFolder_Result_45]" ScriptDirectory="goog" TypeName="CopyFolder" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_11" />
+                  <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_12" />
+                  <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_37" />
+                  <Variable x:TypeArguments="x:Double" Name="FormatString_Result_38" />
+                  <Variable x:TypeArguments="x:Double" Name="CopyFolder_Result_45" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then x64" sap:VirtualizedContainerService.HintSize="325,509" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:GetEnvironmentVariable Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="ProgramFiles(x86)" sap:VirtualizedContainerService.HintSize="305,98" Moniker="6670a425-f422-48c1-85cb-ddada004e7c9" Result="[GetEnvironmentVariable_Result_10]" ScriptDirectory="goog" Type="Process" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_9]" Variable="ProgramFiles(x86)" Variable_DisplayArg="ProgramFiles(x86)" m_bTextLinkChange="False" />
+                  <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="x64AgentLogPath" FormattedString="[FormatString_FormattedString_35]" sap:VirtualizedContainerService.HintSize="305,123" Input0="[GetEnvironmentVariable_Value_9]" Input0_DisplayArg="ProgramFiles(x86).Value" Input1="[FormatString_FormattedString_16]" Input1_DisplayArg="AgentLogFolder.FormattedString" Moniker="e4c284d4-f3b6-41ad-b601-fc1bfa9ebc58" Result="[FormatString_Result_36]" ScriptDirectory="goog" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+                  <p:CopyFolder Destination_Item="{x:Null}" Destination_ItemProp="{x:Null}" FolderName_Item="{x:Null}" FolderName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Destination="[FormatString_FormattedString_43]" Destination_DisplayArg="TempCaseFolder.FormattedString" DisplayName="Copy Folder" FolderName="[FormatString_FormattedString_35]" FolderName_DisplayArg="x64AgentLogPath.FormattedString" sap:VirtualizedContainerService.HintSize="305,86" Moniker="621b486d-87a2-4242-b0a9-29ed8f9fcacc" Result="[CopyFolder_Result_42]" ScriptDirectory="goog" TypeName="CopyFolder" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_9" />
+                  <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_10" />
+                  <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_35" />
+                  <Variable x:TypeArguments="x:Double" Name="FormatString_Result_36" />
+                  <Variable x:TypeArguments="x:Double" Name="CopyFolder_Result_42" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+        <p:CreateZipFile FileName_Item="{x:Null}" FileName_ItemProp="{x:Null}" Files_Item="{x:Null}" Files_ItemProp="{x:Null}" Recurse_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Create Zip File" FileName="[FormatString_FormattedString_61]" FileName_DisplayArg="FullPathZipName.FormattedString" Files="[FormatString_FormattedString_43]" Files_DisplayArg="TempCaseFolder.FormattedString" sap:VirtualizedContainerService.HintSize="684,96" Moniker="af984aa1-1e3d-4a69-bcc1-e076d2fc5a7e" Recurse="True" Result="[CreateZipFile_Result_53]" ScriptDirectory="goog" TypeName="CreateZipFile" m_bTextLinkChange="False" />
+        <p:UploadFileToFTP Host_Item="{x:Null}" Host_ItemProp="{x:Null}" LocalFile_Item="{x:Null}" LocalFile_ItemProp="{x:Null}" Password_Item="{x:Null}" Password_ItemProp="{x:Null}" RemoteFile_Item="{x:Null}" RemoteFile_ItemProp="{x:Null}" User_Item="{x:Null}" User_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Upload File to FTP" sap:VirtualizedContainerService.HintSize="684,205" Host="ftp.n-able.com" Host_DisplayArg="ftp.n-able.com" LocalFile="[FormatString_FormattedString_61]" LocalFile_DisplayArg="FullPathZipName.FormattedString" Moniker="ed5bce68-dac2-4fca-809a-2840a10f23de" OverwriteExistingFile="True" Password="[Password]" Password_DisplayArg="StartObject.Password" RemoteFile="[FormatString_FormattedString_54]" RemoteFile_DisplayArg="ZipName.FormattedString" Result="[UploadFileToFTP_Result_58]" ScriptDirectory="goog" TypeName="UploadFileToFTP" User="partner-upload" User_DisplayArg="partner-upload" m_bTextLinkChange="False" />
+        <p:DeleteFile FileName_Item="{x:Null}" FileName_ItemProp="{x:Null}" Recurse_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Delete File" FileName="[FormatString_FormattedString_61]" FileName_DisplayArg="FullPathZipName.FormattedString" sap:VirtualizedContainerService.HintSize="684,89" Moniker="51ad0935-91da-42f7-81d6-75323e6fbb4a" Recurse="False" Result="[DeleteFile_Result_56]" ScriptDirectory="goog" TypeName="DeleteFile" m_bTextLinkChange="False" />
+        <p:DeleteFolder Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Force_Item="{x:Null}" Recurse_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Delete Folder" Folder="[FormatString_FormattedString_43]" Folder_DisplayArg="TempCaseFolder.FormattedString" Force="False" sap:VirtualizedContainerService.HintSize="684,121" Moniker="4d4c71ff-305f-494b-935f-64e6f4a534bd" Recurse="True" Result="[DeleteFolder_Result_48]" ScriptDirectory="goog" TypeName="DeleteFolder" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="GetOSArchitecture_Value_4" />
+        <Variable x:TypeArguments="x:Double" Name="GetOSArchitecture_Result_5" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_6" />
+        <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_7" />
+        <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_8" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_16" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_17" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_43" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_44" />
+        <Variable x:TypeArguments="x:Double" Name="DeleteFolder_Result_48" />
+        <Variable x:TypeArguments="x:Double" Name="CreateZipFile_Result_53" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_54" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_55" />
+        <Variable x:TypeArguments="x:Double" Name="DeleteFile_Result_56" />
+        <Variable x:TypeArguments="x:Double" Name="UploadFileToFTP_Result_58" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_61" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_62" />
+        <Variable x:TypeArguments="x:String" Default="TestName" Name="RemoteFile" />
+        <Variable x:TypeArguments="p:Password" Name="Password">
+          <Variable.Default>
+            <Literal x:TypeArguments="p:Password">
+              <p:Password PasswordValue="none" />
+            </Literal>
+          </Variable.Default>
+        </Variable>
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

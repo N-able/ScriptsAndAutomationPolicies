@@ -1,0 +1,132 @@
+<Policy ID="{61664e1d-cfad-4c3e-b2de-aa7f9671e655}" Name="Workstation Maintenance" Description="LSBTeW5jIFRpbWUgd2l0aCBEQyBvciBOVFAgU2VydmVyDQotIFNldCBQb3dlclBsYW4NCi0gRGVsZXRlIFRlbXAgRmlsZXMNCi0gQ2xlYXIgV2luZG93cyBVcGRhdGUgQ2FjaGUNCi0gUnVuIENsZWFuTWdyDQotIERpc2FibGUgVUFDDQotIERpc2FibGUgV0FDDQotIENyZWF0ZSBSZXN0b3JlIFBvaW50DQotIEZsdXNoIEROUw0KLSBDSEtEU0sgYW5kIFJlYm9vdCAoWUVTL05PKQ==" Version="1.5.0.14">
+  <Object ID="{eacccc3b-8b98-4449-965e-20d06a5955bc}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;Reboot&quot; Label=&quot;Reboot Device and Run CHKDSK&quot; ParameterType=&quot;string&quot; Value=&quot;YES or NO&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>05ca54f6-b69e-441b-a2b5-2f73ce2bfef4</d2p1:m_Item1>
+        <d2p1:m_Item2>925f70c6-84d7-44b0-997a-9ba02b38f868</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableNum</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>73799d59-c841-452b-983f-e59896de58a7</d2p1:m_Item1>
+        <d2p1:m_Item2>f06f1ee2-3632-4684-8dfd-366ea3053bc8</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableNum</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>1a0a878d-c168-484a-9ef3-07be5bace617</d2p1:m_Item1>
+        <d2p1:m_Item2>0660b27b-06ae-47c4-bef7-fadf234e71c1</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>0660b27b-06ae-47c4-bef7-fadf234e71c1</d2p1:m_Item1>
+        <d2p1:m_Item2>4b29c366-8b44-467c-8c29-45ce6fc40db0</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateRestorePoint, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Description</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Reboot</d2p1:m_Item1>
+        <d2p1:m_Item2>3c9edf4e-f025-4f07-bf2d-64d9c26f58c5</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>503,3366</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="463,3326" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:SynctimewithDC AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Sync time with DC" sap:VirtualizedContainerService.HintSize="443,51" Moniker="05ca54f6-b69e-441b-a2b5-2f73ce2bfef4" Result="[SynctimewithDC_Result_0]" ScriptDirectory="goog" TypeName="SynctimewithDC" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString="{x:Null}" ValueString_DisplayArg="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="{x:Null}" VariableString_DisplayArg="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Condition="greater than" DisplayName="If" sap:VirtualizedContainerService.HintSize="443,341" Moniker="925f70c6-84d7-44b0-997a-9ba02b38f868" Result="[IfObject_Result_1]" ScriptDirectory="goog" Type="number" TypeName="IfObject" ValueNum="0" ValueNum_DisplayArg="0" VariableNum="[SynctimewithDC_Result_0]" VariableNum_DisplayArg="SynctimewithDC.Result" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="323,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SyncTimewithExternalNTP NTP_Item="{x:Null}" NTP_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Sync Time with External NTP" sap:VirtualizedContainerService.HintSize="303,59" Moniker="39dc1e67-d2d4-4b5a-bfa8-322d376245de" NTP="pool.ntp.org" NTP_DisplayArg="pool.ntp.org" Result="[SyncTimewithExternalNTP_Result_2]" ScriptDirectory="goog" TypeName="SyncTimewithExternalNTP" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SyncTimewithExternalNTP_Result_2" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:SetPowerPlan AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Set Power plan" sap:VirtualizedContainerService.HintSize="443,65" Moniker="19dcee80-0cdf-4db1-a2ce-5bed1f4a6185" Powerplan="Balanced" Result="[SetPowerPlan_Result_3]" ScriptDirectory="goog" TypeName="SetPowerPlan" m_bTextLinkChange="False" />
+        <p:FolderSize Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="File/Folder Size" FileCount="[FolderSize_FileCount_5]" Folder="C:\Windows\SoftwareDistribution\Download" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download" Force="False" sap:VirtualizedContainerService.HintSize="443,113" Moniker="73799d59-c841-452b-983f-e59896de58a7" Recurse="True" Result="[FolderSize_Result_6]" ScriptDirectory="goog" SizeInfo="[FolderSize_SizeInfo_4]" TypeName="FolderSize" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString="{x:Null}" ValueString_DisplayArg="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="{x:Null}" VariableString_DisplayArg="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Condition="greater than" DisplayName="If" sap:VirtualizedContainerService.HintSize="443,888" Moniker="f06f1ee2-3632-4684-8dfd-366ea3053bc8" Result="[IfObject_Result_7]" ScriptDirectory="goog" Type="number" TypeName="IfObject" ValueNum="500" ValueNum_DisplayArg="500" VariableNum="[FolderSize_SizeInfo_4]" VariableNum_DisplayArg="File/FolderSize.SizeInfo" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="364,728" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:StopService Service_Item="{x:Null}" Service_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Disable="False" DisplayName="Stop Service" Force="True" sap:VirtualizedContainerService.HintSize="344,114" Moniker="94ccd4ba-c2b2-4676-a946-c5f78dbbc35a" Result="[StopService_Result_9]" ScriptDirectory="goog" Service="wuauserv" Service_DisplayArg="wuauserv" TypeName="StopService" _Result="[StopService__Result_8]" m_bTextLinkChange="False" />
+                  <p:DeleteFolder Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Recurse_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Delete Folder" Folder="C:\Windows\SoftwareDistribution\Download" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download" sap:VirtualizedContainerService.HintSize="344,89" Moniker="320c6c5e-fbf9-4e50-9a41-98986eded134" Recurse="True" Result="[DeleteFolder_Result_11]" ScriptDirectory="goog" TypeName="DeleteFolder" m_bTextLinkChange="False" />
+                  <p:StartService Service_Item="{x:Null}" Service_ItemProp="{x:Null}" StartupType="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Disabled="False" DisplayName="Start Service" sap:VirtualizedContainerService.HintSize="344,129" Moniker="2d0c8341-34c9-42d9-a140-70189e2b6cec" Result="[StartService_Result_10]" ScriptDirectory="goog" Service="wuauserv" Service_DisplayArg="wuauserv" TypeName="StartService" m_bTextLinkChange="False" />
+                  <p:Wait WaitTime_Item="{x:Null}" WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Wait" sap:VirtualizedContainerService.HintSize="344,57" Moniker="bd7cb688-25de-49de-bf7e-b1e224628c65" Result="[Wait_Result_12]" ScriptDirectory="goog" TypeName="Wait" WaitTime="10" WaitTime_DisplayArg="10" m_bTextLinkChange="False" />
+                  <p:FolderExists Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional_13]" DisplayName="Folder Exists" Folder="C:\Windows\SoftwareDistribution\Download" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download" sap:VirtualizedContainerService.HintSize="344,57" Moniker="efe69401-c66a-497e-97bf-46681f88ba82" Result="[FolderExists_Result_14]" ScriptDirectory="goog" TypeName="FolderExists" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="StopService__Result_8" />
+                  <Variable x:TypeArguments="x:Double" Name="StopService_Result_9" />
+                  <Variable x:TypeArguments="x:Double" Name="StartService_Result_10" />
+                  <Variable x:TypeArguments="x:Double" Name="DeleteFolder_Result_11" />
+                  <Variable x:TypeArguments="x:Double" Name="Wait_Result_12" />
+                  <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_13" />
+                  <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_14" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:DisableWindowsActionCenter AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Disable Windows Action Center" sap:VirtualizedContainerService.HintSize="443,51" Moniker="150da705-293d-43ba-934d-30a29fe4b566" Result="[DisableWindowsActionCenter_Result_16]" ScriptDirectory="goog" TypeName="DisableWindowsActionCenter" m_bTextLinkChange="False" />
+        <p:DisableUAC AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Disable UAC" sap:VirtualizedContainerService.HintSize="443,51" Moniker="e1bc3bc9-cfe3-4e21-a8fb-7818d4134120" Result="[DisableUAC_Result_15]" ScriptDirectory="goog" TypeName="DisableUAC" m_bTextLinkChange="False" />
+        <p:DeleteTemporaryFiles DeleteCookies_DisplayArg="{x:Null}" DeleteCookies_Item="{x:Null}" DeleteCookies_ItemProp="{x:Null}" DeleteTempFiles_DisplayArg="{x:Null}" DeleteTempFiles_Item="{x:Null}" DeleteTempFiles_ItemProp="{x:Null}" DeleteTempInternetFiles_DisplayArg="{x:Null}" DeleteTempInternetFiles_Item="{x:Null}" DeleteTempInternetFiles_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DeleteCookies="True" DeleteTempFiles="True" DeleteTempInternetFiles="True" DisplayName="Delete Temporary Files" sap:VirtualizedContainerService.HintSize="443,124" Moniker="43b21d23-4561-4635-be61-908eea826fc6" Result="[DeleteTemporaryFiles_Result_17]" ScriptDirectory="goog" TypeName="DeleteTemporaryFiles" m_bTextLinkChange="False" />
+        <p:FlushDNS Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Flush DNS" sap:VirtualizedContainerService.HintSize="443,59" Moniker="194a3278-4479-45ee-a758-36a974e4a04f" Result="[FlushDNS_Result_18]" ScriptDirectory="goog" TypeName="FlushDNS" m_bTextLinkChange="False" />
+        <p:GetDate CustomDateTimeFormat_Item="{x:Null}" CustomDateTimeFormat_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" CustomDateTimeFormat="dd-MM-yy" CustomDateTimeFormat_DisplayArg="dd-MM-yy" DateResultString="[GetDate_DateResultString_19]" DisplayName="Get Date" sap:VirtualizedContainerService.HintSize="443,88" Moniker="1a0a878d-c168-484a-9ef3-07be5bace617" Result="[GetDate_Result_20]" ScriptDirectory="goog" TypeName="GetDate" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Format String" FormattedString="[FormatString_FormattedString_21]" sap:VirtualizedContainerService.HintSize="443,123" Input0="Monthly_Maintenance" Input0_DisplayArg="Monthly_Maintenance" Input1="[GetDate_DateResultString_19]" Input1_DisplayArg="GetDate.DateResultString" Moniker="0660b27b-06ae-47c4-bef7-fadf234e71c1" Result="[FormatString_Result_22]" ScriptDirectory="goog" Text="{}{0}_{1}" Text_DisplayArg="{}{0}_{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:CreateRestorePoint Description_Item="{x:Null}" Description_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Description="[FormatString_FormattedString_21]" Description_DisplayArg="FormatString.FormattedString" DisplayName="Create Restore Point" sap:VirtualizedContainerService.HintSize="443,96" Moniker="4b29c366-8b44-467c-8c29-45ce6fc40db0" RestorePointType="Modify Settings" Result="[CreateRestorePoint_Result_23]" ScriptDirectory="goog" TypeName="CreateRestorePoint" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="443,639" Moniker="3c9edf4e-f025-4f07-bf2d-64d9c26f58c5" Result="[IfObject_Result_24]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="YES" ValueString_DisplayArg="YES" VariableString="[Reboot]" VariableString_DisplayArg="StartObject.Reboot" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="419,479" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Chkdsk DriveLetter_Item="{x:Null}" DriveLetter_ItemProp="{x:Null}" FixErrors_Item="{x:Null}" ForceDismount_Item="{x:Null}" OkToRunAtBootUp_Item="{x:Null}" RecoverBadSectors_Item="{x:Null}" SkipFolderCycle_Item="{x:Null}" VigorousIndexCheck_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Chkdsk" DriveLetter="C:" DriveLetter_DisplayArg="C:" FixErrors="False" ForceDismount="False" sap:VirtualizedContainerService.HintSize="399,249" Moniker="39bc372b-2693-433f-a851-8c99b0e412a9" OkToRunAtBootUp="True" RecoverBadSectors="False" Result="[Chkdsk_Result_25]" ScriptDirectory="goog" SkipFolderCycle="False" TypeName="Chkdsk" VigorousIndexCheck="False" m_bTextLinkChange="False" />
+                  <p:RestartSystem Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Background="False" Computer="localhost" Computer_DisplayArg="localhost" Confirm="False" DisplayName="Restart System" Force="True" sap:VirtualizedContainerService.HintSize="399,68" Moniker="274cf7e8-083d-4f72-8177-7ac55bbdcfc4" Result="[RestartSystem_Result_26]" ScriptDirectory="goog" TypeName="RestartSystem" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="Chkdsk_Result_25" />
+                  <Variable x:TypeArguments="x:Double" Name="RestartSystem_Result_26" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="SynctimewithDC_Result_0" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_1" />
+        <Variable x:TypeArguments="x:Double" Name="SetPowerPlan_Result_3" />
+        <Variable x:TypeArguments="x:Double" Name="FolderSize_SizeInfo_4" />
+        <Variable x:TypeArguments="x:Double" Name="FolderSize_FileCount_5" />
+        <Variable x:TypeArguments="x:Double" Name="FolderSize_Result_6" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_7" />
+        <Variable x:TypeArguments="x:Double" Name="DisableUAC_Result_15" />
+        <Variable x:TypeArguments="x:Double" Name="DisableWindowsActionCenter_Result_16" />
+        <Variable x:TypeArguments="x:Double" Name="DeleteTemporaryFiles_Result_17" />
+        <Variable x:TypeArguments="x:Double" Name="FlushDNS_Result_18" />
+        <Variable x:TypeArguments="x:String" Name="GetDate_DateResultString_19" />
+        <Variable x:TypeArguments="x:Double" Name="GetDate_Result_20" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_21" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_22" />
+        <Variable x:TypeArguments="x:Double" Name="CreateRestorePoint_Result_23" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_24" />
+        <Variable x:TypeArguments="x:String" Default="YES or NO" Name="Reboot" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

@@ -1,0 +1,1 @@
+powershell Set-ExecutionPolicy Remotesigned -Force

@@ -1,0 +1,92 @@
+<Policy ID="{d24665c1-fb97-479b-adba-79695199ae8a}" Name="Sync Time" Description="SWYgcmFuIG9uIGEgbWVtYmVyIHNlcnZlciwgc3luYyB0aW1lIHdpdGggRG9tYWluIENvbnRyb2xsZXIuICBJZiByYW4gb24gRG9tYWluIENvbnRyb2xsZXIsIHN5bmMgdGltZSB3aXRoIGV4dGVybmFsIE5UUCBzZXJ2ZXIu" Version="1.5.0.13">
+  <Object ID="{8e9d2a79-0874-42cd-b458-d4f43daacfea}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;NTPServer&quot; Label=&quot;External NTP Server&quot; ParameterType=&quot;string&quot; Value=&quot;pool.ntp.org&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>5b313b34-3f79-42b6-b978-d45e7820e2bc</d2p1:m_Item1>
+        <d2p1:m_Item2>4ecdcdd9-07ac-4752-81a9-ffb99677b70f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>5b313b34-3f79-42b6-b978-d45e7820e2bc</d2p1:m_Item1>
+        <d2p1:m_Item2>4ecdcdd9-07ac-4752-81a9-ffb99677b70f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ValueString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>23357807-57a9-4ac9-ba15-831aef31b7dc</d2p1:m_Item1>
+        <d2p1:m_Item2>e62d72b6-7931-49f9-8e47-33d2b46922d8</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>MaintenanceDay</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.NTPServer</d2p1:m_Item1>
+        <d2p1:m_Item2>aad933eb-4d48-4d12-9845-a32881f703d3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SyncTimewithExternalNTP, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>NTP</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>8c1f34c5-d6f3-4149-af57-1425c1df1327</d2p1:m_Item1>
+        <d2p1:m_Item2>4ecdcdd9-07ac-4752-81a9-ffb99677b70f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ValueString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e62d72b6-7931-49f9-8e47-33d2b46922d8</d2p1:m_Item1>
+        <d2p1:m_Item2>19961d1e-d147-4c0d-82f4-886485c7c91c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableNum</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>637,773</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="597,733" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:CurrentDomainController Computer_DisplayArg="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Computer="{x:Null}" Computer_Item="{x:Null}" DisplayName="Get Current Domain Controller" Domain="{x:Null}" Forest="{x:Null}" sap:VirtualizedContainerService.HintSize="577,57" IPAddress="[CurrentDomainController_IPAddress_2]" Moniker="5b313b34-3f79-42b6-b978-d45e7820e2bc" Name="[CurrentDomainController_Name_1]" OSVersion="{x:Null}" Partitions="{x:Null}" Result="[CurrentDomainController_Result_4]" Roles="[CurrentDomainController_Roles_3]" ScriptDirectory="goog" SiteName="{x:Null}" TypeName="CurrentDomainController" m_bTextLinkChange="False" />
+        <p:GetEnvironmentVariable Computer_ItemProp="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" Computer_Item="{x:Null}" DisplayName="Get Environment Variable" sap:VirtualizedContainerService.HintSize="577,98" Moniker="8c1f34c5-d6f3-4149-af57-1425c1df1327" Result="[GetEnvironmentVariable_Result_230]" ScriptDirectory="goog" Type="Process" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_229]" Variable="computername" Variable_DisplayArg="computername" Variable_Item="{x:Null}" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="577,341" Moniker="4ecdcdd9-07ac-4752-81a9-ffb99677b70f" Result="[IfElse_Result_17]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="[GetEnvironmentVariable_Value_229]" ValueString_DisplayArg="GetEnvironmentVariable.Value" ValueString_Item="{x:Null}" VariableString="[CurrentDomainController_Name_1]" VariableString_DisplayArg="GetCurrentDomainController.Name" VariableString_Item="{x:Null}" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="220,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SynctimewithDC AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Sync time with DC" sap:VirtualizedContainerService.HintSize="200,51" Moniker="a6786460-e287-480a-b501-62e4809dbea2" Result="[SynctimewithDC_Result_19]" ScriptDirectory="goog" TypeName="SynctimewithDC" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SynctimewithDC_Result_19" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="323,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SyncTimewithExternalNTP NTP_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Sync Time with External NTP" sap:VirtualizedContainerService.HintSize="303,59" Moniker="aad933eb-4d48-4d12-9845-a32881f703d3" NTP="[NTPServer]" NTP_DisplayArg="StartObject.NTPServer" NTP_Item="{x:Null}" Result="[SyncTimewithExternalNTP_Result_18]" ScriptDirectory="goog" TypeName="SyncTimewithExternalNTP" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SyncTimewithExternalNTP_Result_18" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Name_1" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_IPAddress_2" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Roles_3" />
+        <Variable x:TypeArguments="x:Double" Name="CurrentDomainController_Result_4" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_17" />
+        <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_229" />
+        <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_230" />
+        <Variable x:TypeArguments="x:String" Default="pool.ntp.org" Name="NTPServer" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

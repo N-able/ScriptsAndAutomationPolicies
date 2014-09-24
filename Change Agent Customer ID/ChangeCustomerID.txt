@@ -1,0 +1,13 @@
+The 'ChangeCustomerID.vbs' script must be run via the Probe in N-central.  It accepts a single parameter which is the new customer ID code.
+
+ChangeCustomerID.vbs /new:[CUSTOMER_ID_CODE]
+
+
+The agent will be stopped and started during execution, so the script will NOT work if you run it using the agent.
+
+
+By Chris Feldhaus, Systeem Medical Information Systems (cfeldhaus@systeem-medical.com) (October 2013)
+Derived from Change Appliance ID of a Windows agent written by Tim Wiser, Orchid IT  (twiser@orchidit.com) (13th August 2012)
+
+Modified again by James Weakley, Diamond Technology Group (jweakley@diamondgroup.net.au) (January 2014)
+Will now work when ran by the agent, so ignore the above warning.

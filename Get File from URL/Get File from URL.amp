@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><Policy Description="R2V0IGEgZmlsZSBmcm9tIGEgVVJMDQpkb3dubG9hZCBpdCBzbyBzcGVjaWZpZWQgbG9jYXRpb24gYW5kIGZpbGVuYW1l" ID="309a5fe0-bd8c-4b23-81a2-b14189458d08" Name="Get File from URL" Version="1.2.0.11">
+  <Object Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;SourceFile&quot; Label=&quot;Source URL + filename&quot; ParameterType=&quot;string&quot; Value=&quot;http://www.mydomain.com/myfile.exe&quot; /&gt;&lt;Parameter ParameterName=&quot;DestinationFile&quot; Label=&quot;Destination Path + filename&quot; ParameterType=&quot;string&quot; Value=&quot;c:\temp\myfile.exe&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" ID="{6d181c0d-a6b8-4944-a636-88ce37c56b04}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}"/>
+  <LinkManager xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestinationFile</d2p1:m_Item1>
+        <d2p1:m_Item2>2525008e-2a88-4351-b101-2f655807373b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FileExists, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>File</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>2525008e-2a88-4351-b101-2f655807373b</d2p1:m_Item1>
+        <d2p1:m_Item2>6f99de23-e3be-43c7-abc2-9d8f33adf294</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestinationFile</d2p1:m_Item1>
+        <d2p1:m_Item2>e28a4153-7820-4312-84f5-127f28ff6f22</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFile, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.SourceFile</d2p1:m_Item1>
+        <d2p1:m_Item2>158bb497-d23f-412b-b621-74c23e6fd6e1</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ScriptSourceFile</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestinationFile</d2p1:m_Item1>
+        <d2p1:m_Item2>158bb497-d23f-412b-b621-74c23e6fd6e1</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ScriptDestinationFile</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DestinationFile</d2p1:m_Item1>
+        <d2p1:m_Item2>f0d02057-e91b-48b7-827c-dec66209e67e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FileExists, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>File</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>f0d02057-e91b-48b7-827c-dec66209e67e</d2p1:m_Item1>
+        <d2p1:m_Item2>ba35760b-a2e0-457a-8b81-a9a44964ad56</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="sap" x:Class="Policy Builder">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)"/>
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>781,1625</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" sap:VirtualizedContainerService.HintSize="741,1585">
+      <p:PolicySequence.Activities>
+        <p:RunScript DisplayName="Comments" Moniker="cc183388-0bb0-455a-a894-b5c88c777245" Result="[RunScript_Result_16]" ScriptDirectory="goog" TypeName="RunScript" genArgEvent="{x:Null}" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="721,218" script="IyB2MQ0KIyB0aGlzIEFNUCBnaXZlcyB5b3UgdGhlIHBvc3NpYmxpdHkgdG8gZG93bmxvYWQgZmlsZXMgZnJvbSBhIFVSTCBhbmQgcGxhY2UgaXMgb24gYSBkZXN0aW5hdGlvbg0KIyB0ZXN0ZWQgaXMgd2l0aCBmdWxsIFVSTCBpbmNsdWRpbmcgRklMRSBhbmQgYWxzbyB3aXRoIHJlZGlyZWN0cyBsaWtlICdodHRwOi8vZG93bmxvYWQubW96aWxsYS5vcmcvP3Byb2R1Y3Q9ZmlyZWZveC0xMi4wJm9zPXdpbiZsYW5nPW5sJw0KIyB3b3JrZWQgZmluZQ0KIw0KIyBGaXJzdCB3aWxsIHRoZSBBTVAgY2hlY2tzIGlmIHRoZSBmaWxlIGFscmVhZHkgZXhpc3RzIG9uIGRlc3RpbmF0aW9uIC0gaWYgc28gcmVtb3ZlcyBpdA0KIyBUaGVuIHN0YXJ0IHRoZSBkb3dubG9hZCBvcCB0aGUgZmlsZQ0KIyBBZnRlciBkb3dubG9hZCBkb2VzIGFnYWluIGEgY2hlY2sgaWYgdGhlIGZpbGUgaXMgb24gdGhlIGRlc3RpbmF0aW9uIC0gbG9nIGFjY29yZGluZ2x5IGlmIGl0IGlzIHRoZXJlIG9yIG5vdA0KDQo=">
+          <p:RunScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg"/>
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg"/>
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+        <p:FileExists Conditional="[FileExists_Conditional_4]" DisplayName="File Exists on Destination" File="[DestinationFile]" File_DisplayArg="StartObject.DestinationFile" File_Item="{x:Null}" File_ItemProp="{x:Null}" Moniker="2525008e-2a88-4351-b101-2f655807373b" Result="[FileExists_Result_5]" ScriptDirectory="goog" TypeName="FileExists" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="721,57"/>
+        <p:IfObject Condition="equals" DisplayName="If exists on Destination then delete that file" Moniker="6f99de23-e3be-43c7-abc2-9d8f33adf294" Result="[IfObject_Result_6]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString="True" ValueString_DisplayArg="True" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="[FileExists_Conditional_4]" VariableString_DisplayArg="FileExistsonDestination.Conditional" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="721,339">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" Name="SequenceActivity" sap:VirtualizedContainerService.HintSize="283,179">
+                <p:SequenceActivity.Activities>
+                  <p:DeleteFile DisplayName="Delete File" FileName="[DestinationFile]" FileName_DisplayArg="StartObject.DestinationFile" FileName_Item="{x:Null}" FileName_ItemProp="{x:Null}" Moniker="e28a4153-7820-4312-84f5-127f28ff6f22" Result="[DeleteFile_Result_7]" ScriptDirectory="goog" TypeName="DeleteFile" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="263,57"/>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable Name="DeleteFile_Result_7" x:TypeArguments="x:Double"/>
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:RunScript DisplayName="Run Script - Download of the file" Moniker="158bb497-d23f-412b-b621-74c23e6fd6e1" Result="[RunScript_Result_8]" ScriptDirectory="goog" TypeName="RunScript" genArgEvent="f6dd9b2c-3eb8-473d-829e-150676753ca8" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="721,218" script="JEFjdHVhbERvd25sb2FkID0gTmV3LU9iamVjdCBTeXN0ZW0uTmV0LldlYkNsaWVudA0KJEFjdHVhbERvd25sb2FkLkRvd25sb2FkRmlsZSgkJWlkJVNjcmlwdFNvdXJjZUZpbGUlaWQlLCQlaWQlU2NyaXB0RGVzdGluYXRpb25GaWxlJWlkJSk=">
+          <p:RunScript.InArgs>
+            <p:InArg ArgType="string" DisplayArg="StartObject.SourceFile" DisplayName="ScriptSourceFile" ItemProp="{x:Null}" Name="ScriptSourceFile" isRequired="True" isRequiredDisplay="Yes" x:Key="ScriptSourceFile">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[SourceFile]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object"/>
+              </p:InArg.Item>
+            </p:InArg>
+            <p:InArg ArgType="string" DisplayArg="StartObject.DestinationFile" DisplayName="ScriptDestinationFile" ItemProp="{x:Null}" Name="ScriptDestinationFile" isRequired="True" isRequiredDisplay="Yes" x:Key="ScriptDestinationFile">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[DestinationFile]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object"/>
+              </p:InArg.Item>
+            </p:InArg>
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg"/>
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+        <p:FileExists Conditional="[FileExists_Conditional_9]" DisplayName="File Exists on destination after download" File="[DestinationFile]" File_DisplayArg="StartObject.DestinationFile" File_Item="{x:Null}" File_ItemProp="{x:Null}" Moniker="f0d02057-e91b-48b7-827c-dec66209e67e" Result="[FileExists_Result_10]" ScriptDirectory="goog" TypeName="FileExists" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="721,57"/>
+        <p:IfElse Condition="equals" DisplayName="If/Else - file is there on destination after download" Moniker="ba35760b-a2e0-457a-8b81-a9a44964ad56" Result="[IfElse_Result_11]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString="True" ValueString_DisplayArg="True" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="[FileExists_Conditional_9]" VariableString_DisplayArg="FileExistsondestinationafterdownload.Conditional" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="721,339">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else - log error" Name="SequenceActivity" sap:VirtualizedContainerService.HintSize="376,179">
+                <p:SequenceActivity.Activities>
+                  <p:Log DisplayName="Log" LogMessage="[Log_LogMessage_14]" Message="Ooops something went wrong during download" Message_DisplayArg="Ooops something went wrong during download" Message_Item="{x:Null}" Message_ItemProp="{x:Null}" Moniker="349c5ed6-374d-4531-8d3f-5e697618a3e9" Result="[Log_Result_15]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="356,57"/>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable Name="Log_LogMessage_14" x:TypeArguments="x:String"/>
+                  <Variable Name="Log_Result_15" x:TypeArguments="x:Double"/>
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then - log success" Name="SequenceActivity" sap:VirtualizedContainerService.HintSize="311,179">
+                <p:SequenceActivity.Activities>
+                  <p:Log DisplayName="Log" LogMessage="[Log_LogMessage_12]" Message="Download was succesfull" Message_DisplayArg="Download was succesfull" Message_Item="{x:Null}" Message_ItemProp="{x:Null}" Moniker="44d7fac9-8567-4279-839f-ea817abb4f2f" Result="[Log_Result_13]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="291,57"/>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable Name="Log_LogMessage_12" x:TypeArguments="x:String"/>
+                  <Variable Name="Log_Result_13" x:TypeArguments="x:Double"/>
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable Name="FileExists_Conditional_4" x:TypeArguments="x:String"/>
+        <Variable Name="FileExists_Result_5" x:TypeArguments="x:Double"/>
+        <Variable Name="IfObject_Result_6" x:TypeArguments="x:Double"/>
+        <Variable Name="RunScript_Result_8" x:TypeArguments="x:Double"/>
+        <Variable Name="FileExists_Conditional_9" x:TypeArguments="x:String"/>
+        <Variable Name="FileExists_Result_10" x:TypeArguments="x:Double"/>
+        <Variable Name="IfElse_Result_11" x:TypeArguments="x:Double"/>
+        <Variable Default="http://download.mozilla.org/?product=firefox-12.0&amp;os=win&amp;lang=nl" Name="SourceFile" x:TypeArguments="x:String"/>
+        <Variable Default="c:\temp\mozilla.exe" Name="DestinationFile" x:TypeArguments="x:String"/>
+        <Variable Name="RunScript_Result_16" x:TypeArguments="x:Double"/>
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

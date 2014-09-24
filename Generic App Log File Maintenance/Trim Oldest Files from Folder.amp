@@ -1,0 +1,112 @@
+<Policy ID="{e8701c22-876b-48b8-a681-7c0d23199d7e}" Name="Trim Oldest Files from Folder" Description="LSBTcGVjaWZ5IGZvbGRlciB0byByZW1vdmUgb2xkZXN0IGZpbGVzIGZyb20NCi0gU3BlY2lmeSBtaW5pbXVtIG51bWJlciBvZiBmaWxlcyB0aGF0IG11c3QgYmUga2VwdCB3aXRoaW4gZm9sZGVyDQotIERlbGV0ZSBvbGRlc3QgZmlsZXMgZnJvbSBmb2xkZXIgZW5zdXJpbmcgbWluaW11bSBudW1iZXIgb2YgZmlsZXMgdG8gYmUga2VwdCBpcyByZXNwZWN0ZWQ=" Version="1.5.0.15">
+  <Object ID="{4c8cdb9d-36b7-440c-a5b2-e23d3bcd3560}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;folder&quot; Label=&quot;Folder to remove oldest files from &quot; ParameterType=&quot;string&quot; Value=&quot;c:\folder1\folder2&quot; /&gt;&lt;Parameter ParameterName=&quot;keep&quot; Label=&quot;Number of files to be kept in folder&quot; ParameterType=&quot;number&quot; Value=&quot;5&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.folder</d2p1:m_Item1>
+        <d2p1:m_Item2>05aa1313-1318-4092-ad38-1db7289d05f5</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FolderFileCount, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.keep</d2p1:m_Item1>
+        <d2p1:m_Item2>18613b77-46f5-41e3-a024-e80d3468e407</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ValueNum</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>05aa1313-1318-4092-ad38-1db7289d05f5</d2p1:m_Item1>
+        <d2p1:m_Item2>18613b77-46f5-41e3-a024-e80d3468e407</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableNum</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>05aa1313-1318-4092-ad38-1db7289d05f5</d2p1:m_Item1>
+        <d2p1:m_Item2>4e1b6205-c353-4e18-b28e-0a1647c193f4</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.Math, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Number0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.keep</d2p1:m_Item1>
+        <d2p1:m_Item2>4e1b6205-c353-4e18-b28e-0a1647c193f4</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.Math, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Number1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.folder</d2p1:m_Item1>
+        <d2p1:m_Item2>23413b4b-abaa-4712-8490-73ea35354537</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FindTopNOldestFiles, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>4e1b6205-c353-4e18-b28e-0a1647c193f4</d2p1:m_Item1>
+        <d2p1:m_Item2>23413b4b-abaa-4712-8490-73ea35354537</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FindTopNOldestFiles, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Count</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>23413b4b-abaa-4712-8490-73ea35354537</d2p1:m_Item1>
+        <d2p1:m_Item2>19b656a1-94a9-4936-ba36-2ece14013f1d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>19b656a1-94a9-4936-ba36-2ece14013f1d</d2p1:m_Item1>
+        <d2p1:m_Item2>d84728a0-4396-4840-9d79-dd8b871920e2</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFile, PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>477,1292</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="437,1252" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:FolderFileCount Filter_Item="{x:Null}" Filter_ItemProp="{x:Null}" Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Recurse="{x:Null}" Recurse_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Folder File Count" FileCount="[FolderFileCount_FileCount_47]" Filter="*" Filter_DisplayArg="*" Folder="[folder]" Folder_DisplayArg="StartObject.folder" sap:VirtualizedContainerService.HintSize="417,118" Moniker="05aa1313-1318-4092-ad38-1db7289d05f5" Result="[FolderFileCount_Result_48]" ScriptDirectory="goog" TypeName="FolderFileCount" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString="{x:Null}" ValueString_DisplayArg="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="{x:Null}" VariableString_DisplayArg="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Condition="greater than" DisplayName="If" sap:VirtualizedContainerService.HintSize="417,937" Moniker="18613b77-46f5-41e3-a024-e80d3468e407" Result="[IfObject_Result_52]" ScriptDirectory="goog" Type="number" TypeName="IfObject" ValueNum="[keep]" ValueNum_DisplayArg="StartObject.keep" VariableNum="[FolderFileCount_FileCount_47]" VariableNum_DisplayArg="FolderFileCount.FileCount" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="393,777" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Math Number0_Item="{x:Null}" Number0_ItemProp="{x:Null}" Number1_Item="{x:Null}" Number1_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Math" sap:VirtualizedContainerService.HintSize="373,131" Moniker="4e1b6205-c353-4e18-b28e-0a1647c193f4" Number0="[FolderFileCount_FileCount_47]" Number0_DisplayArg="FolderFileCount.FileCount" Number1="[keep]" Number1_DisplayArg="StartObject.keep" NumberResult="[Math_NumberResult_53]" Operation="Subtract" Result="[Math_Result_54]" ScriptDirectory="goog" TypeName="Math" m_bTextLinkChange="False" />
+                  <p:FindTopNOldestFiles Count_Item="{x:Null}" Count_ItemProp="{x:Null}" Filter_Item="{x:Null}" Filter_ItemProp="{x:Null}" Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" Count="[Math_NumberResult_53]" Count_DisplayArg="Math.NumberResult" DisplayName="Find Top N Oldest Files" FileList="[FindTopNOldestFiles_FileList_55]" Filter="*" Filter_DisplayArg="*" Folder="[folder]" Folder_DisplayArg="StartObject.folder" sap:VirtualizedContainerService.HintSize="373,147" Moniker="23413b4b-abaa-4712-8490-73ea35354537" Recurse="False" Result="[FindTopNOldestFiles_Result_56]" ScriptDirectory="goog" TypeName="FindTopNOldestFiles" m_bTextLinkChange="False" />
+                  <p:ForEachLoop ItemProperty="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" CollectionDisplayName="FileList" CollectionName="[FindTopNOldestFiles_FileList_55]" DisplayName="ForEach" sap:VirtualizedContainerService.HintSize="373,297" ItemValue="[ForEachLoop_ItemValue_57]" LinkedTypeName="FindTopNOldestFiles" Moniker="19b656a1-94a9-4936-ba36-2ece14013f1d" ObjectName="Find Top N Oldest Files" Result="[ForEachLoop_Result_58]" ScriptDirectory="goog" TypeName="ForEachLoop" m_bTextLinkChange="False">
+                    <p:ForEachLoop.Each>
+                      <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="359,179">
+                        <p:ForEachSequence.Activities>
+                          <p:DeleteFile FileName="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.15, Culture=neutral, PublicKeyToken=null" DisplayName="Delete File" FileName_DisplayArg="ForEach.FindTopNOldestFiles.FileList.FullFileName" FileName_Item="[ForEachLoop_ItemValue_57]" FileName_ItemProp="FullFileName" sap:VirtualizedContainerService.HintSize="339,57" Moniker="d84728a0-4396-4840-9d79-dd8b871920e2" Result="[DeleteFile_Result_59]" ScriptDirectory="goog" TypeName="DeleteFile" m_bTextLinkChange="False" />
+                        </p:ForEachSequence.Activities>
+                        <p:ForEachSequence.Variables>
+                          <Variable x:TypeArguments="x:Double" Name="DeleteFile_Result_59" />
+                        </p:ForEachSequence.Variables>
+                      </p:ForEachSequence>
+                    </p:ForEachLoop.Each>
+                  </p:ForEachLoop>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="Math_NumberResult_53" />
+                  <Variable x:TypeArguments="x:Double" Name="Math_Result_54" />
+                  <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="FindTopNOldestFiles_FileList_55" />
+                  <Variable x:TypeArguments="x:Double" Name="FindTopNOldestFiles_Result_56" />
+                  <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_57" />
+                  <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_58" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="FolderFileCount_FileCount_47" />
+        <Variable x:TypeArguments="x:Double" Name="FolderFileCount_Result_48" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_52" />
+        <Variable x:TypeArguments="x:String" Default="C:\AM_TEST" Name="folder" />
+        <Variable x:TypeArguments="x:Double" Default="5" Name="keep" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

@@ -1,0 +1,43 @@
+<Policy ID="{743a35b7-2c30-4ea8-932b-749f519f620a}" Name="Set DNS Scavenging" Description="RW5hYmxlIGFuZCBzZXQgRE5TIFNjYXZlbmdpbmcgb24gdGhlIEROUyBTZXJ2ZXIgYXMgd2VsbCBhcyBzdGFydCBTY2F2ZW5naW5nIG5vdy4=" Version="1.5.0.13">
+  <Object ID="{1ebc84ec-d9ed-4047-815b-a502d104c44d}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;SInterval&quot; Label=&quot;Scavenging Interval (Hours)&quot; ParameterType=&quot;number&quot; Value=&quot;24&quot; /&gt;&lt;Parameter ParameterName=&quot;NRInterval&quot; Label=&quot;No Refresh Interval (Hours)&quot; ParameterType=&quot;number&quot; Value=&quot;12&quot; /&gt;&lt;Parameter ParameterName=&quot;RInterval&quot; Label=&quot;Refresh Interval (Hours)&quot; ParameterType=&quot;number&quot; Value=&quot;12&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.SInterval</d2p1:m_Item1>
+        <d2p1:m_Item2>505d265a-674c-4b6b-881f-5b608bc3ce33</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SetDNSScavenging, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ScavengingInterval</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.NRInterval</d2p1:m_Item1>
+        <d2p1:m_Item2>505d265a-674c-4b6b-881f-5b608bc3ce33</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SetDNSScavenging, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>DefaultNoRefreshInterval</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.RInterval</d2p1:m_Item1>
+        <d2p1:m_Item2>505d265a-674c-4b6b-881f-5b608bc3ce33</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SetDNSScavenging, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>DefaultRefreshInterval</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>486,384</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="446,344" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:SetDNSScavenging DefaultNoRefreshInterval_Item="{x:Null}" DefaultNoRefreshInterval_ItemProp="{x:Null}" DefaultRefreshInterval_Item="{x:Null}" DefaultRefreshInterval_ItemProp="{x:Null}" ScavengingInterval_Item="{x:Null}" ScavengingInterval_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DefaultNoRefreshInterval="[NRInterval]" DefaultNoRefreshInterval_DisplayArg="StartObject.NRInterval" DefaultRefreshInterval="[RInterval]" DefaultRefreshInterval_DisplayArg="StartObject.RInterval" DisplayName="Set DNS Scavenging" EnableScavenging="True" sap:VirtualizedContainerService.HintSize="426,187" Moniker="505d265a-674c-4b6b-881f-5b608bc3ce33" Result="[SetDNSScavenging_Result_144]" ScavengingInterval="[SInterval]" ScavengingInterval_DisplayArg="StartObject.SInterval" ScriptDirectory="goog" StartScavenging="True" TypeName="SetDNSScavenging" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="SetDNSScavenging_Result_144" />
+        <Variable x:TypeArguments="x:Double" Default="24" Name="SInterval" />
+        <Variable x:TypeArguments="x:Double" Default="12" Name="NRInterval" />
+        <Variable x:TypeArguments="x:Double" Default="12" Name="RInterval" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

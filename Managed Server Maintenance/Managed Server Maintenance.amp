@@ -1,0 +1,130 @@
+<Policy ID="{d24665c1-fb97-479b-adba-79695199ae8a}" Name="Managed Server Maintenance" Description="TWFuYWdlZCBTZXJ2ZXIgTWFpbnRlbmFuY2U=" Version="1.5.0.13">
+  <Object ID="{6abcc137-cfb0-4bc6-a0ed-66264c7c1603}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;FullMaintenance&quot; Label=&quot;Perform Full Maintenance including reboot?&quot; ParameterType=&quot;string&quot; Value=&quot;False&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>5b313b34-3f79-42b6-b978-d45e7820e2bc</d2p1:m_Item1>
+        <d2p1:m_Item2>4ecdcdd9-07ac-4752-81a9-ffb99677b70f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>11bbb916-6462-4f4a-9ae4-33368f2a7b96</d2p1:m_Item1>
+        <d2p1:m_Item2>4ecdcdd9-07ac-4752-81a9-ffb99677b70f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ValueString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>23357807-57a9-4ac9-ba15-831aef31b7dc</d2p1:m_Item1>
+        <d2p1:m_Item2>e62d72b6-7931-49f9-8e47-33d2b46922d8</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>MaintenanceDay</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.FullMaintenance</d2p1:m_Item1>
+        <d2p1:m_Item2>1d01a60d-7d34-4bdd-8a94-198308960732</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.4.1.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e62d72b6-7931-49f9-8e47-33d2b46922d8</d2p1:m_Item1>
+        <d2p1:m_Item2>19961d1e-d147-4c0d-82f4-886485c7c91c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableNum</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>836,1784</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="796,1744" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RemoveDefaultWallpaper AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Remove Default Wallpaper" sap:VirtualizedContainerService.HintSize="776,51" Moniker="173ef9b8-6b4d-4086-b7c3-a3d2164e5557" Result="[RemoveDefaultWallpaper_Result_0]" ScriptDirectory="goog" TypeName="RemoveDefaultWallpaper" m_bTextLinkChange="False" />
+        <p:CurrentDomainController Computer="{x:Null}" Computer_DisplayArg="{x:Null}" Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Domain="{x:Null}" Forest="{x:Null}" OSVersion="{x:Null}" Partitions="{x:Null}" SiteName="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Get Current Domain Controller" sap:VirtualizedContainerService.HintSize="776,57" IPAddress="[CurrentDomainController_IPAddress_2]" Moniker="5b313b34-3f79-42b6-b978-d45e7820e2bc" Name="[CurrentDomainController_Name_1]" Result="[CurrentDomainController_Result_4]" Roles="[CurrentDomainController_Roles_3]" ScriptDirectory="goog" TypeName="CurrentDomainController" m_bTextLinkChange="False" />
+        <p:GetEnvironmentVariable Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Get Environment Variable" sap:VirtualizedContainerService.HintSize="776,98" Moniker="11bbb916-6462-4f4a-9ae4-33368f2a7b96" Result="[GetEnvironmentVariable_Result_8]" ScriptDirectory="goog" Type="Process" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_7]" Variable="computername" Variable_DisplayArg="computername" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="776,341" Moniker="4ecdcdd9-07ac-4752-81a9-ffb99677b70f" Result="[IfElse_Result_17]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="[GetEnvironmentVariable_Value_7]" ValueString_DisplayArg="GetEnvironmentVariable.Value" VariableString="[CurrentDomainController_Name_1]" VariableString_DisplayArg="GetCurrentDomainController.Name" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="220,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SynctimewithDC AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Sync time with DC" sap:VirtualizedContainerService.HintSize="200,51" Moniker="a6786460-e287-480a-b501-62e4809dbea2" Result="[SynctimewithDC_Result_19]" ScriptDirectory="goog" TypeName="SynctimewithDC" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SynctimewithDC_Result_19" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="323,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SyncTimewithExternalNTP NTP_Item="{x:Null}" NTP_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Sync Time with External NTP" sap:VirtualizedContainerService.HintSize="303,59" Moniker="aad933eb-4d48-4d12-9845-a32881f703d3" NTP="pool.ntp.org" NTP_DisplayArg="pool.ntp.org" Result="[SyncTimewithExternalNTP_Result_18]" ScriptDirectory="goog" TypeName="SyncTimewithExternalNTP" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SyncTimewithExternalNTP_Result_18" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+        <p:IsServiceRunning Service_Item="{x:Null}" Service_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Conditional="[IsServiceRunning_Conditional_54]" DisplayName="Is Service Running" sap:VirtualizedContainerService.HintSize="776,57" Moniker="a12b6619-647f-4578-bd7c-25760ab0ec39" Result="[IsServiceRunning_Result_55]" ScriptDirectory="goog" Service="SMTPSVC" Service_DisplayArg="SMTPSVC" TypeName="IsServiceRunning" m_bTextLinkChange="False" />
+        <p:IsServiceRunning Service_Item="{x:Null}" Service_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Conditional="[IsServiceRunning_Conditional_56]" DisplayName="Is Service Running" sap:VirtualizedContainerService.HintSize="776,57" Moniker="fbcc3dc5-1da5-4414-98b3-d0ed3bf6f7ad" Result="[IsServiceRunning_Result_57]" ScriptDirectory="goog" Service="MSExchangeTransport" Service_DisplayArg="MSExchangeTransport" TypeName="IsServiceRunning" m_bTextLinkChange="False" />
+        <p:RestartService Force="{x:Null}" Service_Item="{x:Null}" Service_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Restart Service" sap:VirtualizedContainerService.HintSize="776,83" Moniker="824c4b07-5fa8-47cd-93ae-f144b2592b0f" Result="[RestartService_Result_41]" ScriptDirectory="goog" Service="Spooler" Service_DisplayArg="Spooler" TypeName="RestartService" m_bTextLinkChange="False" />
+        <p:ForceWindowsUpdate AllowReboot="False" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" AutoAcceptEULA="True" DisplayName="Force Windows Update" sap:VirtualizedContainerService.HintSize="776,76" Moniker="9465705b-1305-4725-8c98-00d32ac8c3c6" Result="[ForceWindowsUpdate_Result_42]" ScriptDirectory="goog" TypeName="ForceWindowsUpdate" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.1.4, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="776,447" Moniker="1d01a60d-7d34-4bdd-8a94-198308960732" Result="[IfElse_Result_0]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="True" ValueString_DisplayArg="True" VariableString="[FullMaintenance]" VariableString_DisplayArg="StartObject.FullMaintenance" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="359,287" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.1.4, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="339,57" LogMessage="[Log_LogMessage_4]" Message="Today isnt maintenance day, skipping reboot" Message_DisplayArg="Today isnt maintenance day, skipping reboot" Moniker="9716664f-1a2f-4584-88d6-e71ba4c3c043" Result="[Log_Result_5]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="Log_LogMessage_4" />
+                  <Variable x:TypeArguments="x:Double" Name="Log_Result_5" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="383,287" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.1.4, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="363,57" LogMessage="[Log_LogMessage_1]" Message="Today is maintenance day, finishing maintenance" Message_DisplayArg="Today is maintenance day, finishing maintenance" Moniker="fad2ce39-d3eb-4676-be54-7f275fd87e35" Result="[Log_Result_2]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                  <p:RestartSystem Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.1.4, Culture=neutral, PublicKeyToken=null" Background="False" Computer="localhost" Computer_DisplayArg="localhost" Confirm="False" DisplayName="Restart System" Force="False" sap:VirtualizedContainerService.HintSize="363,68" Moniker="895e9330-e94d-4131-97c9-c5f5395cf647" Result="[RestartSystem_Result_3]" ScriptDirectory="goog" TypeName="RestartSystem" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="Log_LogMessage_1" />
+                  <Variable x:TypeArguments="x:Double" Name="Log_Result_2" />
+                  <Variable x:TypeArguments="x:Double" Name="RestartSystem_Result_3" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="RemoveDefaultWallpaper_Result_0" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Name_1" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_IPAddress_2" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Roles_3" />
+        <Variable x:TypeArguments="x:Double" Name="CurrentDomainController_Result_4" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_17" />
+        <Variable x:TypeArguments="x:Double" Name="RestartService_Result_41" />
+        <Variable x:TypeArguments="x:Double" Name="ForceWindowsUpdate_Result_42" />
+        <Variable x:TypeArguments="x:String" Name="IsServiceRunning_Conditional_54" />
+        <Variable x:TypeArguments="x:Double" Name="IsServiceRunning_Result_55" />
+        <Variable x:TypeArguments="x:String" Name="IsServiceRunning_Conditional_56" />
+        <Variable x:TypeArguments="x:Double" Name="IsServiceRunning_Result_57" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_cn_1" />
+        <Variable x:TypeArguments="x:String" Default="False" Name="FullMaintenance" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_0" />
+        <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_7" />
+        <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_8" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

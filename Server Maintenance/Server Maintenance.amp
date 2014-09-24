@@ -1,0 +1,78 @@
+<Policy ID="{1bd7b8ae-a9cd-4be0-b40b-85c98dbe0a2b}" Name="Server Maintenance" Description="LSBTeW5jIFRpbWUgd2l0aCBEQyBvciBOVFAgU2VydmVyDQotIERlbGV0ZSBUZW1wIEZpbGVzDQotIFJlbW92ZSBXYWxscGFwZXINCi0gQ2xlYXIgUkRQIEhpc3RvcnkNCi0gRGlzYWJsZSBTQ0ENCi0gRmx1c2ggRE5TDQotIEVtcHR5IFJlY3ljbGUgQmlu" Version="1.5.0.14">
+  <Object ID="{82241a2c-2f0e-4689-80a8-e062ff5096fe}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>910485db-901f-4aed-b565-515a03ba3be9</d2p1:m_Item1>
+        <d2p1:m_Item2>69f089e2-d026-413c-a28b-377b441d430a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>64d6dbe4-a8c9-4f78-b807-7ba5716032cf</d2p1:m_Item1>
+        <d2p1:m_Item2>69f089e2-d026-413c-a28b-377b441d430a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ValueString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>637,1165</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="597,1125" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:CurrentDomainController Computer="{x:Null}" Computer_DisplayArg="{x:Null}" Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Get Current Domain Controller" Domain="[CurrentDomainController_Domain_32]" Forest="[CurrentDomainController_Forest_33]" sap:VirtualizedContainerService.HintSize="577,57" IPAddress="[CurrentDomainController_IPAddress_28]" Moniker="910485db-901f-4aed-b565-515a03ba3be9" Name="[CurrentDomainController_Name_27]" OSVersion="[CurrentDomainController_OSVersion_31]" Partitions="[CurrentDomainController_Partitions_34]" Result="[CurrentDomainController_Result_35]" Roles="[CurrentDomainController_Roles_29]" ScriptDirectory="goog" SiteName="[CurrentDomainController_SiteName_30]" TypeName="CurrentDomainController" m_bTextLinkChange="False" />
+        <p:GetEnvironmentVariable Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Get Environment Variable" sap:VirtualizedContainerService.HintSize="577,98" Moniker="64d6dbe4-a8c9-4f78-b807-7ba5716032cf" Result="[GetEnvironmentVariable_Result_37]" ScriptDirectory="goog" Type="Process" TypeName="GetEnvironmentVariable" Value="[GetEnvironmentVariable_Value_36]" Variable="computername" Variable_DisplayArg="computername" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="577,341" Moniker="69f089e2-d026-413c-a28b-377b441d430a" Result="[IfElse_Result_38]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="[GetEnvironmentVariable_Value_36]" ValueString_DisplayArg="GetEnvironmentVariable.Value" VariableString="[CurrentDomainController_Name_27]" VariableString_DisplayArg="GetCurrentDomainController.Name" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="220,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SynctimewithDC AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Sync time with DC" sap:VirtualizedContainerService.HintSize="200,51" Moniker="94e8794e-99bc-4b8e-844f-cc802a394444" Result="[SynctimewithDC_Result_40]" ScriptDirectory="goog" TypeName="SynctimewithDC" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SynctimewithDC_Result_40" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="323,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SyncTimewithExternalNTP NTP_Item="{x:Null}" NTP_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Sync Time with External NTP" sap:VirtualizedContainerService.HintSize="303,59" Moniker="11f20b20-5029-494e-b14c-f0c189038ef9" NTP="pool.ntp.org" NTP_DisplayArg="pool.ntp.org" Result="[SyncTimewithExternalNTP_Result_39]" ScriptDirectory="goog" TypeName="SyncTimewithExternalNTP" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SyncTimewithExternalNTP_Result_39" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+        <p:DeleteTemporaryFiles DeleteCookies_DisplayArg="{x:Null}" DeleteCookies_Item="{x:Null}" DeleteCookies_ItemProp="{x:Null}" DeleteTempFiles_DisplayArg="{x:Null}" DeleteTempFiles_Item="{x:Null}" DeleteTempFiles_ItemProp="{x:Null}" DeleteTempInternetFiles_DisplayArg="{x:Null}" DeleteTempInternetFiles_Item="{x:Null}" DeleteTempInternetFiles_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DeleteCookies="True" DeleteTempFiles="True" DeleteTempInternetFiles="True" DisplayName="Delete Temporary Files" sap:VirtualizedContainerService.HintSize="577,124" Moniker="eaa178bd-3150-4f55-8389-f235b4352d1c" Result="[DeleteTemporaryFiles_Result_41]" ScriptDirectory="goog" TypeName="DeleteTemporaryFiles" m_bTextLinkChange="False" />
+        <p:ClearRemoteDesktopClientHistory AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Clear Remote Desktop Client History" sap:VirtualizedContainerService.HintSize="577,51" Moniker="5c8badf9-b8ac-4578-ab51-761ecc2074aa" Result="[ClearRemoteDesktopClientHistory_Result_42]" ScriptDirectory="goog" TypeName="ClearRemoteDesktopClientHistory" m_bTextLinkChange="False" />
+        <p:EmptyRecycleBin DriveLetter="{x:Null}" DriveLetter_DisplayArg="{x:Null}" DriveLetter_Item="{x:Null}" DriveLetter_ItemProp="{x:Null}" EmptyForAllDrives_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.14, Culture=neutral, PublicKeyToken=null" DisplayName="Empty Recycle Bin" EmptyForAllDrives="True" sap:VirtualizedContainerService.HintSize="577,97" Moniker="7b85a499-0b3e-479b-a557-bc23f1d5afa7" Result="[EmptyRecycleBin_Result_43]" ScriptDirectory="goog" TypeName="EmptyRecycleBin" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Name_27" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_IPAddress_28" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Roles_29" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_SiteName_30" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_OSVersion_31" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Domain_32" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Forest_33" />
+        <Variable x:TypeArguments="x:String" Name="CurrentDomainController_Partitions_34" />
+        <Variable x:TypeArguments="x:Double" Name="CurrentDomainController_Result_35" />
+        <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value_36" />
+        <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result_37" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_38" />
+        <Variable x:TypeArguments="x:Double" Name="DeleteTemporaryFiles_Result_41" />
+        <Variable x:TypeArguments="x:Double" Name="ClearRemoteDesktopClientHistory_Result_42" />
+        <Variable x:TypeArguments="x:Double" Name="EmptyRecycleBin_Result_43" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

@@ -1,0 +1,94 @@
+<Policy ID="{f7fac567-49c6-46dc-8bff-f165b8aac692}" Name="Set Power Plan" Description="U3BlY2lmeSBkZXZpY2UgUG93ZXIgUGxhbiB0bzsgSGlnaCBQZXJmb3JtYW5jZSwgQmFsYW5jZWQgb3IgUG93ZXIgU2F2ZXI=" Version="1.5.0.13">
+  <Object ID="{0776293c-1583-4484-b462-169020698df1}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;PowerPlan&quot; Label=&quot;Set Power Plan too&quot; ParameterType=&quot;string&quot; Value=&quot;High Performance, Balanced or Power Saver&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.PowerPlan</d2p1:m_Item1>
+        <d2p1:m_Item2>c53ec1e4-c339-4a50-b8c7-e1831c3297c5</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.PowerPlan</d2p1:m_Item1>
+        <d2p1:m_Item2>2efa5378-7ef8-4357-8ca1-334d0a36d74b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.PowerPlan</d2p1:m_Item1>
+        <d2p1:m_Item2>63cd2c2c-30a4-42d0-8be0-c23cddc27925</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>669,1213</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="629,1173" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="contains" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="609,1016" Moniker="c53ec1e4-c339-4a50-b8c7-e1831c3297c5" Result="[IfElse_Result_146]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="high" ValueString_DisplayArg="high" VariableString="[PowerPlan]" VariableString_DisplayArg="StartObject.PowerPlan" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="354,856" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="334,347" Moniker="2efa5378-7ef8-4357-8ca1-334d0a36d74b" Result="[IfObject_Result_148]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="Balanced" ValueString_DisplayArg="Balanced" VariableString="[PowerPlan]" VariableString_DisplayArg="StartObject.PowerPlan" m_bTextLinkChange="False">
+                    <p:IfObject.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="220,187" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:SetPowerPlan AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Set Power plan" sap:VirtualizedContainerService.HintSize="200,65" Moniker="cd73d970-aa56-40c3-b3cd-5dff896b7b81" Powerplan="Balanced" Result="[SetPowerPlan_Result_149]" ScriptDirectory="goog" TypeName="SetPowerPlan" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="SetPowerPlan_Result_149" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfObject.IfOption>
+                  </p:IfObject>
+                  <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="contains" DisplayName="If" sap:VirtualizedContainerService.HintSize="334,347" Moniker="63cd2c2c-30a4-42d0-8be0-c23cddc27925" Result="[IfObject_Result_150]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="Power" ValueString_DisplayArg="Power" VariableString="[PowerPlan]" VariableString_DisplayArg="StartObject.PowerPlan" m_bTextLinkChange="False">
+                    <p:IfObject.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="220,187" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:SetPowerPlan AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Set Power plan" sap:VirtualizedContainerService.HintSize="200,65" Moniker="b3d9517e-8279-4d2e-922d-e5bb721be3d1" Powerplan="Power saver" Result="[SetPowerPlan_Result_151]" ScriptDirectory="goog" TypeName="SetPowerPlan" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="SetPowerPlan_Result_151" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfObject.IfOption>
+                  </p:IfObject>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="IfObject_Result_148" />
+                  <Variable x:TypeArguments="x:Double" Name="IfObject_Result_150" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="221,856" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:SetPowerPlan AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Set Power plan" sap:VirtualizedContainerService.HintSize="201,65" Moniker="b0beefa2-9249-4455-814c-027705262705" Powerplan="High performance" Result="[SetPowerPlan_Result_147]" ScriptDirectory="goog" TypeName="SetPowerPlan" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="SetPowerPlan_Result_147" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_146" />
+        <Variable x:TypeArguments="x:String" Default="High Performance, Balanced or Power Saver" Name="PowerPlan" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

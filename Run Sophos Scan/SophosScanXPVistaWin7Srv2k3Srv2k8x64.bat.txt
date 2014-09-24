@@ -1,0 +1,2 @@
+cd "C:\Program Files (x86)\Sophos\Sophos Anti-Virus\"
+SAV32CLI -F -PUA -REMOVE -NC -S -P=C:\SAVScanLog.TXT

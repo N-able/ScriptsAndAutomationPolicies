@@ -1,0 +1,99 @@
+<Policy ID="{ee4fb054-bf20-4e5d-847e-b4d9ca76def7}" Name="Download and Run File from URL" Description="RG93bmxvYWQgZmlsZSBmcm9tIFVSTCBhbmQgcnVuIGV4ZWN1dGFibGUgb24gZGV2aWNlLg==" Version="1.5.0.13">
+  <Object ID="{8199fd42-3c33-4d29-8f8a-09fc7b98c4d9}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;destfolder&quot; Label=&quot;Destination Folder&quot; ParameterType=&quot;string&quot; Value=&quot;C:\CCleaner&quot; /&gt;&lt;Parameter ParameterName=&quot;saveas&quot; Label=&quot;Save file as&quot; ParameterType=&quot;string&quot; Value=&quot;ccsetup328.exe&quot; /&gt;&lt;Parameter ParameterName=&quot;URL&quot; Label=&quot;URL to downloafd file from&quot; ParameterType=&quot;string&quot; Value=&quot;http://download.piriform.com/ccsetup328.exe&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.destfolder</d2p1:m_Item1>
+        <d2p1:m_Item2>84099bab-0f17-457a-aad6-7bd8e65ea678</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FolderExists, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>84099bab-0f17-457a-aad6-7bd8e65ea678</d2p1:m_Item1>
+        <d2p1:m_Item2>d88abfe9-21b7-4ffb-9155-a9f032f887a0</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.destfolder</d2p1:m_Item1>
+        <d2p1:m_Item2>c779116a-45db-43c5-ad1d-0811f2c05740</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateFolder, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.destfolder</d2p1:m_Item1>
+        <d2p1:m_Item2>c25ebf9d-050d-4c0d-b979-923702cbb19a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.saveas</d2p1:m_Item1>
+        <d2p1:m_Item2>c25ebf9d-050d-4c0d-b979-923702cbb19a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>c25ebf9d-050d-4c0d-b979-923702cbb19a</d2p1:m_Item1>
+        <d2p1:m_Item2>674b1c79-2992-4a06-8551-34d62355b86d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DownloadFileFromURL, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SaveAsFileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.URL</d2p1:m_Item1>
+        <d2p1:m_Item2>674b1c79-2992-4a06-8551-34d62355b86d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DownloadFileFromURL, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>RemoteFileURL</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>c25ebf9d-050d-4c0d-b979-923702cbb19a</d2p1:m_Item1>
+        <d2p1:m_Item2>5dcbfa92-c402-4dfd-a69f-663847476c21</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunProgram, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Program</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>429,1246</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="389,1206" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:FolderExists Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional_20]" DisplayName="Folder Exists" Folder="[destfolder]" Folder_DisplayArg="StartObject.destfolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="369,57" Moniker="84099bab-0f17-457a-aad6-7bd8e65ea678" Result="[FolderExists_Result_21]" ScriptDirectory="goog" TypeName="FolderExists" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="369,339" Moniker="d88abfe9-21b7-4ffb-9155-a9f032f887a0" Result="[IfObject_Result_22]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" ValueString_Item="{x:Null}" VariableString="[FolderExists_Conditional_20]" VariableString_DisplayArg="FolderExists.Conditional" VariableString_Item="{x:Null}" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="298,179" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:CreateFolder Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Create Folder" Folder="[destfolder]" FolderInfo="[CreateFolder_FolderInfo_23]" FolderInfo_Item="[CreateFolder_FolderInfo_Item_24]" Folder_DisplayArg="StartObject.destfolder" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="278,57" Moniker="c779116a-45db-43c5-ad1d-0811f2c05740" Result="[CreateFolder_Result_25]" ScriptDirectory="goog" TypeName="CreateFolder" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="CreateFolder_FolderInfo_23" />
+                  <Variable x:TypeArguments="x:Object" Name="CreateFolder_FolderInfo_Item_24" />
+                  <Variable x:TypeArguments="x:Double" Name="CreateFolder_Result_25" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:FormatString Input0_ItemProp="{x:Null}" Input1_ItemProp="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Format String" FormattedString="[FormatString_FormattedString_27]" sap:VirtualizedContainerService.HintSize="369,123" Input0="[destfolder]" Input0_DisplayArg="StartObject.destfolder" Input0_Item="{x:Null}" Input1="[saveas]" Input1_DisplayArg="StartObject.saveas" Input1_Item="{x:Null}" Moniker="c25ebf9d-050d-4c0d-b979-923702cbb19a" Result="[FormatString_Result_28]" ScriptDirectory="goog" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" Text_Item="{x:Null}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:DownloadFileFromURL RemoteFileURL_ItemProp="{x:Null}" SaveAsFileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Download File from URL" sap:VirtualizedContainerService.HintSize="369,126" Moniker="674b1c79-2992-4a06-8551-34d62355b86d" OverwriteExistingFile="True" RemoteFileURL="[URL]" RemoteFileURL_DisplayArg="StartObject.URL" RemoteFileURL_Item="{x:Null}" Result="[DownloadFileFromURL_Result_26]" SaveAsFileName="[FormatString_FormattedString_27]" SaveAsFileName_DisplayArg="FormatString.FormattedString" SaveAsFileName_Item="{x:Null}" ScriptDirectory="goog" TypeName="DownloadFileFromURL" m_bTextLinkChange="False" />
+        <p:RunProgram Arguments_DisplayArg="{x:Null}" Arguments_ItemProp="{x:Null}" Program_ItemProp="{x:Null}" WorkingDirectory_DisplayArg="{x:Null}" WorkingDirectory_ItemProp="{x:Null}" Arguments="{x:Null}" Arguments_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Run Program" sap:VirtualizedContainerService.HintSize="369,244" Moniker="5dcbfa92-c402-4dfd-a69f-663847476c21" ProcessID="[RunProgram_ProcessID_29]" Program="[FormatString_FormattedString_27]" Program_DisplayArg="FormatString.FormattedString" Program_Item="{x:Null}" Result="[RunProgram_Result_30]" RunAsType="CLU" ScriptDirectory="goog" TypeName="RunProgram" WaitForCompletion="False" WindowType="Hidden" WorkingDirectory="{x:Null}" WorkingDirectory_Item="{x:Null}" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_20" />
+        <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_21" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_22" />
+        <Variable x:TypeArguments="x:Double" Name="DownloadFileFromURL_Result_26" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_27" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_28" />
+        <Variable x:TypeArguments="x:String" Name="RunProgram_ProcessID_29" />
+        <Variable x:TypeArguments="x:Double" Name="RunProgram_Result_30" />
+        <Variable x:TypeArguments="x:String" Default="C:\CCleaner" Name="destfolder" />
+        <Variable x:TypeArguments="x:String" Default="ccsetup328.exe" Name="saveas" />
+        <Variable x:TypeArguments="x:String" Default="http://download.piriform.com/ccsetup328.exe" Name="URL" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

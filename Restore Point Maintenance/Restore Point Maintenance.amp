@@ -1,0 +1,107 @@
+<Policy ID="{b1aa281b-609c-4f1a-92bc-00bd40bd7b44}" Name="Restore Point Maintenance" Description="UG9saWN5IHRvIEVuYWJsZS9EaXNhYmxlIFN5c3RlbSBSZXN0b3JlLCBhbmQgY3JlYXRlIHJlc3RvcmUgcG9pbnRzIGlmIGVuYWJsZWQ=" Version="1.4.0.10">
+  <Object ID="{da75704e-8be1-4979-9cdc-b43938d7a20b}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;DriveLetter&quot; Label=&quot;Drive Letter to modify&quot; ParameterType=&quot;string&quot; Value=&quot;C:&quot; /&gt;&lt;Parameter ParameterName=&quot;EnableOrDisable&quot; Label=&quot;enter &amp;quot;enable&amp;quot; or &amp;quot;disable&amp;quot;&quot; ParameterType=&quot;string&quot; Value=&quot;enable&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.EnableOrDisable</d2p1:m_Item1>
+        <d2p1:m_Item2>6532ef92-ce1d-4c4e-add6-45411ab07c13</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.EnableOrDisable</d2p1:m_Item1>
+        <d2p1:m_Item2>8bc356ee-2e3d-46e7-9b40-5949fe8c2712</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DriveLetter</d2p1:m_Item1>
+        <d2p1:m_Item2>cf7450d1-a9eb-4a86-9154-c7a206d8b679</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.EnableRestore, PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Drive</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DriveLetter</d2p1:m_Item1>
+        <d2p1:m_Item2>7cfd6820-9774-46b3-99b7-00debc1628ba</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DisableRestore, PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Drive</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DriveLetter</d2p1:m_Item1>
+        <d2p1:m_Item2>7a237b68-2fe4-4bc6-aaae-940655076983</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.CreateRestorePoint, PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Description</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1300,820</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="1260,780" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="1240,623" Moniker="8bc356ee-2e3d-46e7-9b40-5949fe8c2712" Result="[IfElse_Result_52]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="enable" ValueString_DisplayArg="enable" VariableString="[EnableOrDisable]" VariableString_DisplayArg="StartObject.EnableOrDisable" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="842,463" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="822,341" Moniker="6532ef92-ce1d-4c4e-add6-45411ab07c13" Result="[IfElse_Result_53]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="disable" ValueString_DisplayArg="disable" VariableString="[EnableOrDisable]" VariableString_DisplayArg="StartObject.EnableOrDisable" m_bTextLinkChange="False">
+                    <p:IfElse.ElseOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="463,179" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="443,57" LogMessage="[Log_LogMessage_57]" Message="Invalid Parameter Selected. Please Enter only &quot;enable&quot; or &quot;disable&quot;" Message_DisplayArg="Invalid Parameter Selected. Please Enter only &quot;enable&quot; or &quot;disable&quot;" Moniker="b83f5450-5213-4095-bc21-0c583c7adab6" Result="[Log_Result_58]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:String" Name="Log_LogMessage_57" />
+                            <Variable x:TypeArguments="x:Double" Name="Log_Result_58" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.ElseOption>
+                    <p:IfElse.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="325,181" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:DisableRestore Drive_Item="{x:Null}" Drive_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Disable Restore" Drive="[DriveLetter]" Drive_DisplayArg="StartObject.DriveLetter" sap:VirtualizedContainerService.HintSize="305,59" Moniker="7cfd6820-9774-46b3-99b7-00debc1628ba" Result="[DisableRestore_Result_56]" ScriptDirectory="goog" TypeName="DisableRestore" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="DisableRestore_Result_56" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.IfOption>
+                  </p:IfElse>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="IfElse_Result_53" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="364,317" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:EnableRestore Drive_Item="{x:Null}" Drive_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Enable Restore" Drive="[DriveLetter]" Drive_DisplayArg="StartObject.DriveLetter" sap:VirtualizedContainerService.HintSize="344,59" Moniker="cf7450d1-a9eb-4a86-9154-c7a206d8b679" Result="[EnableRestore_Result_55]" ScriptDirectory="goog" TypeName="EnableRestore" m_bTextLinkChange="False" />
+                  <p:CreateRestorePoint Description_Item="{x:Null}" Description_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.4.0.10, Culture=neutral, PublicKeyToken=null" Description="Automated System Restore" Description_DisplayArg="Automated System Restore" DisplayName="Create Restore Point" sap:VirtualizedContainerService.HintSize="344,96" Moniker="7a237b68-2fe4-4bc6-aaae-940655076983" RestorePointType="Modify Settings" Result="[CreateRestorePoint_Result_59]" ScriptDirectory="goog" TypeName="CreateRestorePoint" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="EnableRestore_Result_55" />
+                  <Variable x:TypeArguments="x:Double" Name="CreateRestorePoint_Result_59" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_52" />
+        <Variable x:TypeArguments="x:String" Default="C:" Name="DriveLetter" />
+        <Variable x:TypeArguments="x:String" Default="enable" Name="EnableOrDisable" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

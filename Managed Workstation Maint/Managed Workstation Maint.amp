@@ -1,0 +1,122 @@
+<Policy ID="{dbe5e58a-4b11-4608-a529-ae16a40a9076}" Name="Managed Workstation Maint" Description="TWFuYWdlZCBXb3Jrc3RhdGlvbiBNYWludA==" Version="1.4.1.4">
+  <Object ID="{f41366fe-ac22-459b-8dce-3401da6e4356}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;FullMaintenance&quot; Label=&quot;Perform Full Maintenance including reboot?&quot; ParameterType=&quot;string&quot; Value=&quot;False&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>2c401f56-bf1b-4099-a0b9-ffeb3cc0a98b</d2p1:m_Item1>
+        <d2p1:m_Item2>944c63df-ceaa-4d09-a8e1-6ed51438086f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>f93b831e-f894-491f-9d66-d81f42a02e04</d2p1:m_Item1>
+        <d2p1:m_Item2>c6d9064d-28a6-4ddb-90ce-989f60c2ec6d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.FullMaintenance</d2p1:m_Item1>
+        <d2p1:m_Item2>0562e4c4-bcb9-4fe0-b322-baebec9b67bc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.4.1.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1381,2114</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="1341,2074" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IsUserLoggedOn Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Domain_Item="{x:Null}" Domain_ItemProp="{x:Null}" User_Item="{x:Null}" User_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" Conditional="[IsUserLoggedOn_Conditional_20]" DisplayName="Is User Logged On" Domain="*" Domain_DisplayArg="*" sap:VirtualizedContainerService.HintSize="1321,88" Moniker="2c401f56-bf1b-4099-a0b9-ffeb3cc0a98b" Result="[IsUserLoggedOn_Result_21]" ScriptDirectory="goog" TypeName="IsUserLoggedOn" User="*" User_DisplayArg="*" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="1321,1789" Moniker="944c63df-ceaa-4d09-a8e1-6ed51438086f" Result="[IfObject_Result_24]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="True" ValueString_DisplayArg="True" VariableString="[IsUserLoggedOn_Conditional_20]" VariableString_DisplayArg="IsUserLoggedOn.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="1297,1629" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:PromptUser Prompt_Item="{x:Null}" Prompt_ItemProp="{x:Null}" Title_Item="{x:Null}" Title_ItemProp="{x:Null}" Wait_Item="{x:Null}" Wait_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" ClickResult="[PromptUser_ClickResult_25]" DisplayName="Prompt" sap:VirtualizedContainerService.HintSize="1277,144" Moniker="f93b831e-f894-491f-9d66-d81f42a02e04" Prompt="Workstation maintenance is about to occur. Please close down all of your programs, or hit No to cancel maintenance today." Prompt_DisplayArg="Workstation maintenance is about to occur. Please close down all of your programs, or hit No to cancel maintenance today." Result="[PromptUser_Result_26]" ScriptDirectory="goog" Title="Workstation Maintenance" Title_DisplayArg="Workstation Maintenance" Type="4" TypeName="PromptUser" Wait="300" Wait_DisplayArg="300" m_bTextLinkChange="False" />
+                  <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="1277,1323" Moniker="c6d9064d-28a6-4ddb-90ce-989f60c2ec6d" Result="[IfElse_Result_27]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="Yes" ValueString_DisplayArg="Yes" VariableString="[PromptUser_ClickResult_25]" VariableString_DisplayArg="Prompt.ClickResult" m_bTextLinkChange="False">
+                    <p:IfElse.ElseOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="311,179" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="291,57" LogMessage="[Log_LogMessage_28]" Message="User declined maintenance" Message_DisplayArg="User declined maintenance" Moniker="f3171383-d44d-4ca6-b3b6-54e3d2eefd8a" Result="[Log_Result_29]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:String" Name="Log_LogMessage_28" />
+                            <Variable x:TypeArguments="x:Double" Name="Log_Result_29" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.ElseOption>
+                    <p:IfElse.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="932,1163" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:DisableUAC AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Disable UAC" sap:VirtualizedContainerService.HintSize="912,51" Moniker="ffac29a3-c3ca-420e-887c-344328d297dd" Result="[DisableUAC_Result_30]" ScriptDirectory="goog" TypeName="DisableUAC" m_bTextLinkChange="False" />
+                            <p:DisableWindowsActionCenter AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Disable Windows Action Center" sap:VirtualizedContainerService.HintSize="912,51" Moniker="e46e32ec-d056-473b-a0cb-81c6571926c8" Result="[DisableWindowsActionCenter_Result_31]" ScriptDirectory="goog" TypeName="DisableWindowsActionCenter" m_bTextLinkChange="False" />
+                            <p:DisableWindowsFirewall AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Disable Windows Firewall" sap:VirtualizedContainerService.HintSize="912,51" Moniker="458c82ad-2d38-4b05-a7ff-a27f55d68315" Result="[DisableWindowsFirewall_Result_32]" ScriptDirectory="goog" TypeName="DisableWindowsFirewall" m_bTextLinkChange="False" />
+                            <p:DiskDefragmentation Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" Drive_Item="{x:Null}" Drive_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Disk Defragmentation" Drive="C:" Drive_DisplayArg="C:" sap:VirtualizedContainerService.HintSize="912,89" Moniker="98a0ef73-7108-47a9-8335-aa58becc648d" Result="[DiskDefragmentation_Result_33]" ScriptDirectory="goog" TypeName="DiskDefragmentation" Wait="True" m_bTextLinkChange="False" />
+                            <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="912,639" Moniker="0562e4c4-bcb9-4fe0-b322-baebec9b67bc" Result="[IfElse_Result_43]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="True" ValueString_DisplayArg="True" VariableString="[FullMaintenance]" VariableString_DisplayArg="StartObject.FullMaintenance" m_bTextLinkChange="False">
+                              <p:IfElse.ElseOption>
+                                <ActivityAction>
+                                  <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="456,179" Name="SequenceActivity">
+                                    <p:SequenceActivity.Activities>
+                                      <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="436,57" LogMessage="[Log_LogMessage_46]" Message="Today is not maintenance day, skipping remaining maintenance" Message_DisplayArg="Today is not maintenance day, skipping remaining maintenance" Moniker="514120e1-31c9-49cb-a691-a617669d8607" Result="[Log_Result_47]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                                    </p:SequenceActivity.Activities>
+                                    <p:SequenceActivity.Variables>
+                                      <Variable x:TypeArguments="x:String" Name="Log_LogMessage_46" />
+                                      <Variable x:TypeArguments="x:Double" Name="Log_Result_47" />
+                                    </p:SequenceActivity.Variables>
+                                  </p:SequenceActivity>
+                                </ActivityAction>
+                              </p:IfElse.ElseOption>
+                              <p:IfElse.IfOption>
+                                <ActivityAction>
+                                  <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="422,479" Name="SequenceActivity">
+                                    <p:SequenceActivity.Activities>
+                                      <p:Chkdsk DriveLetter_Item="{x:Null}" DriveLetter_ItemProp="{x:Null}" FixErrors_Item="{x:Null}" ForceDismount_Item="{x:Null}" OkToRunAtBootUp_Item="{x:Null}" RecoverBadSectors_Item="{x:Null}" SkipFolderCycle_Item="{x:Null}" VigorousIndexCheck_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" DisplayName="Chkdsk" DriveLetter="C:" DriveLetter_DisplayArg="C:" FixErrors="True" ForceDismount="False" sap:VirtualizedContainerService.HintSize="402,249" Moniker="212c1057-bd24-49d7-bcdc-1468307b7dea" OkToRunAtBootUp="True" RecoverBadSectors="False" Result="[Chkdsk_Result_44]" ScriptDirectory="goog" SkipFolderCycle="False" TypeName="Chkdsk" VigorousIndexCheck="False" m_bTextLinkChange="False" />
+                                      <p:RestartSystem Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.5, Culture=neutral, PublicKeyToken=null" Background="False" Computer="localhost" Computer_DisplayArg="localhost" Confirm="False" DisplayName="Restart System" Force="False" sap:VirtualizedContainerService.HintSize="402,68" Moniker="9569deb8-31df-4653-97b3-0445ea954d33" Result="[RestartSystem_Result_45]" ScriptDirectory="goog" TypeName="RestartSystem" m_bTextLinkChange="False" />
+                                    </p:SequenceActivity.Activities>
+                                    <p:SequenceActivity.Variables>
+                                      <Variable x:TypeArguments="x:Double" Name="Chkdsk_Result_44" />
+                                      <Variable x:TypeArguments="x:Double" Name="RestartSystem_Result_45" />
+                                    </p:SequenceActivity.Variables>
+                                  </p:SequenceActivity>
+                                </ActivityAction>
+                              </p:IfElse.IfOption>
+                            </p:IfElse>
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="DisableUAC_Result_30" />
+                            <Variable x:TypeArguments="x:Double" Name="DisableWindowsActionCenter_Result_31" />
+                            <Variable x:TypeArguments="x:Double" Name="DisableWindowsFirewall_Result_32" />
+                            <Variable x:TypeArguments="x:Double" Name="DiskDefragmentation_Result_33" />
+                            <Variable x:TypeArguments="x:Double" Name="IfElse_Result_43" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfElse.IfOption>
+                  </p:IfElse>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="PromptUser_ClickResult_25" />
+                  <Variable x:TypeArguments="x:Double" Name="PromptUser_Result_26" />
+                  <Variable x:TypeArguments="x:Double" Name="IfElse_Result_27" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="IsUserLoggedOn_Conditional_20" />
+        <Variable x:TypeArguments="x:Double" Name="IsUserLoggedOn_Result_21" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_24" />
+        <Variable x:TypeArguments="x:String" Default="False" Name="FullMaintenance" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

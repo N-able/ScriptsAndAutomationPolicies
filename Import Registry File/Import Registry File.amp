@@ -1,0 +1,29 @@
+<Policy ID="{7e66df62-9604-4da1-b950-279acaac4850}" Name="Import Registry File" Description="SW1wb3J0IFJlZ2lzdHJ5IEZpbGUgaW50byBkZXZpY2UuICBUaGUgUmVnaXN0cnkgRmlsZSBtdXN0IGV4aXN0IG9uIHRoZSBkZXZpY2UuICBMZXZlcmFnaW5nIE4tY2VudHJhbCdzIEZpbGUgVHJhbnNmZXIgYW5kIHRoaXMgQU1QIHdpdGhpbiBhbiBOLWNlbnRyYWwgU2NoZWR1bGVkIFRhc2sgUHJvZmlsZSBjb3VsZCBiZSB1c2VkIHRvIGNvcHkgdGhlIGZpbGUgdG8gdGhlIGRldmljZSBhbmQgZXhlY3V0ZSBBTVAu" Version="1.5.0.13">
+  <Object ID="{22046db4-00be-4d4d-8fc6-03fc3473bf14}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;RegFile&quot; Label=&quot;Path of Registry File to Import&quot; ParameterType=&quot;string&quot; Value=&quot;C:\folder1\file1.reg&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.RegFile</d2p1:m_Item1>
+        <d2p1:m_Item2>3d23f079-a7d2-4012-bd9c-d72c80cdf980</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ImportRegistryFile, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>RegistryFile</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>365,270</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="325,230" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:ImportRegistryFile RegistryFile_Item="{x:Null}" RegistryFile_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Import Registry File" sap:VirtualizedContainerService.HintSize="305,73" Moniker="3d23f079-a7d2-4012-bd9c-d72c80cdf980" RegistryFile="[RegFile]" RegistryFile_DisplayArg="StartObject.RegFile" Result="[ImportRegistryFile_Result_35]" ScriptDirectory="goog" TypeName="ImportRegistryFile" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:Double" Name="ImportRegistryFile_Result_35" />
+        <Variable x:TypeArguments="x:String" Default="C:\folder1\file1.reg" Name="RegFile" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

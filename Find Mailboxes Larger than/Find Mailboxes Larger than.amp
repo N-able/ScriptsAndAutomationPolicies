@@ -1,0 +1,31 @@
+<Policy ID="{48d9dc69-062f-4b70-b3b7-5f61a75cc852}" Name="Find Mailboxes Larger than" Description="UXVlcnkgZm9yIG1haWxib3hlcyBsYXJnZXIgdGhhbiBhIHNwZWNpZmllZCBzaXpl" Version="1.5.0.13">
+  <Object ID="{ecbd4c0a-b104-43bd-872f-6676de9b936b}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;MailboxSize&quot; Label=&quot;Find Mailboxes Larger than (MB)&quot; ParameterType=&quot;number&quot; Value=&quot;1048&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.MailboxSize</d2p1:m_Item1>
+        <d2p1:m_Item2>17a87f86-931c-4714-9471-e9bc13550a9b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.MailboxesLargerThanX, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>MbxSize</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>399,264</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="359,224" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:MailboxesLargerThanX MbxSize_Item="{x:Null}" MbxSize_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Mailboxes Larger Than X" sap:VirtualizedContainerService.HintSize="339,67" LargeMailboxes="[MailboxesLargerThanX_LargeMailboxes_238]" MbxSize="[MailboxSize]" MbxSize_DisplayArg="StartObject.MailboxSize" Moniker="17a87f86-931c-4714-9471-e9bc13550a9b" OutPut_64="[MailboxesLargerThanX_OutPut_64_237]" Result="[MailboxesLargerThanX_Result_239]" ScriptDirectory="goog" TypeName="MailboxesLargerThanX" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="MailboxesLargerThanX_OutPut_64_237" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="MailboxesLargerThanX_LargeMailboxes_238" />
+        <Variable x:TypeArguments="x:Double" Name="MailboxesLargerThanX_Result_239" />
+        <Variable x:TypeArguments="x:Double" Default="1048" Name="MailboxSize" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

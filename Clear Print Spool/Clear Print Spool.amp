@@ -1,0 +1,188 @@
+<Policy ID="{7a8dc2eb-b462-46a6-920d-5c00ce70b68a}" Name="Clear Print Spool" Description="Rmlyc3QgY2hlY2tzIGlmIFByaW50IFNwb29sZXIgaXMgaW4gU3RvcHBlZCBzdGF0ZSANCi0gU3RhcnQgUHJpbnQgU3Bvb2xlcg0KQ2hlY2tzIGFnYWluIGlmIGl0IGlzIGluIFN0b3BwZWQgU3RhdGUNCi0gRG8gYSByZWdpc3RyeSB2YWx1ZSBmb3IgdGhlIERlZmF1bHRTcG9vbA0KLSBEbyBhIEZpbGUgU2VhcmNoIGZvciBjb3JydXB0ZSBzcG9vbGVyIGZpbGVzDQotIERlbGV0ZXMgdGhvc2UgZmlsZXMNCi0gU3RhcnQgUHJpbnQgU3Bvb2xlciBhZ2Fpbg==" Version="1.2.0.11">
+  <Object ID="{e20caf72-9615-41be-8cd9-6ed9cc68e942}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>1cbb035a-903f-42c7-bdef-15897e44d993</d2p1:m_Item1>
+        <d2p1:m_Item2>b58853c5-0f14-4500-ba8f-87ee09045b17</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e42d4d1d-a03b-465e-bec1-276c33c9335f</d2p1:m_Item1>
+        <d2p1:m_Item2>8bb20c88-463d-4037-bf16-f21cdffc6e07</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>86bc007e-60a0-416c-aae9-f7f26290832d</d2p1:m_Item1>
+        <d2p1:m_Item2>c2d89fad-21f6-47eb-af2f-d3e14396bfe3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>c2d89fad-21f6-47eb-af2f-d3e14396bfe3</d2p1:m_Item1>
+        <d2p1:m_Item2>a7801565-8185-4d85-8b5a-eb932a503ae8</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFile, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>01d3e5e6-8683-407e-8a7c-4a827e7e50f1</d2p1:m_Item1>
+        <d2p1:m_Item2>2cf9684b-894d-4a5e-b806-c04fb8d05a1b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>639eedb7-264d-44cb-8527-65f633fc49af</d2p1:m_Item1>
+        <d2p1:m_Item2>86bc007e-60a0-416c-aae9-f7f26290832d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FileSearch, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e42d4d1d-a03b-465e-bec1-276c33c9335f</d2p1:m_Item1>
+        <d2p1:m_Item2>db044395-b599-4113-be54-f5c7889be5e3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>8c653584-a998-498f-b0f8-0e8f337ba775</d2p1:m_Item1>
+        <d2p1:m_Item2>7c2d0cea-297e-4c46-ad2a-1275d75b0264</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FileSearch, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Folder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>7c2d0cea-297e-4c46-ad2a-1275d75b0264</d2p1:m_Item1>
+        <d2p1:m_Item2>4eb7d665-920a-4b32-bf63-df11a66a3437</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>4eb7d665-920a-4b32-bf63-df11a66a3437</d2p1:m_Item1>
+        <d2p1:m_Item2>8ff16246-834f-4b47-8b16-487039d67c92</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteFile, PolicyExecutionEngine, Version=1.2.0.11, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>FileName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>591,3171</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="551,3131" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IsServiceRunning Service_Item="{x:Null}" Service_ItemProp="{x:Null}" Conditional="[IsServiceRunning_Conditional_0]" DisplayName="Is Service Running First" sap:VirtualizedContainerService.HintSize="531,57" Moniker="1cbb035a-903f-42c7-bdef-15897e44d993" Result="[IsServiceRunning_Result_1]" ScriptDirectory="goog" Service="Print Spooler" Service_DisplayArg="Print Spooler" TypeName="IsServiceRunning" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="531,341" Moniker="b58853c5-0f14-4500-ba8f-87ee09045b17" Result="[IfObject_Result_2]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" VariableString="[IsServiceRunning_Conditional_0]" VariableString_DisplayArg="IsServiceRunningFirst.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="337,181" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:StartService Service_Item="{x:Null}" Service_ItemProp="{x:Null}" DisplayName="Start Service First" sap:VirtualizedContainerService.HintSize="317,59" Moniker="da6034fa-12cb-4b40-863b-7fc522f8d85a" Result="[StartService_Result_3]" ScriptDirectory="goog" Service="Print Spooler" Service_DisplayArg="Print Spooler" TypeName="StartService" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:Double" Name="StartService_Result_3" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:IsServiceRunning Service_Item="{x:Null}" Service_ItemProp="{x:Null}" Conditional="[IsServiceRunning_Conditional_4]" DisplayName="Is Service Running Second" sap:VirtualizedContainerService.HintSize="531,57" Moniker="e42d4d1d-a03b-465e-bec1-276c33c9335f" Result="[IsServiceRunning_Result_5]" ScriptDirectory="goog" Service="Print Spooler" Service_DisplayArg="Print Spooler" TypeName="IsServiceRunning" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="531,892" Moniker="8bb20c88-463d-4037-bf16-f21cdffc6e07" Result="[IfObject_Result_6]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" VariableString="[IsServiceRunning_Conditional_4]" VariableString_DisplayArg="IsServiceRunningSecond.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="419,732" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:GetRegistryValue Key_Item="{x:Null}" Key_ItemProp="{x:Null}" Property_Item="{x:Null}" Property_ItemProp="{x:Null}" BaseKey="HKLM" DisplayName="Get Registry Value" sap:VirtualizedContainerService.HintSize="399,115" Key="SYSTEM\CurrentControlSet\Control\Print\Printers" Key_DisplayArg="SYSTEM\CurrentControlSet\Control\Print\Printers" Moniker="639eedb7-264d-44cb-8527-65f633fc49af" Property="DefaultSpoolDirectory" Property_DisplayArg="DefaultSpoolDirectory" Result="[GetRegistryValue_Result_7]" ScriptDirectory="goog" TypeName="GetRegistryValue" Value="[GetRegistryValue_Value_6]" m_bTextLinkChange="False" />
+                  <p:FileSearch Filter_Item="{x:Null}" Filter_ItemProp="{x:Null}" Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Recurse="{x:Null}" Recurse_Item="{x:Null}" DisplayName="File Search SHD" Files="[FileSearch_Files_7]" Filter="*.shd" Filter_DisplayArg="*.shd" Folder="[GetRegistryValue_Value_6]" Folder_DisplayArg="GetRegistryValue.Value" sap:VirtualizedContainerService.HintSize="399,118" Moniker="86bc007e-60a0-416c-aae9-f7f26290832d" Result="[FileSearch_Result_8]" ScriptDirectory="goog" TypeName="FileSearch" m_bTextLinkChange="False" />
+                  <p:ForEachLoop ItemProperty="{x:Null}" CollectionDisplayName="Files" CollectionName="[FileSearch_Files_7]" DisplayName="ForEach SHD" sap:VirtualizedContainerService.HintSize="399,297" ItemValue="[ForEachLoop_ItemValue_9]" LinkedTypeName="FileSearch" Moniker="c2d89fad-21f6-47eb-af2f-d3e14396bfe3" ObjectName="File Search SHD" Result="[ForEachLoop_Result_10]" ScriptDirectory="goog" TypeName="ForEachLoop" m_bTextLinkChange="False">
+                    <p:ForEachLoop.Each>
+                      <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="317,179">
+                        <p:ForEachSequence.Activities>
+                          <p:DeleteFile FileName="{x:Null}" DisplayName="Delete File SHD" FileName_DisplayArg="ForEachSHD.FileSearchSHD.Files.FullName" FileName_Item="[ForEachLoop_ItemValue_9]" FileName_ItemProp="FullName" sap:VirtualizedContainerService.HintSize="297,57" Moniker="a7801565-8185-4d85-8b5a-eb932a503ae8" Result="[DeleteFile_Result_11]" ScriptDirectory="goog" TypeName="DeleteFile" m_bTextLinkChange="False" />
+                        </p:ForEachSequence.Activities>
+                        <p:ForEachSequence.Variables>
+                          <Variable x:TypeArguments="x:Double" Name="DeleteFile_Result_11" />
+                        </p:ForEachSequence.Variables>
+                      </p:ForEachSequence>
+                    </p:ForEachLoop.Each>
+                  </p:ForEachLoop>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="FileSearch_Files_7" />
+                  <Variable x:TypeArguments="x:Double" Name="FileSearch_Result_8" />
+                  <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_9" />
+                  <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_10" />
+                  <Variable x:TypeArguments="x:String" Name="GetRegistryValue_Value_6" />
+                  <Variable x:TypeArguments="x:Double" Name="GetRegistryValue_Result_7" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="531,892" Moniker="db044395-b599-4113-be54-f5c7889be5e3" Result="[IfObject_Result_18]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" VariableString="[IsServiceRunning_Conditional_4]" VariableString_DisplayArg="IsServiceRunningSecond.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="419,732" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:GetRegistryValue Key_Item="{x:Null}" Key_ItemProp="{x:Null}" Property_Item="{x:Null}" Property_ItemProp="{x:Null}" BaseKey="HKLM" DisplayName="Get Registry Value" sap:VirtualizedContainerService.HintSize="399,115" Key="SYSTEM\CurrentControlSet\Control\Print\Printers" Key_DisplayArg="SYSTEM\CurrentControlSet\Control\Print\Printers" Moniker="8c653584-a998-498f-b0f8-0e8f337ba775" Property="DefaultSpoolDirectory" Property_DisplayArg="DefaultSpoolDirectory" Result="[GetRegistryValue_Result_22]" ScriptDirectory="goog" TypeName="GetRegistryValue" Value="[GetRegistryValue_Value_21]" m_bTextLinkChange="False" />
+                  <p:FileSearch Filter_Item="{x:Null}" Filter_ItemProp="{x:Null}" Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Recurse="{x:Null}" Recurse_Item="{x:Null}" DisplayName="File Search SPL" Files="[FileSearch_Files_23]" Filter="*.spl" Filter_DisplayArg="*.spl" Folder="[GetRegistryValue_Value_21]" Folder_DisplayArg="GetRegistryValue.Value" sap:VirtualizedContainerService.HintSize="399,118" Moniker="7c2d0cea-297e-4c46-ad2a-1275d75b0264" Result="[FileSearch_Result_24]" ScriptDirectory="goog" TypeName="FileSearch" m_bTextLinkChange="False" />
+                  <p:ForEachLoop ItemProperty="{x:Null}" CollectionDisplayName="Files" CollectionName="[FileSearch_Files_23]" DisplayName="ForEach SPL" sap:VirtualizedContainerService.HintSize="399,297" ItemValue="[ForEachLoop_ItemValue_25]" LinkedTypeName="FileSearch" Moniker="4eb7d665-920a-4b32-bf63-df11a66a3437" ObjectName="File Search SPL" Result="[ForEachLoop_Result_26]" ScriptDirectory="goog" TypeName="ForEachLoop" m_bTextLinkChange="False">
+                    <p:ForEachLoop.Each>
+                      <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="309,179">
+                        <p:ForEachSequence.Activities>
+                          <p:DeleteFile FileName="{x:Null}" DisplayName="Delete File" FileName_DisplayArg="ForEachSPL.FileSearchSPL.Files.FullName" FileName_Item="[ForEachLoop_ItemValue_25]" FileName_ItemProp="FullName" sap:VirtualizedContainerService.HintSize="289,57" Moniker="8ff16246-834f-4b47-8b16-487039d67c92" Result="[DeleteFile_Result_27]" ScriptDirectory="goog" TypeName="DeleteFile" m_bTextLinkChange="False" />
+                        </p:ForEachSequence.Activities>
+                        <p:ForEachSequence.Variables>
+                          <Variable x:TypeArguments="x:Double" Name="DeleteFile_Result_27" />
+                        </p:ForEachSequence.Variables>
+                      </p:ForEachSequence>
+                    </p:ForEachLoop.Each>
+                  </p:ForEachLoop>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="GetRegistryValue_Value_21" />
+                  <Variable x:TypeArguments="x:Double" Name="GetRegistryValue_Result_22" />
+                  <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="FileSearch_Files_23" />
+                  <Variable x:TypeArguments="x:Double" Name="FileSearch_Result_24" />
+                  <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_25" />
+                  <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_26" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:StartService Service_Item="{x:Null}" Service_ItemProp="{x:Null}" DisplayName="Start Service Second" sap:VirtualizedContainerService.HintSize="531,59" Moniker="0bbdb264-2040-4d66-a9fe-1ae0deb1d9ec" Result="[StartService_Result_13]" ScriptDirectory="goog" Service="Print Spooler" Service_DisplayArg="Print Spooler" TypeName="StartService" m_bTextLinkChange="False" />
+        <p:IsServiceRunning Service_Item="{x:Null}" Service_ItemProp="{x:Null}" Conditional="[IsServiceRunning_Conditional_8]" DisplayName="Is Service Running Third" sap:VirtualizedContainerService.HintSize="531,57" Moniker="01d3e5e6-8683-407e-8a7c-4a827e7e50f1" Result="[IsServiceRunning_Result_9]" ScriptDirectory="goog" Service="Print Spooler" Service_DisplayArg="Print Spooler" TypeName="IsServiceRunning" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="531,339" Moniker="2cf9684b-894d-4a5e-b806-c04fb8d05a1b" Result="[IfObject_Result_10]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" VariableString="[IsServiceRunning_Conditional_8]" VariableString_DisplayArg="IsServiceRunningThird.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="507,179" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" DisplayName="Log" sap:VirtualizedContainerService.HintSize="487,57" LogMessage="[Log_LogMessage_11]" Message="Print Spooler cannot be restarted after clearing the Print Spooler directory" Message_DisplayArg="Print Spooler cannot be restarted after clearing the Print Spooler directory" Moniker="df581798-a655-4209-84ba-b8f053c71c72" Result="[Log_Result_12]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="Log_LogMessage_11" />
+                  <Variable x:TypeArguments="x:Double" Name="Log_Result_12" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="IsServiceRunning_Conditional_0" />
+        <Variable x:TypeArguments="x:Double" Name="IsServiceRunning_Result_1" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_2" />
+        <Variable x:TypeArguments="x:String" Name="IsServiceRunning_Conditional_4" />
+        <Variable x:TypeArguments="x:Double" Name="IsServiceRunning_Result_5" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_6" />
+        <Variable x:TypeArguments="x:String" Name="IsServiceRunning_Conditional_8" />
+        <Variable x:TypeArguments="x:Double" Name="IsServiceRunning_Result_9" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_10" />
+        <Variable x:TypeArguments="x:Double" Name="StartService_Result_13" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_18" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

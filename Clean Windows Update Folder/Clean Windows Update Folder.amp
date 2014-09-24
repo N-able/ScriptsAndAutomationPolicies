@@ -1,0 +1,73 @@
+<Policy ID="{eb001bc2-3579-4b79-ad50-3918978b05a1}" Name="Clean Windows Update Folder" Description="U3RvcCBXaW5kb3dzIFVwZGF0ZSBTZXJ2aWNlLCByZW5hbWUgQzpcV2luZG93c1xTb2Z0d2FyZURpc3RyaWJ1dGlvblxEb3dubG9hZCB0byBPTEQsIHJlc3RhcnQgV2luZG93cyBVcGRhdGUgU2VydmljZSBhbmQgZGVsZXRlIEM6XFdpbmRvd3NcU29mdHdhcmVEaXN0cmlidXRpb25cRG93bmxvYWRfT0xE" Version="1.5.0.13">
+  <Object ID="{c4b54034-9135-4908-83d2-059232144eb8}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>30ee4076-3788-46a1-a9a7-fcfb76a448b7</d2p1:m_Item1>
+        <d2p1:m_Item2>dbe811e0-a27a-415d-8709-8198251fb2ec</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>a852582e-1867-4728-a08a-c80f53f2a1ba</d2p1:m_Item1>
+        <d2p1:m_Item2>4b977955-7a77-4554-8cce-0bb2302af92f</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>520,1493</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="480,1453" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:FolderExists Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional_31]" DisplayName="Folder Exists - 1" Folder="C:\Windows\SoftwareDistribution\Download" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download" sap:VirtualizedContainerService.HintSize="460,57" Moniker="30ee4076-3788-46a1-a9a7-fcfb76a448b7" Result="[FolderExists_Result_32]" ScriptDirectory="goog" TypeName="FolderExists" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="460,1199" Moniker="dbe811e0-a27a-415d-8709-8198251fb2ec" Result="[IfObject_Result_33]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="True" ValueString_DisplayArg="True" VariableString="[FolderExists_Conditional_31]" VariableString_DisplayArg="FolderExists-1.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="436,1039" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:StopService Service_Item="{x:Null}" Service_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Disable="False" DisplayName="Stop Service" Force="True" sap:VirtualizedContainerService.HintSize="416,114" Moniker="d8fafb70-4c53-4be8-916e-45a02baa6580" Result="[StopService_Result_35]" ScriptDirectory="goog" Service="Windows Update" Service_DisplayArg="Windows Update" TypeName="StopService" _Result="[StopService__Result_34]" m_bTextLinkChange="False" />
+                  <p:RenameFolder Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" NewName_Item="{x:Null}" NewName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Rename Folder" Folder="C:\Windows\SoftwareDistribution\Download" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download" sap:VirtualizedContainerService.HintSize="416,86" Moniker="a026bc24-52f3-43c5-b167-118d5c91e574" NewName="C:\Windows\SoftwareDistribution\Download_OLD" NewName_DisplayArg="C:\Windows\SoftwareDistribution\Download_OLD" Result="[RenameFolder_Result_36]" ScriptDirectory="goog" TypeName="RenameFolder" m_bTextLinkChange="False" />
+                  <p:StartService Service_Item="{x:Null}" Service_ItemProp="{x:Null}" StartupType="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Disabled="False" DisplayName="Start Service" sap:VirtualizedContainerService.HintSize="416,129" Moniker="3c7d01dd-38e9-4109-aae7-3c08adf42a13" Result="[StartService_Result_37]" ScriptDirectory="goog" Service="Windows Update" Service_DisplayArg="Windows Update" TypeName="StartService" m_bTextLinkChange="False" />
+                  <p:FolderExists Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional_50]" DisplayName="Folder Exists - 2" Folder="C:\Windows\SoftwareDistribution\Download" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download" sap:VirtualizedContainerService.HintSize="416,57" Moniker="a852582e-1867-4728-a08a-c80f53f2a1ba" Result="[FolderExists_Result_51]" ScriptDirectory="goog" TypeName="FolderExists" m_bTextLinkChange="False" />
+                  <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="416,371" Moniker="4b977955-7a77-4554-8cce-0bb2302af92f" Result="[IfObject_Result_52]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="True" ValueString_DisplayArg="True" VariableString="[FolderExists_Conditional_50]" VariableString_DisplayArg="FolderExists-2.Conditional" m_bTextLinkChange="False">
+                    <p:IfObject.IfOption>
+                      <ActivityAction>
+                        <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="392,211" Name="SequenceActivity">
+                          <p:SequenceActivity.Activities>
+                            <p:DeleteFolder Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Recurse_Item="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Delete Folder" Folder="C:\Windows\SoftwareDistribution\Download_OLD" Folder_DisplayArg="C:\Windows\SoftwareDistribution\Download_OLD" sap:VirtualizedContainerService.HintSize="372,89" Moniker="da41a2b3-098e-4d41-a30b-2a0c0df59d41" Recurse="True" Result="[DeleteFolder_Result_53]" ScriptDirectory="goog" TypeName="DeleteFolder" m_bTextLinkChange="False" />
+                          </p:SequenceActivity.Activities>
+                          <p:SequenceActivity.Variables>
+                            <Variable x:TypeArguments="x:Double" Name="DeleteFolder_Result_53" />
+                          </p:SequenceActivity.Variables>
+                        </p:SequenceActivity>
+                      </ActivityAction>
+                    </p:IfObject.IfOption>
+                  </p:IfObject>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="StopService__Result_34" />
+                  <Variable x:TypeArguments="x:Double" Name="StopService_Result_35" />
+                  <Variable x:TypeArguments="x:Double" Name="RenameFolder_Result_36" />
+                  <Variable x:TypeArguments="x:Double" Name="StartService_Result_37" />
+                  <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_50" />
+                  <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_51" />
+                  <Variable x:TypeArguments="x:Double" Name="IfObject_Result_52" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_31" />
+        <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_32" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_33" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
