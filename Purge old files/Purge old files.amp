@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{e1a02c01-db2e-4a6d-b36f-c28019cf3797}" Name="Purge old files" Description="UmVtb3ZlcyBmaWxlcyBvbGRlciB0aGFuIHRoZSBzcGVjaWZpZWQgYWdlIC0gZGVmYXVsdCBpcyA5MCAtIGZyb20gdGhlIGdpdmVuIGRpcmVjdG9yeSBhbmQgYWxsIHN1YmRpcmVjdG9yaWVzLiAgRW1wdHkgZGlyZWN0b3JpZXMgYXJlIHJlbW92ZWQu" Version="2.0.2.23" RemoteCategory="0" ExecutionType="CurrentLoggedOnUser" PS3ObjectCount="0">
+  <Object ID="{7cadb826-e2b9-4bdf-903c-5070755f47b0}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;BaseFolder&quot; Label=&quot;Base Folder&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Age&quot; Label=&quot;Age&quot; ParameterType=&quot;number&quot; Value=&quot;90&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>InputParameter.BaseFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>15bfdce3-9d3b-439a-8bc2-d90b7478f53b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>BaseFolder</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>InputParameter.Age</d2p1:m_Item1>
+        <d2p1:m_Item2>15bfdce3-9d3b-439a-8bc2-d90b7478f53b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.RunScript, PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Age</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>494.4,504</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" sap:VirtualizedContainerService.HintSize="454.4,464">
+      <p:PolicySequence.Activities>
+        <p:RunScript AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Run Script" Moniker="15bfdce3-9d3b-439a-8bc2-d90b7478f53b" OutPut_64="{x:Null}" ResultString="{x:Null}" Results_x64="{x:Null}" RunAsCurrentLoggedOnUser="True" TypeName="RunScript" genArgEvent="3e3138db-e271-41dc-8f1d-96c76ddc7f48" m_bTextLinkChange="False" sap:VirtualizedContainerService.HintSize="433.6,270.4" script="RnVuY3Rpb24gUmVtb3ZlLU9sZEZpbGVzICgkQmFzZUZvbGRlciwgJEFnZSkNCnsNCglbSU8uRGlyZWN0b3J5SW5mb10kRGlyID0gJEJhc2VGb2xkZXINCg0KCSRGaWxlcyA9ICgkRGlyLkdldEZpbGVzKCkgfCBXaGVyZSB7JF8uTGFzdFdyaXRlVGltZSAtbHQgKEdldC1EYXRlKS5BZGREYXlzKC0kQWdlKX0pDQoJRm9yZWFjaCAoJEZpbGUgaW4gJEZpbGVzKSB7DQoJCVJlbW92ZS1JdGVtICRGaWxlLkZ1bGxOYW1lIC1Gb3JjZQ0KCQl9DQoJDQoJSWYgKCRGaWxlcy5Db3VudCAtZ3QgMCkgew0KCQkiUmVtb3ZlZCB7MH0gZmlsZXMgZnJvbSB7MX0iIC1mICRGaWxlcy5Db3VudCwgJERpci5GdWxsTmFtZQ0KCQl9DQoJCQ0KCSRTdWJEaXJzID0gKCREaXIuR2V0RGlyZWN0b3JpZXMoKSB8IFNvcnQtT2JqZWN0IC1Qcm9wZXJ0eSBGdWxsTmFtZSkNCglGb3JlYWNoICgkU3ViRGlyIGluICRTdWJEaXJzKSB7DQoJCVJlbW92ZS1PbGRGaWxlcyAtQmFzZUZvbGRlciAkU3ViRGlyLkZ1bGxOYW1lIC1BZ2UgJEFnZQ0KCQl9DQoJCQ0KCUlmICgoJERpci5HZXRGaWxlcygpLkNvdW50IC1lcSAwKSAtYW5kICgkRGlyLkdldERpcmVjdG9yaWVzKCkuQ291bnQgLWVxIDApKSB7DQoJCSJSZW1vdmluZyBlbXB0eSBkaXJlY3RvcnkgezB9IiAtZiAkRGlyLkZ1bGxOYW1lDQoJCVJlbW92ZS1JdGVtICREaXIuRnVsbE5hbWUgLUZvcmNlDQoJCX0NCn0NCg0KUmVtb3ZlLU9sZEZpbGVzIC1CYXNlRm9sZGVyICQlaWQlQmFzZUZvbGRlciVpZCUgLUFnZSAkJWlkJUFnZSVpZCU=">
+          <p:RunScript.InArgs>
+            <p:InArg ArgType="string" DisplayArg="StartObject.BaseFolder" DisplayName="BaseFolder" ItemProp="{x:Null}" Name="BaseFolder" isRequired="True" x:Key="BaseFolder">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[BaseFolder]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object" />
+              </p:InArg.Item>
+            </p:InArg>
+            <p:InArg ArgType="number" DisplayArg="StartObject.Age" DisplayName="Age" ItemProp="{x:Null}" Name="Age" isRequired="True" x:Key="Age">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:Double">[Age]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object" />
+              </p:InArg.Item>
+            </p:InArg>
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="RunScript_OutPut_64_0" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_ResultString_1" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunScript_Results_x64_2" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Result_3" />
+        <Variable x:TypeArguments="x:String" Default="C:\Temp\Test" Name="BaseFolder" />
+        <Variable x:TypeArguments="x:Double" Default="90" Name="Age" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
