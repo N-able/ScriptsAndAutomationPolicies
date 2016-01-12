@@ -1,0 +1,3 @@
+ConcatCSV.ps1:
+
+This will read in files of the form xxxx_SomeStr.csv, where xxxx is the ApplianceID of the device on which the CSV was generated.  It will query the ODS for the Customer Name and Device Name.  All CSVs will then be concatenated together with two extra columns for these fields.
