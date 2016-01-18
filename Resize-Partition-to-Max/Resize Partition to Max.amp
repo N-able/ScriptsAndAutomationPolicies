@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{a5b0bafa-3c50-42b1-b1b6-88d2e44b8bba}" Name="Resize Partition to Max" Description="UmVzaXplIFBhcnRpdGlvbiB0byBtYXhpbXVtIGNhcGFjaXR5IChXaW5kb3dzIDIwMTIgb3IgbmV3ZXIgcmVxdWlyZWQp" Version="2.0.3.32" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0">
+  <Object ID="{749a82aa-5971-4bf4-9571-42a0431068e3}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;GlobalVariables&gt;&lt;Parameter ParameterName=&quot;strDrive&quot; Label=&quot;DriveLetter&quot; ParameterType=&quot;string&quot; Value=&quot;C&quot; /&gt;&lt;/GlobalVariables&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sap sads" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>574,1096</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy Builder" sap:VirtualizedContainerService.HintSize="574,1096" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:IfObject Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="does not contain" Condition_DisplayArg="does not contain" DisplayName="If" sap:VirtualizedContainerService.HintSize="538,873" Moniker="f7ad161c-399e-4158-a90c-0fef9d77b7c4" Result="[IfObject_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg=":" Value_Type="x:String" Variable="[strDrive]" Variable_DisplayArg="Global Variables.DriveLetter" Variable_Type="x:String" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="506,672" Name="SequenceActivity">
+              <p:SequenceActivity.Activities>
+                <p:RunScript AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Run Script" sap:VirtualizedContainerService.HintSize="468,522" Moniker="f235e71d-5183-4f97-8f62-03f0034af2ab" OutPut_64="[RunScript_OutPut_64]" Result="[RunScript_Result]" ResultString="[RunScript_ResultString]" Results_x64="[RunScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunScript" genArgEvent="09daf1c8-f0ef-4a1e-ac62-4c90912eca66" m_bTextLinkChange="False" script="JHdpbnZlciA9IFtTeXN0ZW0uRW52aXJvbm1lbnRdOjpPU1ZlcnNpb24uVmVyc2lvbg0Kc3dpdGNoICgkd2ludmVyLm1ham9yKSB7DQo2IHsNCnN3aXRjaCAtcmVnZXggKCR3aW52ZXIubWlub3IpIHsNClsyLTNdIHsgJHNpemUgPSAoR2V0LVBhcnRpdGlvblN1cHBvcnRlZFNpemUgLURyaXZlTGV0dGVyICQlaWQlc3RyRHJpdmVMZXR0ZXIlaWQlIH0NCjIgeyBSZXNpemUtUGFydGl0aW9uIC1Ecml2ZUxldHRlciAkJWlkJXN0ckRyaXZlTGV0dGVyJWlkJSAtU2l6ZSAkc2l6ZS5NYXhpbXVtU2l6ZTsgYnJlYWsgfQ0KMyB7IFJlc2l6ZS1QYXJ0aXRpb24gLURyaXZlTGV0dGVyICQlaWQlc3RyRHJpdmVMZXR0ZXIlaWQlIC1TaXplICRzaXplLlNpemVNYXg7IGJyZWFrIH0NCmRlZmF1bHQgeyBlY2hvICJXaW5kb3dzIHZlcnNpb24gbm90IHN1cHBvcnRlZCIgfQ0KfQ0KfQ0KMTAgew0KJHNpemUgPSAoR2V0LVBhcnRpdGlvblN1cHBvcnRlZFNpemUgLURyaXZlTGV0dGVyICQlaWQlc3RyRHJpdmVMZXR0ZXIlaWQlDQpSZXNpemUtUGFydGl0aW9uIC1Ecml2ZUxldHRlciAkJWlkJXN0ckRyaXZlTGV0dGVyJWlkJSAtU2l6ZSAkc2l6ZS5TaXplTWF4DQpicmVhaw0KfQ0KZGVmYXVsdCB7IGVjaG8gIldpbmRvd3MgdmVyc2lvbiBub3Qgc3VwcG9ydGVkIiB9DQp9DQo=">
+                  <p:RunScript.InArgs>
+                    <p:InArg ItemProp="{x:Null}" x:Key="strDriveLetter" ArgType="string" DisplayArg="Global Variables.DriveLetter" DisplayName="Drive Letter" Name="strDriveLetter" isRequired="True">
+                      <p:InArg.Arg>
+                        <InArgument x:TypeArguments="x:String">[strDrive]</InArgument>
+                      </p:InArg.Arg>
+                      <p:InArg.Item>
+                        <InArgument x:TypeArguments="x:Object" />
+                      </p:InArg.Item>
+                    </p:InArg>
+                  </p:RunScript.InArgs>
+                  <p:RunScript.OutArgs>
+                    <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+                  </p:RunScript.OutArgs>
+                </p:RunScript>
+              </p:SequenceActivity.Activities>
+              <p:SequenceActivity.Variables>
+                <Variable x:TypeArguments="x:String" Name="RunScript_OutPut_64" />
+                <Variable x:TypeArguments="x:String" Name="RunScript_ResultString" />
+                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunScript_Results_x64" />
+                <Variable x:TypeArguments="x:Double" Name="RunScript_Result" />
+              </p:SequenceActivity.Variables>
+            </p:SequenceActivity>
+          </p:IfObject.IfOption>
+          <p:IfObject.Value>
+            <InArgument x:TypeArguments="x:Object">
+              <p:ObjectLiteral Value=":" />
+            </InArgument>
+          </p:IfObject.Value>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Default="C" Name="strDrive" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
