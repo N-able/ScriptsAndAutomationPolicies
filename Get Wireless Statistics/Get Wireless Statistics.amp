@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{caa266dd-9dd7-4f3f-94d0-03d87b72dcd3}" Name="Get Wireless Statistics" Description="R2V0IHdpcmVsZXNzIHN0YXRzIGxpa2UgU1NJRCwgY29ubmVjdGlvbiBzcGVlZCBhbmQgc2lnbmFsIHN0cmVuZ3Ro" Version="1.7.0.28" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="30">
+  <Object ID="{b93b0078-4ca5-4727-b288-6a0a20283141}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;OutputParameters&gt;&lt;Parameter ParameterName=&quot;Name&quot; Label=&quot;Connection Name&quot; ParameterType=&quot;string&quot; Value=&quot;GetWLANStats.Name&quot; /&gt;&lt;Parameter ParameterName=&quot;State&quot; Label=&quot;Connection State&quot; ParameterType=&quot;string&quot; Value=&quot;GetWLANStats.State&quot; /&gt;&lt;Parameter ParameterName=&quot;SSID&quot; Label=&quot;SSID&quot; ParameterType=&quot;string&quot; Value=&quot;GetWLANStats.SSID&quot; /&gt;&lt;Parameter ParameterName=&quot;BSSID&quot; Label=&quot;BSSID&quot; ParameterType=&quot;string&quot; Value=&quot;GetWLANStats.BSSID&quot; /&gt;&lt;Parameter ParameterName=&quot;Channel&quot; Label=&quot;Channel&quot; ParameterType=&quot;number&quot; Value=&quot;GetWLANStats.Channel&quot; /&gt;&lt;Parameter ParameterName=&quot;ReceiveRate&quot; Label=&quot;Receive Rate&quot; ParameterType=&quot;number&quot; Value=&quot;GetWLANStats.Receive Rate&quot; /&gt;&lt;Parameter ParameterName=&quot;TransmitRate&quot; Label=&quot;Transmit Rate&quot; ParameterType=&quot;number&quot; Value=&quot;GetWLANStats.Transmit Rate&quot; /&gt;&lt;Parameter ParameterName=&quot;Signal&quot; Label=&quot;Signal Strength&quot; ParameterType=&quot;number&quot; Value=&quot;GetWLANStats.Signal Strength&quot; /&gt;&lt;/OutputParameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.Name</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>Name</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.State</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>State</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.SSID</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>SSID</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.BSSID</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>BSSID</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.Channel</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>Channel</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.ReceiveRate</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>ReceiveRate</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.TransmitRate</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>TransmitRate</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>d0b3aff8-da56-45d7-9b08-d34a87931465.Signal</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>Signal</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>494.4,504</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="454.4,464" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RunScript genArgEvent="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Get WLAN Stats" sap:VirtualizedContainerService.HintSize="433.6,270.4" Moniker="d0b3aff8-da56-45d7-9b08-d34a87931465" OutPut_64="[RunScript_OutPut_64_18]" Result="[RunScript_Result_21]" ResultString="[RunScript_ResultString_19]" Results_x64="[RunScript_Results_x64_20]" RunAsCLU="False" ScriptDirectory="Unused" TypeName="RunScript" m_bTextLinkChange="False" script="IyBXaXJlbGVzcyBTdGF0aXN0aWNzIGludG8gb2JqZWN0DQojIEF1dGhvcjogSm9zaCBQb3BwDQojIFB1dCBXaXJlbGVzcyBTdGF0cywgbGlrZSBTaWduYWwgU3RyZW5naCwgQlNTSUQsIGFuZCBDaGFubmVsIGludG8gYW4gb2JqZWN0DQoNCiMgRmlyc3QganVzdCBkdW1wIHRoZSBuZXRzaCBvdXRwdXQgaW50byAkd2xhbnJhdyANCiR3bGFucmF3ID0gbmV0c2ggd2xhbiBzaG93IGludGVyZmFjZQ0KDQojIFBvcHVsYXRlIHRoZSBvYmplY3QgZnJvbSB0aGUgb3V0cHV0LCBwcm9jZXNzaW5nIDEgbGluZSBhdCBhIHRpbWUNCkZvckVhY2ggKCRMaW5lIGluICR3bGFucmF3KSB7DQoJaWYgKFtyZWdleF06OklzTWF0Y2goJExpbmUsIiAgICBOYW1lIikpIHskJWlkJU5hbWUlaWQlID0gJExpbmUgLVJlcGxhY2UgIiAgICBOYW1lICAgICAgICAgICAgICAgICAgIDogIiwiIn0NCgkJCQ0KCWlmIChbcmVnZXhdOjpJc01hdGNoKCRMaW5lLCIgICAgU3RhdGUiKSkgeyQlaWQlU3RhdGUlaWQlID0gJExpbmUgLVJlcGxhY2UgIiAgICBTdGF0ZSAgICAgICAgICAgICAgICAgIDogIiwiIn0NCg0KCWlmIChbcmVnZXhdOjpJc01hdGNoKCRMaW5lLCIgICAgU1NJRCIpKSB7JCVpZCVTU0lEJWlkJSA9ICRMaW5lIC1SZXBsYWNlIiAgICBTU0lEICAgICAgICAgICAgICAgICAgIDogIiwiIn0NCiAgICAgICAgICAgICAgDQoJaWYgKFtyZWdleF06OklzTWF0Y2goJExpbmUsIiAgICBCU1NJRCIpKSB7JCVpZCVCU1NJRCVpZCU9ICRMaW5lIC1SZXBsYWNlIiAgICBCU1NJRCAgICAgICAgICAgICAgICAgIDogIiwiIn0NCiAgICAgICAgICAgICAgIA0KCWlmIChbcmVnZXhdOjpJc01hdGNoKCRMaW5lLCIgICAgQ2hhbm5lbCIpKSB7JCVpZCVDaGFubmVsJWlkJSA9ICRMaW5lIC1yZXBsYWNlICIgICAgQ2hhbm5lbCAgICAgICAgICAgICAgICA6ICIsIiJ9DQogICAgICAgICAgICAgICANCglpZiAoW3JlZ2V4XTo6SXNNYXRjaCgkTGluZSwiICAgIFJlY2VpdmUgcmF0ZSIpKSB7JCVpZCVSZWNlaXZlUmF0ZSVpZCUgPSAkTGluZSAtcmVwbGFjZSAiICAgIFJlY2VpdmUgcmF0ZSBcKE1icHNcKSAgICA6ICIsIiJ9ICAgDQogICAgICAgICAgICAgICANCglpZiAoW3JlZ2V4XTo6SXNNYXRjaCgkTGluZSwiICAgIFRyYW5zbWl0IHJhdGUiKSkgeyQlaWQlVHJhbnNtaXRSYXRlJWlkJSA9ICRMaW5lIC1yZXBsYWNlICIgICAgVHJhbnNtaXQgcmF0ZSBcKE1icHNcKSAgIDogIiwiIn0gIA0KICAgICAgICAgICAgICAgDQoJaWYgKFtyZWdleF06OklzTWF0Y2goJExpbmUsIiAgICBTaWduYWwiKSkgeyQlaWQlU2lnbmFsJWlkJSA9ICgkTGluZSAtcmVwbGFjZSAiICAgIFNpZ25hbCAgICAgICAgICAgICAgICAgOiAiLCIiKSAtcmVwbGFjZSAiJSIsIiJ9DQoJfQ0KDQo=">
+          <p:RunScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <p:OutArg x:Key="Name" ArgType="string" DisplayName="Name" Name="Name">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_Name_22]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="State" ArgType="string" DisplayName="State" Name="State">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_State_23]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="SSID" ArgType="string" DisplayName="SSID" Name="SSID">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_SSID_24]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="BSSID" ArgType="string" DisplayName="BSSID" Name="BSSID">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_BSSID_25]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="Channel" ArgType="number" DisplayName="Channel" Name="Channel">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_Channel_26]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="ReceiveRate" ArgType="number" DisplayName="Receive Rate" Name="ReceiveRate">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_ReceiveRate_27]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="TransmitRate" ArgType="number" DisplayName="Transmit Rate" Name="TransmitRate">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_TransmitRate_28]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="Signal" ArgType="number" DisplayName="Signal Strength" Name="Signal">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_Signal_29]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="RunScript_OutPut_64_18" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_ResultString_19" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunScript_Results_x64_20" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Result_21" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_Name_22" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_State_23" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_SSID_24" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_BSSID_25" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Channel_26" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_ReceiveRate_27" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_TransmitRate_28" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Signal_29" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
