@@ -74,7 +74,7 @@ if (!(Test-Path $path))
 if (!(Test-Path "$path\IP Address"))
     {
     Write-Host "Creating Registry Branch for $path\IP Address"
-    New-Item $ipaddresspathReg | out-null
+    New-Item "$path\IP Address" | out-null
     }
     else {
         Write-Host "Registry Branch for $path\IP Address already exists"
