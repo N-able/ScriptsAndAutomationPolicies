@@ -1,36 +1,40 @@
-<#    
+<#
     ************************************************************************************************************
     Name: Get-AVDefenderErrorMessage
-    Version: 0.1 (28th October 2018)
+    Version: 0.2 (07th June 2019)
     Purpose:    Read through error message from AVD Error Manager XML
     Pre-Reqs:    Powershell 2
-    0.1
+    0.2
     ************************************************************************************************************
 #>
-
-
-$OSVersion=(Get-WmiObject Win32_OperatingSystem).OSArchitecture
-If ($OSVersion -eq "64-bit") {
-$global:AgentConfigFolder = "$env:systemdrive\Program Files (x86)\N-able Technologies\Windows Agent\config"
+[System.IntPtr]::Size # an integer whose size is platform-specific.
+If ([System.IntPtr]::Size -eq 4) {
+    $OSVersion = "32-bit"
+} Else {
+    $OSVersion = "64-bit"
 }
-Else {
-	$global:AgentConfigFolder = "$env:systemdrive\Program Files\N-able Technologies\Windows Agent\config"
+
+If ($OSVersion -eq "64-bit") {
+    $global:AgentConfigFolder = "$env:systemdrive\Program Files (x86)\N-able Technologies\Windows Agent\config"
+} Else {
+    $global:AgentConfigFolder = "$env:systemdrive\Program Files\N-able Technologies\Windows Agent\config"
 }
 
 $LogLocation = "$agentconfigfolder\AVDefenderErrorManager.xml"
-Write-Host "Log Location: " -nonewline; Write-Host "$LogLocation" -ForegroundColor Yellow
+Write-Host "Log Location: " -Nonewline
+Write-Host "$LogLocation" -ForegroundColor Yellow
 
 [xml]$AVDDefenderError = Get-Content "$LogLocation"
 $nodeexists = $AVDDefenderError.AVDefenderErrorManager.MessageHolders.DictionarySerializableOfStringArrayOfString.ArrayOfSerializableKeyValuePairOfStringArrayOfString.SerializableKeyValuePairOfStringArrayOfString
-if ($nodeexists) {
-$ErrorMsg = $AVDDefenderError.AVDefenderErrorManager.MessageHolders.DictionarySerializableOfStringArrayOfString.ArrayOfSerializableKeyValuePairOfStringArrayOfString.SerializableKeyValuePairOfStringArrayOfString.Value.String[1]
+
+If ($nodeexists) {
+    $ErrorMsg = $AVDDefenderError.AVDefenderErrorManager.MessageHolders.DictionarySerializableOfStringArrayOfString.ArrayOfSerializableKeyValuePairOfStringArrayOfString.SerializableKeyValuePairOfStringArrayOfString.Value.String[1]
+} Else {
+    $ErrorMsg = "None"
 }
-else {
-$ErrorMsg = "None"
-}
-if ($errormsg -eq "None") {
-    Write-Host "Error: " -nonewline; Write-Host "$ErrorMsg`n" -ForegroundColor Green    
-}
-else {
-Write-Host "Error: " -nonewline; Write-Host "$ErrorMsg`n" -ForegroundColor Red
+
+If ($errormsg -eq "None") {
+    Write-Host "Error: " -nonewline; Write-Host "$ErrorMsg`n" -ForegroundColor Green
+} Else {
+    Write-Host "Error: " -nonewline; Write-Host "$ErrorMsg`n" -ForegroundColor Red
 }
