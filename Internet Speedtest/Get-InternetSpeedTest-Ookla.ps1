@@ -102,8 +102,8 @@ Function execute-Speedtest {
     $argument = "--format=json-pretty"
     Write-Host "`nPerforming SpeedTest..." -ForegroundColor Green
     Write-Host "$exelocation $argument" -ForegroundColor Yellow
-    start-process -filepath $exelocation -argumentlist $argument -RedirectStandardOutput $dalogsfolder\ooklaspeedtest.json -Wait
-    $json = convertfrom-json -inputobject (get-content $dalogsfolder\ooklaspeedtest.json -raw)
+    start-process -filepath $exelocation -argumentlist $argument -RedirectStandardOutput $companylogsfolder\ooklaspeedtest.json -Wait
+    $json = convertfrom-json -inputobject (get-content $companylogsfolder\ooklaspeedtest.json -raw)
 
     $timestamp = $json.timestamp
     $ISP = $json.isp
