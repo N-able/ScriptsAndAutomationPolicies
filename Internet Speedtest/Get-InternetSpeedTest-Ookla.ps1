@@ -3,11 +3,12 @@
 <#    
     ************************************************************************************************************
     Name: Get-InternetSpeedTest-Ookla
-    Version: 0.1.1 (27th December 2019)
+    Version: 0.1.3 (02nd January 2019)
     Purpose:    Use Ookla SpeedTest to measure available bandwidth on a device
     Pre-Reqs:    Powershell 2
     Changes:
     + Restructured Functions to be more generic
+    + updated calculations, changed switches being used
 
     ************************************************************************************************************
 #>
@@ -97,9 +98,9 @@ function extract-speedtestzip {
     [System.IO.Compression.ZipFile]::ExtractToDirectory("$location","$env:systemdrive\programdata\$company\speedtest")
 }
 
-Function execute-Speedtest {
+Function execute-speedtest {
     if (test-path $exelocation) {
-    $argument = "--format=json-pretty"
+    $argument = "--accept-license --accept-gdpr --format=json-pretty"
     Write-Host "`nPerforming SpeedTest..." -ForegroundColor Green
     Write-Host "$exelocation $argument" -ForegroundColor Yellow
     start-process -filepath $exelocation -argumentlist $argument -RedirectStandardOutput $companylogsfolder\ooklaspeedtest.json -Wait
