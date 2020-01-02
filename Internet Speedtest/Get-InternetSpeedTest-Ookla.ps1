@@ -3,12 +3,12 @@
 <#    
     ************************************************************************************************************
     Name: Get-InternetSpeedTest-Ookla
-    Version: 0.1.3 (02nd January 2019)
+    Version: 0.1.4 (02nd January 2019)
     Purpose:    Use Ookla SpeedTest to measure available bandwidth on a device
     Pre-Reqs:    Powershell 2
     Changes:
-    + Restructured Functions to be more generic
-    + updated calculations, changed switches being used
+    + Download and Upload results converted to Mbps rather than bytes and rounded to 3 decimal places
+    + Latency and Jitter results are rounded to 2 decimal places
 
     ************************************************************************************************************
 #>
@@ -111,10 +111,10 @@ Function execute-speedtest {
     $serverid = $json.server.id
     $servername = $json.server.name
     $serverhost = $json.server.host
-    $latency = $json.ping.latency
-    $jitter = $json.ping.jitter
-    $download= $json.download.bandwidth
-    $upload= $json.upload.bandwidth
+    $latency = [math]::Round($json.ping.latency, 2)                  # Round to 2 decimal places
+    $jitter = [math]::Round($json.ping.jitter, 2)                    # Round to 2 decimal places
+    $download= [math]::Round($json.download.bandwidth / 125000, 3)   # Convert raw bytes value to Mbps and round to 3 decimal places
+    $upload= [math]::Round($json.upload.bandwidth / 125000, 3)       # Convert raw bytes value to Mbps and round to 3 decimal places
     $packetloss = $json.packetloss
     $externalip = $json.interface.externalIp
     $internalip = $json.interface.internalIp
@@ -133,8 +133,8 @@ Function execute-speedtest {
 Write-Host "Time: " -nonewline; Write-Host "$timestamp" -ForegroundColor Green
 Write-Host "Ping: " -nonewline; Write-Host "$latency ms" -ForegroundColor Green
 Write-Host "Jitter: " -nonewline; Write-Host "$jitter ms" -ForegroundColor Green
-Write-Host "Download: " -nonewline; Write-Host "$download kbps" -ForegroundColor Green
-Write-Host "Upload: " -nonewline; Write-Host "$upload kbps" -ForegroundColor Green
+Write-Host "Download: " -nonewline; Write-Host "$download Mbps" -ForegroundColor Green
+Write-Host "Upload: " -nonewline; Write-Host "$upload Mbps" -ForegroundColor Green
 Write-Host "Packet Loss: " -nonewline; Write-Host "$packetloss" -ForegroundColor Green
 Write-Host "Server: " -nonewline; Write-Host "$serverid - $servername - $serverhost" -ForegroundColor Green
 Write-Host "ISP: " -nonewline; Write-Host "$ISP" -ForegroundColor Green
