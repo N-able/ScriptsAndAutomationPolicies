@@ -1,9 +1,10 @@
 <#    
     ************************************************************************************************************
-    Name: Get-CUInstalled
-    Version: 0.1 (22nd February 2020)
+    Name: Get-WindowsCUInstalled
+    Version: 0.1.1 (26th February 2020)
     Purpose:    Detect device build and check whether recentCU is installed
     Pre-Reqs:    Powershell 2
+    0.1.1 + Added 24/02 Cumulative Update Builds
     ************************************************************************************************************
 
 Obtained from https://pureinfotech.com/windows-10-version-release-history/
@@ -242,6 +243,10 @@ if ($osbuildversion -eq "10.0.18362.592") {
 
 
 #1809
+if ($osbuildversion -eq "10.0.17763.1075") {
+    $CU = "KB4537818 (February 24, 2020)"
+}
+
 if ($osbuildversion -eq "10.0.17763.1039") {
     $CU = "KB4532691 (February 11, 2020)"
 }
@@ -256,6 +261,10 @@ if ($osbuildversion -eq "10.0.17763.973") {
 
 
 #1803
+if ($osbuildversion -eq "10.0.17134.1345") {
+    $CU = "KB4537795 (February 24, 2020)"
+}
+
 if ($osbuildversion -eq "10.0.17134.1304") {
     $CU = "KB4537762 (February 11, 2020)"
 }
@@ -270,6 +279,10 @@ if ($osbuildversion -eq "10.0.17134.1246") {
 
 
 #1709
+if ($osbuildversion -eq "10.0.16299.1717") {
+    $CU = "KB4537816 (February 24, 2020)"
+}
+
 if ($osbuildversion -eq "10.0.16299.1686") {
     $CU = "KB4537789 (February 11, 2020)"
 }
@@ -294,6 +307,10 @@ if ($osbuildversion -eq "10.0.15063.2254") {
   
 
 #1607
+if ($osbuildversion -eq "10.0.14393.3542") {
+    $CU = "KB4537806 (February 24, 2020)"
+}
+
 if ($osbuildversion -eq "10.0.14393.3504") {
     $CU = "KB4537764 (February 11, 2020)"
 }
