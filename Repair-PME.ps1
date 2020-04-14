@@ -1,37 +1,53 @@
 <#    
     ******************************************************************************************************************
-    Name:        Repair-PME.ps1
-    Version:     0.1.1.0 (14/04/2020)
-    Purpose:     Install/Reinstall Patch Management Enginge (PME)
-    Created by:  Ashley How
-    Thanks:      Jordan Ritz for Get-PMESetup function code
-    Pre-Reqs:    Powershell 3.0 (2.0 is possible - alternative to Invoke-RestMethod in Get-PMESetup function required)
+    Name:            Repair-PME.ps1
+    Version:         0.1.1.1 (14/04/2020)
+    Purpose:         Install/Reinstall Patch Management Enginge (PME)
+    Created by:      Ashley How
+    Thanks to:       Jordan Ritz for Get-PMESetup function code
+    Pre-Reqs:        Powershell 3.0 (2.0 is possible - alternative to Invoke-RestMethod in Get-PMESetup function required)
     Version History: 0.1.0.0 - Initial Release.
                      0.1.1.0 - Update PMESetup_details.xml URL, update install arguments, create new cleanup function 
                                as suggested by Jan Tauwinkl at Solarwinds. Thanks for your input. Rename Function
-                               Install-PMESetup to Install-PME.                            
+                               Install-PMESetup to Install-PME.
+                     0.1.1.1 - Update Get-PMESetup function for better error detection when unable to grab
+                               PMESetup_Details.xml. Thanks to Jordan Ritz.          
    ******************************************************************************************************************
 #>
-$Version = '0.1.1.0 (14/04/2020)'
+$Version = '0.1.1.1 (14/04/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
 function Get-LegacyHash {
-    param($Path)
+    Param($Path)
 
     $csp = new-object -TypeName System.Security.Cryptography.SHA256CryptoServiceProvider
     $ComputedHash = @()
     $ComputedHash = $csp.ComputeHash([System.IO.File]::ReadAllBytes($Path))
     $ComputedHash = [System.BitConverter]::ToString($ComputedHash).Replace("-", "").ToLower()
-    return $ComputedHash
+    Return $ComputedHash
 }
 
 Function Get-PMESetup {
-    [xml]$x = ((Invoke-RestMethod https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml) -split '<\?xml.*\?>')[-1]
-    $PMEDetails = $x.ComponentDetails
+   # Delcare static URI of PMESetup_details.xml
+    $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
+    
+    Try {
+       [xml]$x = ((Invoke-RestMethod $PMESetup_detailsURI) -split '<\?xml.*\?>')[-1]
+       $PMEDetails = $x.ComponentDetails
+    }
+    Catch [System.Net.WebException] {
+       Write-Output "Error fetching PMESetup_Details.xml check your source URL!"
+       Throw
+    }
+    Catch [System.Management.Automation.MetadataException] {
+       Write-Output "Error casting to XML; could not parse PMESetup_details.xml"
+       Throw
+    }   
 }
 
 Function Cleanup-PME {
+   # Cleanup Solarwinds MSP Cache Service root folder
    If (Test-Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService") {
       Write-Output "Performing cleanup of Solarwinds MSP Cache Service root folder"
       Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.*" -Force -Confirm:$false
@@ -40,6 +56,7 @@ Function Cleanup-PME {
       Write-Output "Cleanup not required as Solarwinds MSP Cache Service Root Folder does not already exist"
    }
    
+   # Cleanup Solarwinds MSP Cache Service cache folder
    If (Test-Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache") {
       Write-Output "Performing cleanup of Solarwinds MSP Cache Service cache folder"
       Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache\*.*" -Force -Confirm:$false
