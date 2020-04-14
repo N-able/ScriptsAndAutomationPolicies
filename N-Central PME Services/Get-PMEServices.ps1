@@ -1,16 +1,17 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.1 (16th March 2020)
+    Version: 0.1.4.2 (20th April 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 2
-    + Added Better Detection for PME Services being missing on a device
+    + Improved Detection for PME Services being missing on a device
+    + Improved Detection of Latest PME Version
+    + Improved Detection of latest Public PME Version when PME is not installed on a deivce
     ************************************************************************************************************
 #>
-$Version = '0.1.4.1 (16th March 2020)'
+$Version = '0.1.4.2 (14th April 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
-$latestVersion = '1.1.12'
 
 Write-Host "Get-PMEServices $Version"
 
@@ -20,6 +21,34 @@ Function Get-PMEServicesStatus {
 $SolarWindsMSPCacheStatus = (get-service "SolarWinds.MSP.CacheService" -ErrorAction SilentlyContinue).Status
 $SolarWindsMSPPMEAgentStatus = (get-service "SolarWinds.MSP.PME.Agent.PmeService" -ErrorAction SilentlyContinue).Status
 $SolarWindsMSPRpcServerStatus = (get-service "SolarWinds.MSP.RpcServerService" -ErrorAction SilentlyContinue).status
+}
+
+Function Get-LatestPMEVersion {
+    if ($PMEAgentVersion -eq $null) {
+        [xml]$x = ((Invoke-RestMethod https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml) -split '<\?xml.*\?>')[-1]
+        $PMEDetails = $x.ComponentDetails
+        $LatestVersion = $x.ComponentDetails.Version
+    }
+    else {
+        $PMEWrapper = get-content "c:\Program Files (x86)\N-able Technologies\Windows Agent\log\PMEWrapper.log"
+        $Latest = "Pme.GetLatestVersion result = LatestVersion"
+        $LatestMatch = ($PMEWrapper -match $latest)[-1]
+        if ($latestmatch -eq $null) {
+            Write-Host "PME 1.1.x Version Detected" -ForegroundColor Yellow
+            $separator = '"LatestVersion":"'
+            $latestmatch = ($PMEWrapper -match $separator)[-1]
+            $separator2 = 'LatestVersion'
+            $latestmatch2 = ($PMEWrapper -match $separator2)[-1]
+            $option = [System.StringSplitOptions]::RemoveEmptyEntries
+            $latestversion = $latestmatch.split($separator,$option)
+
+        }
+        else {
+            Write-Host "PME 1.2.x Version Detected" -ForegroundColor Yellow
+            $LatestVersion = $LatestMatch.Split(' ')[9].TrimEnd(',')
+        }
+    }
+    Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
 }
 
 Function Get-PMEServicesVersions {
@@ -174,14 +203,8 @@ Write-Host "Status: $OverallStatus"
 
 . Get-PMEServicesStatus
 . Get-PMEServicesVersions
-
-# . Write-Status
-# . Write-Version
+. Get-LatestPMEVersion
 . Validate-PME
-
-# . Start-Services
-# . Set-AutomaticStartup
-
 
 
 if ($RecheckStartup -eq $True) {
