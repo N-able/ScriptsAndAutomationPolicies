@@ -7,8 +7,9 @@
     Thanks:      Jordan Ritz for Get-PMESetup function code
     Pre-Reqs:    Powershell 3.0 (2.0 is possible - alternative to Invoke-RestMethod in Get-PMESetup function required)
     Version History: 0.1.0.0 - Initial Release
-                     0.1.0.1 - Update PMESetup_details.xml URL as requested by Jan Tauwinkl at Solarwinds
-    ******************************************************************************************************************
+                     0.1.0.1 - Update PMESetup_details.xml URL, update install arguments 
+                               as requested by Jan Tauwinkl at Solarwinds
+******************************************************************************************************************
 #>
 $Version = '0.1.0.1 (14/04/2020)'
 
@@ -37,7 +38,7 @@ Function Install-PMESetup {
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
                 Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct, installing"
-                $Install = Start-process -filepath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS' -wait -passthru
+                $Install = Start-process -filepath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -wait -passthru
                     If ($Install.ExitCode -eq 0) {
                         Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                     }
@@ -55,7 +56,7 @@ Function Install-PMESetup {
                     If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                         # Install
                         Write-Output "Hash of file is correct, installing $($PMEDetails.FileName)"
-                        $Install = Start-process -filepath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS' -wait -passthru
+                        $Install = Start-process -filepath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -wait -passthru
                             If ($Install.ExitCode -eq 0) {
                                 Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                             }
@@ -89,7 +90,7 @@ Function Install-PMESetup {
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
                 Write-Output "Hash of file is correct, installing $($PMEDetails.FileName)"
-                $Install = Start-process -filepath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS' -wait -passthru
+                $Install = Start-process -filepath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -wait -passthru
                     If ($Install.ExitCode -eq 0) {
                         Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                     }
