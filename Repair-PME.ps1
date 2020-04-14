@@ -53,7 +53,7 @@ Function Cleanup-PME {
       Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.*" -Force -Confirm:$false
    } 
    Else {
-      Write-Output "Cleanup not required as Solarwinds MSP Cache Service Root Folder does not already exist"
+      Write-Output "Cleanup not required as Solarwinds MSP Cache Service root folder does not already exist"
    }
    
    # Cleanup Solarwinds MSP Cache Service cache folder
@@ -62,7 +62,7 @@ Function Cleanup-PME {
       Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache\*.*" -Force -Confirm:$false
    } 
    Else {
-      Write-Output "Cleanup not required as Solarwinds MSP Cache Service Cache Folder does not already exist"
+      Write-Output "Cleanup not required as Solarwinds MSP Cache Service cache folder does not already exist"
    }
 }
 
