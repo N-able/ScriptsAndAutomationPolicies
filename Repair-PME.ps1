@@ -1,17 +1,18 @@
 <#    
     ******************************************************************************************************************
     Name:        Repair-PME.ps1
-    Version:     0.1.0.1 (14/04/2020)
+    Version:     0.1.1.0 (14/04/2020)
     Purpose:     Install/Reinstall Patch Management Enginge (PME)
     Created by:  Ashley How
     Thanks:      Jordan Ritz for Get-PMESetup function code
     Pre-Reqs:    Powershell 3.0 (2.0 is possible - alternative to Invoke-RestMethod in Get-PMESetup function required)
-    Version History: 0.1.0.0 - Initial Release
-                     0.1.0.1 - Update PMESetup_details.xml URL, update install arguments 
-                               as requested by Jan Tauwinkl at Solarwinds
-******************************************************************************************************************
+    Version History: 0.1.0.0 - Initial Release.
+                     0.1.1.0 - Update PMESetup_details.xml URL, update install arguments, create new cleanup function 
+                               as suggested by Jan Tauwinkl at Solarwinds. Thanks for your input. Rename Function
+                               Install-PMESetup to Install-PME.                            
+   ******************************************************************************************************************
 #>
-$Version = '0.1.0.1 (14/04/2020)'
+$Version = '0.1.1.0 (14/04/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -26,11 +27,29 @@ function Get-LegacyHash {
 }
 
 Function Get-PMESetup {
-    [xml]$x = ((Invoke-RestMethod https://sis.n-able.com/ComponentData/RMM/1/PMESetup_details.xml) -split '<\?xml.*\?>')[-1]
+    [xml]$x = ((Invoke-RestMethod https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml) -split '<\?xml.*\?>')[-1]
     $PMEDetails = $x.ComponentDetails
 }
 
-Function Install-PMESetup {
+Function Cleanup-PME {
+   If (Test-Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService") {
+      Write-Output "Performing cleanup of Solarwinds MSP Cache Service Root Folder"
+      Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.* -Force -Confirm:$false"
+   } 
+   Else {
+   Write-Output "Cleanup not required as Solarwinds MSP Cache Service Root Folder does not already exist"
+   }
+   
+   If (Test-Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache") {
+      Write-Output "Performing cleanup of Solarwinds MSP Cache Service Cache Folder"
+      Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache\*.* -Force -Confirm:$false"
+   } 
+   Else {
+   Write-Output "Cleanup not required as Solarwinds MSP Cache Service Cache Folder does not already exist"
+   }
+}
+
+Function Install-PME {
     # Check Setup Exists in PME Archive Directory
     If (Test-Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)") {
         # Check Hash
@@ -105,4 +124,5 @@ Function Install-PMESetup {
 }
 
 . Get-PMESetup
-. Install-PMESetup
+. Cleanup-PME
+. Install-PME
