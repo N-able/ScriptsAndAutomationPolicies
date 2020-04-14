@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.2 (20th April 2020)
+    Version: 0.1.4.2 (14th April 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 2
     + Improved Detection for PME Services being missing on a device
@@ -12,6 +12,8 @@
 $Version = '0.1.4.2 (14th April 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
+$Latestversion = $Null
+
 
 Write-Host "Get-PMEServices $Version"
 
