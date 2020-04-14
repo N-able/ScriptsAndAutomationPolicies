@@ -1,14 +1,16 @@
 <#    
     ******************************************************************************************************************
     Name:        Repair-PME.ps1
-    Version:     0.1.0.0 (13/04/2020)
+    Version:     0.1.0.1 (14/04/2020)
     Purpose:     Install/Reinstall Patch Management Enginge (PME)
     Created by:  Ashley How
     Thanks:      Jordan Ritz for Get-PMESetup function code
     Pre-Reqs:    Powershell 3.0 (2.0 is possible - alternative to Invoke-RestMethod in Get-PMESetup function required)
+    Version History: 0.1.0.0 - Initial Release
+                     0.1.0.1 - Update PMESetup_details.xml URL as requested by Jan Tauwinkl at Solarwinds
     ******************************************************************************************************************
 #>
-$Version = '0.1.0.0 (13/04/2020)'
+$Version = '0.1.0.1 (14/04/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
