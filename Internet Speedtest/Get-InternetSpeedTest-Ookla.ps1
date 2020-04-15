@@ -3,13 +3,15 @@
 <#    
     ************************************************************************************************************
     Name: Get-InternetSpeedTest-Ookla
-    Version: 0.1.4 (02nd January 2019)
+    Version: 0.1.5 (15th April 2020)
     Purpose:    Use Ookla SpeedTest to measure available bandwidth on a device
     Pre-Reqs:    Powershell 2
     Changes:
+    + Restructured Functions to be more generic
+    + updated calculations, changed switches being used
     + Download and Upload results converted to Mbps rather than bytes and rounded to 3 decimal places
     + Latency and Jitter results are rounded to 2 decimal places
-
+    + Add % to packet loss output
     ************************************************************************************************************
 #>
 $company = "Doherty Associates"
@@ -135,7 +137,7 @@ Write-Host "Ping: " -nonewline; Write-Host "$latency ms" -ForegroundColor Green
 Write-Host "Jitter: " -nonewline; Write-Host "$jitter ms" -ForegroundColor Green
 Write-Host "Download: " -nonewline; Write-Host "$download Mbps" -ForegroundColor Green
 Write-Host "Upload: " -nonewline; Write-Host "$upload Mbps" -ForegroundColor Green
-Write-Host "Packet Loss: " -nonewline; Write-Host "$packetloss" -ForegroundColor Green
+Write-Host "Packet Loss: " -nonewline; Write-Host "$packetloss %" -ForegroundColor Green
 Write-Host "Server: " -nonewline; Write-Host "$serverid - $servername - $serverhost" -ForegroundColor Green
 Write-Host "ISP: " -nonewline; Write-Host "$ISP" -ForegroundColor Green
 Write-Host "External IP: " -nonewline; Write-Host "$externalip" -ForegroundColor Green
