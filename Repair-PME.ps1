@@ -1,20 +1,21 @@
 <#    
-    ******************************************************************************************************************
+   **********************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.1.1 (14/04/2020)
+    Version:         0.1.2.0 (15/04/2020)
     Purpose:         Install/Reinstall Patch Management Enginge (PME)
     Created by:      Ashley How
-    Thanks to:       Jordan Ritz for Get-PMESetup function code
-    Pre-Reqs:        Powershell 3.0 (2.0 is possible - alternative to Invoke-RestMethod in Get-PMESetup function required)
+    Thanks to:       Jordan Ritz for inital Get-PMESetup function code
+    Pre-Reqs:        Powershell 2.0
     Version History: 0.1.0.0 - Initial Release.
                      0.1.1.0 - Update PMESetup_details.xml URL, update install arguments, create new cleanup function 
                                as suggested by Jan Tauwinkl at Solarwinds. Thanks for your input. Rename Function
                                Install-PMESetup to Install-PME.
                      0.1.1.1 - Update Get-PMESetup function for better error detection when unable to grab
-                               PMESetup_Details.xml. Thanks to Jordan Ritz.          
-   ******************************************************************************************************************
+                               PMESetup_Details.xml. Thanks to Jordan Ritz.       
+                     0.1.2.0 - Update Get-PMESetup function for PS 2.0 support. Import of BitsTransfer Module for PS 2.0.               
+   **********************************************************************************************************************
 #>
-$Version = '0.1.1.1 (14/04/2020)'
+$Version = '0.1.2.0 (15/04/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -31,10 +32,10 @@ function Get-LegacyHash {
 Function Get-PMESetup {
    # Delcare static URI of PMESetup_details.xml
     $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
-    
     Try {
-       [xml]$x = ((Invoke-RestMethod $PMESetup_detailsURI) -split '<\?xml.*\?>')[-1]
-       $PMEDetails = $x.ComponentDetails
+        $request = $null
+        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
+        $PMEDetails = $request.ComponentDetails
     }
     Catch [System.Net.WebException] {
        Write-Output "Error fetching PMESetup_Details.xml check your source URL!"
@@ -57,9 +58,9 @@ Function Cleanup-PME {
    }
    
    # Cleanup Solarwinds MSP Cache Service cache folder
-   If (Test-Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache") {
+   If (Test-Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache") {
       Write-Output "Performing cleanup of Solarwinds MSP Cache Service cache folder"
-      Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\Cache\*.*" -Force -Confirm:$false
+      Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache\*.*" -Force -Confirm:$false
    } 
    Else {
       Write-Output "Cleanup not required as Solarwinds MSP Cache Service cache folder does not already exist"
@@ -83,8 +84,11 @@ Function Install-PME {
                     }
             }
             Else {
+                # Download Setup
                 Write-Output "Hash of local file ($($Download.Hash)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.nable.com, downloading the latest available version"
                 Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.a-able.com"
+                # Load module to ensure it works on Powershell 2.0 devices
+                Import-Module BitsTransfer
                 Start-BitsTransfer -Source "$($PMEDetails.DownloadURL)" -Destination "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
                 
                 # Check Hash
@@ -119,6 +123,8 @@ Function Install-PME {
 
         # Download Setup
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.a-able.com"
+        # Load module to ensure it works on Powershell 2.0 devices
+        Import-Module BitsTransfer
         Start-BitsTransfer -Source "$($PMEDetails.DownloadURL)" -Destination "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
         
         # Check Hash
