@@ -1,17 +1,19 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.5 (15th April 2020)
+    Version: 0.1.4.6 (15th April 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 3
     + Improved Detection for PME Services being missing on a device
     + Improved Detection of Latest PME Version
     + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
+    + Improved Compatibility of PME Version Check
     ************************************************************************************************************
 #>
-$Version = '0.1.4.5 (15th April 2020)'
+$Version = '0.1.4.6 (15th April 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
+$request = $null
 $Latestversion = $Null
 
 
@@ -26,13 +28,12 @@ $SolarWindsMSPRpcServerStatus = (get-service "SolarWinds.MSP.RpcServerService" -
 }
 
 Function Get-LatestPMEVersionfromURL {
-# Delcare static URI of PMESetup_details.xml
-$PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
+# Declare static URI of PMESetup_details.xml
+$PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
 
     Try {
-        [xml]$x = ((Invoke-RestMethod $PMESetup_detailsURI) -split '<\?xml.*\?>')[-1]
-        $PMEDetails = $x.ComponentDetails
-        $LatestVersion = $x.ComponentDetails.Version
+        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
+        $LatestVersion = $request.ComponentDetails.Version
     }
     Catch [System.Net.WebException] {
         Write-Output "Error fetching PMESetup_Details.xml check your source URL!"
@@ -47,7 +48,6 @@ $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetu
 
 Function Get-LatestPMEVersion {
  
-
     if ([version]$PMEAgentVersion -lt '1.2.0') {
     . Get-LatestPMEVersionfromURL
     }
