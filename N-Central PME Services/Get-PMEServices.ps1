@@ -1,15 +1,15 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.4 (15th April 2020)
+    Version: 0.1.4.5 (15th April 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 3
     + Improved Detection for PME Services being missing on a device
     + Improved Detection of Latest PME Version
-    + Improved Detection of latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
+    + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
     ************************************************************************************************************
 #>
-$Version = '0.1.4.4 (15th April 2020)'
+$Version = '0.1.4.5 (15th April 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $Latestversion = $Null
@@ -26,31 +26,40 @@ $SolarWindsMSPRpcServerStatus = (get-service "SolarWinds.MSP.RpcServerService" -
 }
 
 Function Get-LatestPMEVersionfromURL {
-        [xml]$x = ((Invoke-RestMethod https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml) -split '<\?xml.*\?>')[-1]
+# Delcare static URI of PMESetup_details.xml
+$PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
+
+    Try {
+        [xml]$x = ((Invoke-RestMethod $PMESetup_detailsURI) -split '<\?xml.*\?>')[-1]
         $PMEDetails = $x.ComponentDetails
         $LatestVersion = $x.ComponentDetails.Version
-        }
+    }
+    Catch [System.Net.WebException] {
+        Write-Output "Error fetching PMESetup_Details.xml check your source URL!"
+        Throw
+    }
+    Catch [System.Management.Automation.MetadataException] {
+        Write-Output "Error casting to XML; could not parse PMESetup_details.xml"
+        Throw
+    }   
+}
+
 
 Function Get-LatestPMEVersion {
-    if ($PMEAgentVersion -eq $null) {
+ 
+
+    if ([version]$PMEAgentVersion -lt '1.2.0') {
     . Get-LatestPMEVersionfromURL
     }
     else {
-        $PMEWrapper = get-content "c:\Program Files (x86)\N-able Technologies\Windows Agent\log\PMEWrapper.log"
-        $Latest = "Pme.GetLatestVersion result = LatestVersion"
-        $LatestMatch = ($PMEWrapper -match $latest)[-1]
-        if ($latestmatch -eq $null) {
-            Write-Host "PME 1.1.x Version Detected" -ForegroundColor Yellow
-           . Get-LatestPMEVersionfromURL
-
-        }
-        else {
+            $PMEWrapper = get-content "${Env:ProgramFiles(x86)}\N-able Technologies\Windows Agent\log\PMEWrapper.log"
+            $Latest = "Pme.GetLatestVersion result = LatestVersion"
+            $LatestMatch = ($PMEWrapper -match $latest)[-1]
             Write-Host "PME 1.2.x Version Detected" -ForegroundColor Yellow
             $LatestVersion = $LatestMatch.Split(' ')[9].TrimEnd(',')
         }
+        Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
     }
-    Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
-}
 
 Function Get-PMEServicesVersions {
 
