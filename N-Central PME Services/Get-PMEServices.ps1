@@ -1,16 +1,17 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.6 (15th April 2020)
+    Version: 0.1.4.7 (30th April 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 3
     + Improved Detection for PME Services being missing on a device
     + Improved Detection of Latest PME Version
     + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
     + Improved Compatibility of PME Version Check
+    + Updated PME 1.2.x check
     ************************************************************************************************************
 #>
-$Version = '0.1.4.6 (15th April 2020)'
+$Version = '0.1.4.7 (30th April 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -52,11 +53,14 @@ Function Get-LatestPMEVersion {
     . Get-LatestPMEVersionfromURL
     }
     else {
-            $PMEWrapper = get-content "${Env:ProgramFiles(x86)}\N-able Technologies\Windows Agent\log\PMEWrapper.log"
-            $Latest = "Pme.GetLatestVersion result = LatestVersion"
-            $LatestMatch = ($PMEWrapper -match $latest)[-1]
+            #$PMEWrapper = get-content "${Env:ProgramFiles(x86)}\N-able Technologies\Windows Agent\log\PMEWrapper.log"
+            #$Latest = "Pme.GetLatestVersion result = LatestVersion"
+            #$LatestVersion = $LatestMatch.Split(' ')[9].TrimEnd(',')
+            $PMECore = get-content "$env:programdata\SolarWinds MSP\PME\log\Core.log"
+            $Latest = "Latest PME Version is"
+            $LatestMatch = ($PMECore -match $latest)[-1]
             Write-Host "PME 1.2.x Version Detected" -ForegroundColor Yellow
-            $LatestVersion = $LatestMatch.Split(' ')[9].TrimEnd(',')
+            $LatestVersion = $LatestMatch.Split(' ')[10].Trim()
         }
         Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
     }
