@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{d21237f0-adfb-45d5-bfe9-92191e125b49}" Name="SEP Removal" Description="U0VQ" Version="1.6.2.4" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="6">
+  <Object ID="{0987d92e-7f09-4341-b34f-4df63f9df9f1}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml /&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>49e300d5-173d-4a78-a051-80ca06a5bef7</d2p1:m_Item1>
+        <d2p1:m_Item2>524dd354-1fd0-4860-9d19-ff96cf008d23</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>524dd354-1fd0-4860-9d19-ff96cf008d23</d2p1:m_Item1>
+        <d2p1:m_Item2>cc0438b1-4f41-48b2-9079-1f1144888cef</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>524dd354-1fd0-4860-9d19-ff96cf008d23</d2p1:m_Item1>
+        <d2p1:m_Item2>b01631d6-08b5-46bb-b3ad-a5d990498bfc</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DeleteSoftware, PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ApplicationName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap sads" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>515,873</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="475,833" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:SoftwareInventory ComputerName_Item="{x:Null}" ComputerName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null" ComputerName="localhost" ComputerName_DisplayArg="localhost" DisplayName="Software Inventory" sap:VirtualizedContainerService.HintSize="455,59" Moniker="49e300d5-173d-4a78-a051-80ca06a5bef7" Programs="[SoftwareInventory_Programs_0]" Result="[SoftwareInventory_Result_1]" ScriptDirectory="Unused" TypeName="SoftwareInventory" m_bTextLinkChange="False" />
+        <p:ForEachLoop ItemProperty="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null" CollectionDisplayName="Programs" CollectionName="[SoftwareInventory_Programs_0]" DisplayName="ForEach" sap:VirtualizedContainerService.HintSize="455,577" ItemValue="[ForEachLoop_ItemValue_2]" LinkedTypeName="SoftwareInventory" Moniker="524dd354-1fd0-4860-9d19-ff96cf008d23" ObjectName="Software Inventory" Result="[ForEachLoop_Result_3]" ScriptDirectory="Unused" TypeName="ForEachLoop" m_bTextLinkChange="False">
+          <p:ForEachLoop.Each>
+            <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="441,463">
+              <p:ForEachSequence.Activities>
+                <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null" Condition="contains" DisplayName="If" sap:VirtualizedContainerService.HintSize="421,341" Moniker="cc0438b1-4f41-48b2-9079-1f1144888cef" Result="[IfObject_Result_4]" ScriptDirectory="Unused" Type="string" TypeName="IfObject" ValueString="Symantec Endpoint Protection" ValueString_DisplayArg="Symantec Endpoint Protection" VariableString_DisplayArg="ForEach.SoftwareInventory.Programs.Name" VariableString_Item="[ForEachLoop_ItemValue_2]" VariableString_ItemProp="Name" m_bTextLinkChange="False">
+                  <p:IfObject.IfOption>
+                    <ActivityAction>
+                      <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="397,181" Name="SequenceActivity">
+                        <p:SequenceActivity.Activities>
+                          <p:DeleteSoftware ApplicationName="{x:Null}" ApplicationName_DisplayArg="ForEach.SoftwareInventory.Programs.Name" ApplicationName_Item="[ForEachLoop_ItemValue_2]" ApplicationName_ItemProp="Name" AssemblyName="PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null" DisplayName="Uninstall Software" sap:VirtualizedContainerService.HintSize="377,59" Moniker="b01631d6-08b5-46bb-b3ad-a5d990498bfc" Result="[DeleteSoftware_Result_5]" ScriptDirectory="Unused" TypeName="DeleteSoftware" m_bTextLinkChange="False" />
+                        </p:SequenceActivity.Activities>
+                        <p:SequenceActivity.Variables>
+                          <Variable x:TypeArguments="x:Double" Name="DeleteSoftware_Result_5" />
+                        </p:SequenceActivity.Variables>
+                      </p:SequenceActivity>
+                    </ActivityAction>
+                  </p:IfObject.IfOption>
+                </p:IfObject>
+              </p:ForEachSequence.Activities>
+              <p:ForEachSequence.Variables>
+                <Variable x:TypeArguments="x:Double" Name="IfObject_Result_4" />
+              </p:ForEachSequence.Variables>
+            </p:ForEachSequence>
+          </p:ForEachLoop.Each>
+        </p:ForEachLoop>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SoftwareInventory_Programs_0" />
+        <Variable x:TypeArguments="x:Double" Name="SoftwareInventory_Result_1" />
+        <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_2" />
+        <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_3" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

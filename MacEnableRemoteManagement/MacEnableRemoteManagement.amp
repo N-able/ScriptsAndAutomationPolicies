@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{5369e7ba-cce7-40b2-a299-63ac157c08f5}" Name="MacEnableRemoteManagement" Description="RW5hYmxlIHJlbW90ZSBtYW5hZ2VtZW50IG9uIE1hYyB0aHJvdWdoIFNTSA==" Version="1.7.2.53" RemoteCategory="2" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="56">
+  <Object ID="{08db73e4-89c5-42fc-ac15-5c183bf7f4a9}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;IP&quot; Label=&quot;IP Address&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Username&quot; Label=&quot;Username&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Password&quot; Label=&quot;Password&quot; ParameterType=&quot;password&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;VNCPassword&quot; Label=&quot;Set your VNC password&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.IP</d2p1:m_Item1>
+        <d2p1:m_Item2>603d61c1-063f-48d7-b11d-3126502f105d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SSHServer</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Username</d2p1:m_Item1>
+        <d2p1:m_Item2>603d61c1-063f-48d7-b11d-3126502f105d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>UserName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Password</d2p1:m_Item1>
+        <d2p1:m_Item2>603d61c1-063f-48d7-b11d-3126502f105d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Password</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.VNCPassword</d2p1:m_Item1>
+        <d2p1:m_Item2>e56be2cb-cc55-4a7b-bf98-c53804e57d3b</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e56be2cb-cc55-4a7b-bf98-c53804e57d3b</d2p1:m_Item1>
+        <d2p1:m_Item2>ed864550-a042-4d82-b235-fdeb0b0240ed</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.EnableCisco, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>EnableCommandNameOverride</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Password</d2p1:m_Item1>
+        <d2p1:m_Item2>ed864550-a042-4d82-b235-fdeb0b0240ed</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.EnableCisco, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>EnablePassword</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1395,780</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="1355,740" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:OpenSession Connected="{x:Null}" Password_Item="{x:Null}" Password_ItemProp="{x:Null}" PortNumber_Item="{x:Null}" PortNumber_ItemProp="{x:Null}" RemoveTerminalEmulationCharacters="{x:Null}" SSHServer_Item="{x:Null}" SSHServer_ItemProp="{x:Null}" ShellConnected="{x:Null}" ShellOpened="{x:Null}" UserName_Item="{x:Null}" UserName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" Cipher="[OpenSession_Cipher_25]" ClientVersion="[OpenSession_ClientVersion_28]" DisplayName="Open Session" ExpectPattern="[OpenSession_ExpectPattern_24]" sap:VirtualizedContainerService.HintSize="1335,160" Host="[OpenSession_Host_29]" HostKey="[OpenSession_HostKey_31]" Host_Name_Arrow="[OpenSession_Host_Name_Arrow_30]" IO="[OpenSession_IO_23]" Mac="[OpenSession_Mac_26]" Moniker="603d61c1-063f-48d7-b11d-3126502f105d" Password="[Password]" Password_DisplayArg="StartObject.Password" Port="[OpenSession_Port_32]" PortNumber="22" PortNumber_DisplayArg="22" Pwd="[OpenSession_Pwd_33]" Result="[OpenSession_Result_36]" SSHOutput="[OpenSession_SSHOutput_35]" SSHServer="[IP]" SSHServer_DisplayArg="StartObject.IP" ScriptDirectory="Unused" ServerVersion="[OpenSession_ServerVersion_27]" TypeName="OpenSession" UserName="[Username]" UserName_DisplayArg="StartObject.Username" Username="[OpenSession_Username_34]" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1="{x:Null}" Input1_DisplayArg="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Format String" FormattedString="[FormatString_FormattedString_41]" sap:VirtualizedContainerService.HintSize="1335,119" Input0="[VNCPassword]" Input0_DisplayArg="StartObject.VNCPassword" Moniker="e56be2cb-cc55-4a7b-bf98-c53804e57d3b" Result="[FormatString_Result_42]" ScriptDirectory="Unused" Text="sudo  /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw {0} -restart -agent -privs -all" Text_DisplayArg="sudo  /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw {0} -restart -agent -privs -all" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:EnableCisco EnableCommandNameOverride_Item="{x:Null}" EnableCommandNameOverride_ItemProp="{x:Null}" EnablePassword_Item="{x:Null}" EnablePassword_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="SSH Enable Cisco" EnableCommandNameOverride="[FormatString_FormattedString_41]" EnableCommandNameOverride_DisplayArg="FormatString.FormattedString" EnablePassword="[Password]" EnablePassword_DisplayArg="StartObject.Password" sap:VirtualizedContainerService.HintSize="1335,98" Host_Name_Hash="[EnableCisco_Host_Name_Hash_54]" Moniker="ed864550-a042-4d82-b235-fdeb0b0240ed" Result="[EnableCisco_Result_55]" SSHOutput="[EnableCisco_SSHOutput_53]" ScriptDirectory="Unused" TypeName="EnableCisco" m_bTextLinkChange="False" />
+        <p:CloseConnection AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Close Connection" sap:VirtualizedContainerService.HintSize="1335,51" Moniker="639e4d47-8285-491f-81ff-7a9dbb2d5eb1" Result="[CloseConnection_Result_48]" SSHOutput="[CloseConnection_SSHOutput_47]" ScriptDirectory="Unused" TypeName="CloseConnection" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="OpenSession_IO_23" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ExpectPattern_24" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Cipher_25" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Mac_26" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ServerVersion_27" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ClientVersion_28" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Host_29" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Host_Name_Arrow_30" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_HostKey_31" />
+        <Variable x:TypeArguments="x:Int32" Name="OpenSession_Port_32" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Pwd_33" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Username_34" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_SSHOutput_35" />
+        <Variable x:TypeArguments="x:Double" Name="OpenSession_Result_36" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_41" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_42" />
+        <Variable x:TypeArguments="x:String" Name="CloseConnection_SSHOutput_47" />
+        <Variable x:TypeArguments="x:Double" Name="CloseConnection_Result_48" />
+        <Variable x:TypeArguments="x:String" Name="EnableCisco_SSHOutput_53" />
+        <Variable x:TypeArguments="x:String" Name="EnableCisco_Host_Name_Hash_54" />
+        <Variable x:TypeArguments="x:Double" Name="EnableCisco_Result_55" />
+        <Variable x:TypeArguments="x:String" Default="10.19.6.42" Name="IP" />
+        <Variable x:TypeArguments="x:String" Default="selabm1n!" Name="VNCPassword" />
+        <Variable x:TypeArguments="x:String" Default="none" Name="Username" />
+        <Variable x:TypeArguments="p:Password" Name="Password">
+          <Variable.Default>
+            <Literal x:TypeArguments="p:Password">
+              <p:Password PasswordValue="none" />
+            </Literal>
+          </Variable.Default>
+        </Variable>
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
