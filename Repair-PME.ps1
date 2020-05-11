@@ -30,7 +30,8 @@
                                Updated function 'Invoke-SolarwindsDiagnostics' to create destination folder rather than
                                relying upon the tool to create it. 
                                Added DEBUG output to determinate parameters given to Solarwinds Diagnostics tool.
-                               Moved function 'Get-PMESetupDetails' to run later on to avoid hung installer issues.                           
+                               Moved function 'Get-PMESetupDetails' to run later on to avoid hung installer issues.
+                               Updated function 'Stop-PMESetup' to also kill CacheServiceSetup and RPCServerServiceSetup.                         
    **************************************************************************************************************************
 #>
 $Version = '0.1.4.2 (11/05/2020)'
@@ -46,6 +47,22 @@ Function Confirm-Elevation {
     }
     Else {
     Write-Output "Script is running as administrator, proceeding"
+    }
+}
+
+function Get-LegacyHash {
+    Param($Path)
+    # Performs hashing functionality with compatibility for older OS
+    Try {
+        Add-Type -AssemblyName System.Security
+        $csp = new-object -TypeName System.Security.Cryptography.SHA256CryptoServiceProvider
+        $ComputedHash = @()
+        $ComputedHash = $csp.ComputeHash([System.IO.File]::ReadAllBytes($Path))
+        $ComputedHash = [System.BitConverter]::ToString($ComputedHash).Replace("-", "").ToLower()
+        Return $ComputedHash
+    }
+    Catch {
+        Throw "Unable to performing hashing, aborting. Error: $($_.Exception.Message)"
     }
 }
 
@@ -117,41 +134,6 @@ Function Invoke-SolarwindsDiagnostics {
     }      
 }
 
-function Get-LegacyHash {
-    Param($Path)
-    # Performs hashing functionality with compatibility for older OS
-    Try {
-        Add-Type -AssemblyName System.Security
-        $csp = new-object -TypeName System.Security.Cryptography.SHA256CryptoServiceProvider
-        $ComputedHash = @()
-        $ComputedHash = $csp.ComputeHash([System.IO.File]::ReadAllBytes($Path))
-        $ComputedHash = [System.BitConverter]::ToString($ComputedHash).Replace("-", "").ToLower()
-        Return $ComputedHash
-    }
-    Catch {
-        Throw "Unable to performing hashing, aborting. Error: $($_.Exception.Message)"
-    }
-}
-
-Function Get-PMESetupDetails {
-   # Declare static URI of PMESetup_details.xml
-    $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
-    Try {
-        $request = $null
-        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
-        $PMEDetails = $request.ComponentDetails
-    }
-    Catch [System.Net.WebException] {
-        Throw "Error fetching PMESetup_Details.xml, check your source URL, aborting. Error: $($_.Exception.Message)"
-    }
-    Catch [System.Management.Automation.MetadataException] {
-        Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
-    }
-    Catch {
-        Throw "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message)"
-     }     
-}
-
 Function Stop-PMESetup {
     # Kill any running instances of PMESetup.exe to ensure that we can download & install successfully
     
@@ -185,6 +167,25 @@ Function Stop-PMESetup {
             Write-Output "RPCServerServiceSetup is not currently running, proceeding"
         }          
 }   
+
+Function Get-PMESetupDetails {
+   # Declare static URI of PMESetup_details.xml
+    $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
+    Try {
+        $request = $null
+        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
+        $PMEDetails = $request.ComponentDetails
+    }
+    Catch [System.Net.WebException] {
+        Throw "Error fetching PMESetup_Details.xml, check your source URL, aborting. Error: $($_.Exception.Message)"
+    }
+    Catch [System.Management.Automation.MetadataException] {
+        Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
+    }
+    Catch {
+        Throw "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message)"
+     }     
+}
 
 Function Clear-PME {
     # Cleanup Solarwinds MSP Cache Service root folder
