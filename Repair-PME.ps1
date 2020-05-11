@@ -1,7 +1,7 @@
 <#    
    **************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.4.1 (10/05/2020)
+    Version:         0.1.4.2 (11/05/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -25,12 +25,29 @@
                                Rename Function 'Get-PMESetup' to 'Get-PMESetupDetails' to release use for above function.
                                New function 'Stop-PMESetup' moving code from 'Clear-PME' function.
                                New function 'Set-Start' and 'Set-End' to write event log entries.
-                     0.1.4.1   New function 'Invoke-SolarwindsDiagnostics' to capture logs for support prior to repair.                       
+                     0.1.4.1   New function 'Invoke-SolarwindsDiagnostics' to capture logs for support prior to repair.
+                     0.1.4.2   New function 'Confirm-Elevation' to confirm/debug UAC issues.
+                               Updated function 'Invoke-SolarwindsDiagnostics' to create destination folder rather than
+                               relying upon the tool to create it. 
+                               Added DEBUG output to determinate parameters given to Solarwinds Diagnostics tool.
+                               Moved function 'Get-PMESetupDetails' to run later on to avoid hung installer issues.                           
    **************************************************************************************************************************
 #>
-$Version = '0.1.4.1 (10/05/2020)'
+$Version = '0.1.4.2 (11/05/2020)'
 
 Write-Output "Repair-PME $Version`n"
+
+Function Confirm-Elevation {
+    # Confirms script is running as an administrator
+    Write-Host "Checking for elevated permissions"
+    If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
+        [Security.Principal.WindowsBuiltInRole] "Administrator")) {
+        Throw "Insufficient permissions to run this script. Open the PowerShell as an administrator and run this script again."
+    }
+    Else {
+    Write-Output "Script is running as administrator, proceeding"
+    }
+}
 
 Function Set-Start {
     New-EventLog -LogName Application -Source "Repair-PME" -ErrorAction SilentlyContinue
@@ -47,7 +64,20 @@ Function Invoke-SolarwindsDiagnostics {
         $SolarwindsDiagnosticsExePath = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")+"\SolarWinds MSP\PME\Diagnostics\SolarwindsDiagnostics.exe"
         If (Test-Path $SolarwindsDiagnosticsExePath) {
             Write-Output "Processor architecture is $OSArch, Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
+            If (Test-Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs") {
+                Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' already exists, no need to create directory"
+            }
+            Else {
+                Try {
+                    Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' does not exist, creating directory"
+                    New-Item -ItemType Directory -Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs" -Force | Out-Null
+                }
+                Catch {
+                    Throw "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message)"
+                }
+            }     
             Write-Output "Starting Solarwinds Diagnostics"
+            Write-Output "DEBUG: Solarwinds Diagnostics started with:- Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait"
             Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait
             Write-Output "Solarwinds Diagnostics completed, file saved to 'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs'"    
         }
@@ -61,7 +91,20 @@ Function Invoke-SolarwindsDiagnostics {
         $SolarwindsDiagnosticsExePath = [Environment]::GetEnvironmentVariable("ProgramFiles")+"\SolarWinds MSP\PME\Diagnostics\SolarwindsDiagnostics.exe"
         If (Test-Path $SolarwindsDiagnosticsExePath) {
             Write-Output "Processor architecture is $OSArch, Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
+            If (Test-Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs") {
+                Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs', no need to create directory"
+            }
+            Else {
+                Try {
+                    Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' does not exist, creating directory"
+                    New-Item -ItemType Directory -Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs" -Force | Out-Null
+                }
+                Catch {
+                    Throw "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message)"
+                }
+            }     
             Write-Output "Starting Solarwinds Diagnostics"
+            Write-Output "DEBUG: Solarwinds Diagnostics started with:- Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait"
             Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait
             Write-Output "Solarwinds Diagnostics completed, file saved to 'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs'"   
         }
@@ -111,6 +154,7 @@ Function Get-PMESetupDetails {
 
 Function Stop-PMESetup {
     # Kill any running instances of PMESetup.exe to ensure that we can download & install successfully
+    
     Write-Output "Checking if PMESetup is currently running"
     $PMESetupRunning = Get-Process PMESetup* -ErrorAction SilentlyContinue
         If ($PMESetupRunning) {
@@ -120,6 +164,26 @@ Function Stop-PMESetup {
         Else {
             Write-Output "PMESetup is not currently running, proceeding"
         }
+    
+    Write-Output "Checking if CacheServiceSetup is currently running"
+    $PMESetupRunning = Get-Process CacheServiceSetup* -ErrorAction SilentlyContinue
+        If ($PMESetupRunning) {
+            Write-Output "CacheServiceSetup is currently running, forcefully terminating"
+            $PMESetupRunning | Stop-Process -Force
+        }
+        Else {
+            Write-Output "CacheServiceSetup is not currently running, proceeding"
+        }
+    
+    Write-Output "Checking if RPCServerServiceSetup is currently running"
+    $PMESetupRunning = Get-Process RPCServerServiceSetup* -ErrorAction SilentlyContinue
+        If ($PMESetupRunning) {
+            Write-Output "RPCServerServiceSetup is currently running, forcefully terminating"
+            $PMESetupRunning | Stop-Process -Force
+        }
+        Else {
+            Write-Output "RPCServerServiceSetup is not currently running, proceeding"
+        }          
 }   
 
 Function Clear-PME {
@@ -206,7 +270,7 @@ Function Install-PME {
         Write-Output "$($PMEDetails.FileName) does not exist, begin download and install phase"
             # Check for PME Archive Directory
             If (Test-Path "C:\ProgramData\SolarWinds MSP\PME\archives") {
-                Write-Output "Directory C:\ProgramData\SolarWinds MSP\PME\archives already exists, no need to create directory"
+                Write-Output "Directory 'C:\ProgramData\SolarWinds MSP\PME\archives already exists', no need to create directory"
             }
             Else {
                 Try {
@@ -244,10 +308,11 @@ Function Set-End {
     Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Repair-PME has finished.`nScript: Repair-PME.ps1"
 }
 
+. Confirm-Elevation
 . Set-Start
 . Invoke-SolarwindsDiagnostics 
-. Get-PMESetupDetails
 . Stop-PMESetup
 . Clear-PME
+. Get-PMESetupDetails
 . Install-PME
 . Set-End
