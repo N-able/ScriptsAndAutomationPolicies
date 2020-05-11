@@ -51,4 +51,4 @@ Below is an GIF of Repair-PME in action run from PowerShell.
 
 ### Feedback or Issues?
 
-Feedback is always appreciated and I look to improve this script where I can. If you have any issues with it or would like to suggest improvements please do raise an Issue in GitHub. Alternatively reach out to me (Ashley How) in the N-Able Slack Community (**n-able.slack.com**).
+Feedback is always appreciated and I look to improve this script where I can. If you have any issues with it or would like to suggest improvements please do raise an Issue in GitHub. Alternatively reach out to the maintainer (Ashley How) in the N-Able Slack Community (**n-able.slack.com**).
