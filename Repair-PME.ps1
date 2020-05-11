@@ -29,7 +29,7 @@
                      0.1.4.2   New function 'Confirm-Elevation' to confirm/debug UAC issues.
                                Updated function 'Invoke-SolarwindsDiagnostics' to create destination folder rather than
                                relying upon the tool to create it. 
-                               Added DEBUG output to determinate parameters given to Solarwinds Diagnostics tool.
+                               Added DEBUG output to determine parameters given to Solarwinds Diagnostics tool.
                                Moved function 'Get-PMESetupDetails' to run later on to avoid hung installer issues.
                                Updated function 'Stop-PMESetup' to also kill CacheServiceSetup and RPCServerServiceSetup.                         
    **************************************************************************************************************************
