@@ -7,7 +7,9 @@ Repair-PME is a script provided to the community that repairs Solarwinds MSP Pat
 
 ### Why was Repair-PME created?
 
-Repair-PME was created as I was getting frustrated with having to spend time trying resolve issues where PME had broken and subsequently caused **Patch Status v2** to become **misconfigured** in N-Central. Obviously having this in the misconfigured state is very bad as you cannot determine what's going on with patching.
+Repair-PME was created as I was getting frustrated with having to spend time trying resolve various issues where PME had broken and subsequently caused **Patch Status v2** to become **misconfigured** in N-Central. Obviously having this in the misconfigured state is very bad as you cannot determine what's going on with patching. An example of an error that can be fixed with this tool.
+
+![Patch_Status_v2_Misconfigured](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/WikiFiles/Repair-PME/Patch_Status_v2_Misconfigured.png)
 
 ### What does Repair-PME do?
 
@@ -20,6 +22,10 @@ Repair-PME does the following with logic and error handling to operate as user-f
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
 * Silently installs PME (PME Agent, Cache Service and RPC Server Service).
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has ended.
+
+### Important
+
+Please ensure you rescan and run a patch detection after running this script to ensure patch management is operating fully again.
 
 ### System Requirements
 
