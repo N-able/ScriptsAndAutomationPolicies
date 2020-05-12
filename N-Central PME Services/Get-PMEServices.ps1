@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.7 (30th April 2020)
+    Version: 0.1.4.8 (12th May 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 3
     + Improved Detection for PME Services being missing on a device
@@ -9,9 +9,10 @@
     + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
     + Improved Compatibility of PME Version Check
     + Updated PME 1.2.x check
+    + Updates PS 3.0+ Compatibility
     ************************************************************************************************************
 #>
-$Version = '0.1.4.7 (30th April 2020)'
+$Version = '0.1.4.8 (12th May 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -65,16 +66,27 @@ Function Get-LatestPMEVersion {
         Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
     }
 
-Function Get-PMEServicesVersions {
+Function Get-PMEServiceVersions {
+
+    if ([version]$psversiontable.psversion -le '2.0') {
+        Write-Host "PS 2.0 Compatible Version" -ForegroundColor Yellow
+        $SolarWindsMSPCacheLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.CacheService'" -ErrorAction SilentlyContinue).PathName.Replace('"','')
+        $SolarWindsMSPPMEAgentLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.PME.Agent.PmeService'" -ErrorAction SilentlyContinue).Pathname.Replace('"','')
+        $SolarWindsMSPRpcServerLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.RpcServerService'" -ErrorAction SilentlyContinue).Pathname.Replace('"','')
+        }
+        else {
+            $SolarWindsMSPCacheLocation = (get-ciminstance win32_service -filter "Name like 'SolarWinds.MSP.CacheService'" -OperationTimeoutSec 5 -ErrorAction SilentlyContinue).PathName.Replace('"','')
+            $SolarWindsMSPPMEAgentLocation = (get-ciminstance win32_service -filter "Name like 'SolarWinds.MSP.PME.Agent.PmeService'" -OperationTimeoutSec 5 -ErrorAction SilentlyContinue).Pathname.Replace('"','')
+            $SolarWindsMSPRpcServerLocation = (get-ciminstance win32_service -filter "Name like 'SolarWinds.MSP.RpcServerService'" -OperationTimeoutSec 5 -ErrorAction SilentlyContinue).Pathname.Replace('"','')
+        }
+        $PMECacheVersion = (get-item $SolarWindsMSPCacheLocation).VersionInfo.ProductVersion
+        $PMEAgentVersion = (get-item $SolarWindsMSPPMEAgentLocation).VersionInfo.ProductVersion
+        $PMERpcServerVersion = (get-item $SolarWindsMSPRpcServerLocation).VersionInfo.ProductVersion
 
     if ($SolarWindsMSPCacheStatus -eq $null) {
         Write-Host "PME Cache service is missing" -ForegroundColor Red
         $SolarWindsMSPCacheStatus = 'Service is Missing'
         $PMECacheVersion = '0.0'
-    }
-    else {
-        $SolarWindsMSPCacheLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.CacheService'" -ErrorAction SilentlyContinue).PathName.Replace('"','')
-        $PMECacheVersion = (get-item $SolarWindsMSPCacheLocation).VersionInfo.ProductVersion
     }
 
     if ($SolarWindsMSPPMEAgentStatus -eq $null) { 
@@ -82,19 +94,11 @@ Function Get-PMEServicesVersions {
         $SolarWindsMSPPMEAgentStatus = 'Service is Missing'
         $PMEAgentVersion = '0.0'
     }
-    else {
-        $SolarWindsMSPPMEAgentLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.PME.Agent.PmeService'" -ErrorAction SilentlyContinue).Pathname.Replace('"','')
-        $PMEAgentVersion = (get-item $SolarWindsMSPPMEAgentLocation).VersionInfo.ProductVersion
-    }
 
     if ($SolarWindsMSPRpcServerStatus -eq $null) {
         Write-Host "PME RPC Server service is missing" -ForegroundColor Red
         $SolarWindsMSPRpcServerStatus = 'Service is Missing'
         $PMERpcServerVersion = '0.0'
-    }
-    else {
-        $SolarWindsMSPRpcServerLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.RpcServerService'" -ErrorAction SilentlyContinue).Pathname.Replace('"','')
-        $PMERpcServerVersion = (get-item $SolarWindsMSPRpcServerLocation).VersionInfo.ProductVersion
     }
 
 }
@@ -216,7 +220,7 @@ Write-Host "Status: $OverallStatus"
 #endregion
 
 . Get-PMEServicesStatus
-. Get-PMEServicesVersions
+. Get-PMEServiceVersions
 . Get-LatestPMEVersion
 . Validate-PME
 
