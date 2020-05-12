@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.8 (12th May 2020)
+    Version: 0.1.4.9 (12th May 2020)
     Purpose:    Get/Reset PME Service Details
     Pre-Reqs:    Powershell 3
     + Improved Detection for PME Services being missing on a device
