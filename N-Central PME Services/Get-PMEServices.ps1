@@ -9,10 +9,10 @@
     + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
     + Improved Compatibility of PME Version Check
     + Updated PME 1.2.x check
-    + Updates PS 3.0+ Compatibility
+    + Updates PS 2.0/ PS 3.0 Compatibility
     ************************************************************************************************************
 #>
-$Version = '0.1.4.8 (12th May 2020)'
+$Version = '0.1.4.9 (12th May 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -67,18 +67,32 @@ Function Get-LatestPMEVersion {
     }
 
 Function Get-PMEServiceVersions {
-
+    <#
     if ([version]$psversiontable.psversion -le '2.0') {
         Write-Host "PS 2.0 Compatible Version" -ForegroundColor Yellow
         $SolarWindsMSPCacheLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.CacheService'" -ErrorAction SilentlyContinue).PathName.Replace('"','')
         $SolarWindsMSPPMEAgentLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.PME.Agent.PmeService'" -ErrorAction SilentlyContinue).Pathname.Replace('"','')
         $SolarWindsMSPRpcServerLocation = (get-wmiobject win32_service -filter "Name like 'SolarWinds.MSP.RpcServerService'" -ErrorAction SilentlyContinue).Pathname.Replace('"','')
+        
         }
         else {
             $SolarWindsMSPCacheLocation = (get-ciminstance win32_service -filter "Name like 'SolarWinds.MSP.CacheService'" -OperationTimeoutSec 5 -ErrorAction SilentlyContinue).PathName.Replace('"','')
             $SolarWindsMSPPMEAgentLocation = (get-ciminstance win32_service -filter "Name like 'SolarWinds.MSP.PME.Agent.PmeService'" -OperationTimeoutSec 5 -ErrorAction SilentlyContinue).Pathname.Replace('"','')
             $SolarWindsMSPRpcServerLocation = (get-ciminstance win32_service -filter "Name like 'SolarWinds.MSP.RpcServerService'" -OperationTimeoutSec 5 -ErrorAction SilentlyContinue).Pathname.Replace('"','')
         }
+    #>
+        $OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+        If ($OSArch -like '*64*') {
+            $SolarWindsMSPCacheLocation = 'C:\Program Files (x86)\SolarWinds MSP\CacheService\SolarWinds.MSP.CacheService.exe'
+            $SolarWindsMSPPMEAgentLocation = 'C:\Program Files (x86)\SolarWinds MSP\PME\SolarWinds.MSP.PME.Agent.exe'
+            $SolarWindsMSPRpcServerLocation = 'C:\Program Files (x86)\SolarWinds MSP\RpcServer\SolarWinds.MSP.RpcServerService.exe'
+        }
+        else {
+            $SolarWindsMSPCacheLocation = 'C:\Program Files\SolarWinds MSP\CacheService\SolarWinds.MSP.CacheService.exe'
+            $SolarWindsMSPPMEAgentLocation = 'C:\Program Files\SolarWinds MSP\PME\SolarWinds.MSP.PME.Agent.exe'
+            $SolarWindsMSPRpcServerLocation = 'C:\Program Files\SolarWinds MSP\RpcServer\SolarWinds.MSP.RpcServerService.exe'
+        }
+
         $PMECacheVersion = (get-item $SolarWindsMSPCacheLocation).VersionInfo.ProductVersion
         $PMEAgentVersion = (get-item $SolarWindsMSPPMEAgentLocation).VersionInfo.ProductVersion
         $PMERpcServerVersion = (get-item $SolarWindsMSPRpcServerLocation).VersionInfo.ProductVersion
