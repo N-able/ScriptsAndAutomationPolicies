@@ -1,12 +1,12 @@
   ' *************************************************************************************************************************************************
 ' Script: AVStatus.vbs
-' Version: 2.27
+' Version: 2.32
 ' Maintained by : Chris Reid @SolarWinds MSP
 ' Description: This script checks the status of the A/V software installed on 
 '              the machine, and writes data about the A/V software to the 
 '              AntiVirusProduct WMI Class in the root\SecurityCenter WMI namespace.
-' Date: April 11th, 2019
-' Compatibility : It is tested on the current versions of Windows but it also should work on all desktop and server versions, from Windows XP to Windows Server 2016.
+' Date: April 23rd, 2020
+' Compatibility : It is tested on the current versions of Windows but it also should work on all desktop and server versions, from Windows XP to Windows Server 2019.
 ' Usage in N-Central : avstatus.vbs WRITE     OR     avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
 ' Usage in Windows Command Prompt : CSCRIPT avstatus.vbs WRITE     OR     CSCRIPT avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
 ' *************************************************************************************************************************************************
@@ -19,7 +19,7 @@ Option Explicit
 dim HKEY_LOCAL_MACHINE, strComputer, objReg, strTrendKeyPath, InputRegistryKey1, InputRegistryKey2
 dim oReg,arrSubKeys,SubKey
 dim InputRegistryKey3, InstalledAV, NamespacePresense, objClassCreator, objGetClass, objWMIObject
-dim RegstrValue, ReturneddwValue1, objWMIService, objItem, objNameSpace, ReturneddwValue2
+dim RegstrValue, ReturneddwValue1, objWMIService, objItem, objItem2, objNameSpace, ReturneddwValue2
 dim wbemCimtypeString, wbemCimtypeUint32, colNamespaces, objNewNamespace
 dim RawAVVersion, FormattedAVVersion, objNewInstance, strWMINamespace, ParentWMINamespace
 dim ReturnedstrValue1, strValue, FormattedPatternAge, CalculatedPatternAge, CurrentDate
@@ -27,7 +27,7 @@ dim WMINamespace, strWMIClassWithQuotes, strWMIClassNoQuotes, colClasses, objCla
 dim strTestKeyPath, Registry, Registry32, Registry64, arrValueNames, strSymantecESKeyPath, WshShell
 dim ReturnedBinaryArray1(7), bytevalue, i, f, SymantecAvPatternDate
 dim SymantecAVMonth, SymantecAVYear, SymantecAVDate, ProductUpToDate, wbemCimtypeBoolean, OnAccessScanningEnabled, ReturneddwValue3, strTrendRealTimeKeyPath, InputRegistryKey4, InputRegistryKey7, strTrendRealTimeKeyPathNew
-dim AddressWidth, colItems, RawOnAccessScanningEnabled, Revision, strSymantecAVKeyPath, strSophosAVKeyPath, strSophosAVVersionPath, strSophosUpdateStatusPath
+dim AddressWidth, colItems, colItems2, RawOnAccessScanningEnabled, Revision, strSymantecAVKeyPath, strSophosAVKeyPath, strSophosAVVersionPath, strSophosUpdateStatusPath
 dim RawAVDate, strSymantecAVRealTimePath, strTrendPatternAgeKeyPath, strTrend7KeyPath, objComponentMgr, objConfigMgr
 Dim strTrendVersionKeyPath, VIPREAvPatternDate, VIPREAVMonth, VIPREAVYear, VIPREAVDate, strVIPREAVRealTimePath, strVIPREESFolderPath
 Dim McAfeeDatVersion, strMcAfeeVersionPath, McAfeeDatOAS, strMcAfeePath, InputRegistryKey5, strMcAfeeOASPath, OASEnabled, RAWOASEnabled, mcAfeeEndPointSecurityVersion, mcAfeeEndpointSecurityDefDatePath, mcAfeeEndpointSecurityBuildNum, mcAfeeEndpointSecurityVerNum, mcAfeeEndpointSecurity, mcAfeeEndpointSecurityDefDate
@@ -39,7 +39,7 @@ Dim InputRegistryKey6, ProductName, strVIPREBusiness5KeyPath, strVIPREAV2012KeyP
 Dim strKasperskyKESServerKeyPath, strKasperskyKESServerAVDatePath, InstalledApp, ProductVersionKey, strForefrontKeyPath, strKasperskyKES8ServerKeyPath, strKasperskyKES6ServerKeyPath 
 Dim Version, WSHStdOut, filename, cscriptExec, strKasperskySOS2KeyPath, strKasperskySOS3KeyPath, Return, strTotalDefenseKeyPath, strWMIQuery
 Dim strAviraKeyPath, NoAVBehavior, strWMINamespace2, HexProductState, HexScannerState, HexAVDefState, strAviraServerKeyPath, DeleteWMINamespace
-Dim strFSecureRegPath0, strFSecureRegPath00, strFSecureRegPath1, strFSecureRegPath2, strFSecureRegPath3, strFSecureRegPath4, strFSecureRegPath5, strFSecureRegPath6, strFSecureRegPathLoc,strFSecureInstallPath
+Dim strFSecureRegPath0, strFSecureRegPath00, strFSecureRegPath000, strFSecureRegPath1, strFSecureRegPath2, strFSecureRegPath3, strFSecureRegPath4, strFSecureRegPath5, strFSecureRegPath6, strFSecureRegPathLoc,strFSecureInstallPath
 Dim strSEPCloudRegPath0, strSEPCloudRegpath2,strSEPCloudRegpath3,strSEPCloudRegpath4,strSEPCloudDefPath, strSEPCloudDefPath2, OSName, strKES10KeyPath, strKES10KeyPathSP1, strKES10KeyPathSP2
 Dim strPandaCloudEPPath64, strPandaCloudEPPath32, strPandaAVDefinitionPath
 Dim strWindowsDefenderPath, DisableRealtimeMonitoring, strTrendProductVersion
@@ -53,12 +53,13 @@ Dim strViprebusinessAgt, strViprebusiness64Agt , strVipreBusinessAgtLoc, strVipr
 Dim strMalwareBytesRegPath64, SCEPInstalled, FoundGUID, StatusCode, StatusText
 Dim sMonth, sDay, sYear, sHour, sMinutes, sSeconds, strTMMSARegPath, recentFile, NamespacetoCheck, strTMDSARegPath, fileSystem, folder, file, newestfile, ProgramFiles64, stravg2016defpath, stravg2016regpath, colServices, objService
 Dim strNormanregpath32, strNormanregpath64, strNormanrootpath, boolNormanversion9, strNormandefpath, strKasperskyStandAlonePath, LastUpdateDate, AVGBusSecDataFolder, arrIniFileLines, ProviderRealTimeScanningEnabled, UserRealTimeScanningDisabled
-Dim objFileToRead, objFileToWrite, node, UpToDateState, strFortiClientPath, FortiClientInstallPath, objApp
+Dim objFileToRead, objFileToWrite, node, UpToDateState, strFortiClientPath, FortiClientInstallPath, objApp, strKasperskyKESServerAVVersionPath, strSophosVirtualAVKeyPath, RawProtectionStatus, strPandaAdaptiveDefencePath64, strPandaAdaptiveDefencePath32
+Dim ProgramData
 
 
 ' Specify values for some of the variables
 
-Version = "2.27"
+Version = "2.32"
 
 HKEY_LOCAL_MACHINE = &H80000002
 strComputer = "."
@@ -78,6 +79,7 @@ Set output = Wscript.stdout
 OutOfDateDays = 5
 InstallLocation = WshShell.ExpandEnvironmentStrings("%AllUsersProfile%")
 CurrentDate=Now 
+
 
 
 
@@ -106,7 +108,7 @@ End If
 'This is a meat of the script - where all of the functions are called.
 
   output.writeline "- This is version " & Version & " of the script." 
-
+  
   OSType 'This function determines whether this is a 32-bit or 64-bit OS
   OSVersion 'This function figures out what OS the machine is running
   
@@ -143,24 +145,13 @@ End If
 
   
   ElseIf InstalledAV="Sophos Anti-Virus" Then
-    ' If the script is launched on a 64-bit machine, let's re-launch it in the 32-bit command prompt. This will allow the script to properly detect Sophos.
-    ' Thanks to Jason Berg for this code snippet!
-    'Set WSHShell=CreateObject("Wscript.Shell")
-    'Set WSHStdOut=WScript.StdOut
-    'If WshShell.ExpandEnvironmentStrings("%processor_architecture%")="AMD64" then
-    '  filename=Wscript.ScriptFullName
-     ' output.writeline "- This script is being run on a 64-bit machine, so it'll be re-launched using the 32-bit version of cscript. This will ensure the proper discovery of Sophos."
-      'Set cscriptExec=WSHShell.Exec(WshShell.ExpandEnvironmentStrings("%windir%") & "\Syswow64\cscript.exe /nologo " & Chr(34) & filename & Chr(34))
-      'Do While cscriptExec.Status=0
-        'WScript.Sleep 100
-        'WSHStdout.WriteLine(cscriptExec.StdOut.ReadAll())
-        'WScript.StdErr.Write(cscriptExec.StdErr.ReadAll())
-      'Loop
-      'Wscript.Quit(cscriptExec.ExitCode)
-    'End If
     ObtainSophos10AVData 'Call the function we created to grab info about Sophos Anti-Virus from the registry
+
+  ElseIf InstalledAV="Sophos Endpoint Protection" Then
+    ObtainSophos10AVData 'Call the function we created to grab info about Sophos Endpoint Protection from the registry
     
-	  ElseIf InstalledAV="Sophos Anti-Virus 10" Then
+       
+  ElseIf InstalledAV="Sophos Anti-Virus 10" Then
     ' If the script is launched on a 64-bit machine, let's re-launch it in the 32-bit command prompt. This will allow the script to properly detect Sophos.
     ' Thanks to Jason Berg for this code snippet!
     Set WSHShell=CreateObject("Wscript.Shell")
@@ -272,7 +263,7 @@ End If
   ElseIf InStr(1,InstalledAV,"F-Secure")>0 Then
     ObtainFSecureAVData 'Call the function we created to grab info about F-Secure from registry and folder
 
-  ElseIf InstalledAV="Symantec Endpoint.Cloud" then
+  ElseIf InstalledAV="Symantec Endpoint Protection Cloud" then
     ObtainSEPCloudData
   
   ElseIf InstalledAV="Avast!" Then
@@ -333,7 +324,11 @@ End If
      Path = InstallLocation & "\Kaspersky Lab\KES10SP2\Data\u1313g.xml"
     ObtainKESServerData 'Call the function we created to grab info about Kaspersky from the registry
 
-	
+  ElseIf InstalledAV="Panda Adaptive Defense 360 32 Bit" OR InstalledAV="Panda Adaptive Defense 360 64 Bit" Then
+    strPandaAVDefinitionPath = ProgramData & "\Panda Security\Panda Security Protection"
+    ObtainPandaAdaptiveDefenceData 'Call the function we created to grab info about Panda Adaptive Defense from the registry
+
+
   ElseIf InstalledAV="Panda Endpoint Protection 10 32 Bit" Then
     strPandaAVDefinitionPath = "C:\Program Files\Panda Security\WaAgent\WalUpd\Data\Catalog"
     ObtainPandaCloudOfficeData 'Call the function we created to grab info about Kaspersky Endpoint Security 6 from the registry
@@ -380,6 +375,16 @@ End If
 
   ElseIf InstalledAV="FortiClient" Then
     ObtainFortiClient 'Call the function to grab info about FortiClient from the registry
+    
+  ElseIf InstalledAV="Cisco Advanced Malware Protection (AMP)" Then
+    ObtainCiscoAMPData 'Call the function to grab info about Cisco AMP
+    
+  ElseIf InstalledAV="Sophos for Virtual Environments" Then
+    ObtainSophosVirtualAVData 'Call the function to grab info about Sophos for Virtual Environments
+    
+  ElseIf InstalledAV="Palo Alto Networks Traps™" Then
+    ObtainPaloAltoTrapsAVData 'Call the function to grab info about Palo Alto Networks Traps™  
+
  
   End If
 
@@ -442,6 +447,9 @@ Next
     'Windows doesn't know what OS Type it's running
     output.writeline "- The type of OS is unknown - the script can't detect if it's 32-bit or 64-bit."
   End If
+  
+' Let's grab the %ProgramData% value, as it'll be used in detecting the installed AV product
+ProgramData = WshShell.ExpandEnvironmentStrings("%PROGRAMDATA%")
 End Sub   
 
 
@@ -459,11 +467,12 @@ Sub DetectInstalledAV
     strSymantecESKeyPath = Registry & "Symantec\Symantec Endpoint Protection\AV\"
     strSymantecAVKeyPath = Registry & "Symantec\Symantec AntiVirus\"
     strSophosAVKeyPath = Registry & "Sophos\"
+    strSophosVirtualAVKeyPath = Registry32 & "Sophos\Sophos for Virtual Environments\"   
     strVIPREAVKeyPath = Registry & "Sunbelt Software\VIPRE Antivirus\"
     strVIPREEnterpriseKeyPath = Registry & "Sunbelt Software\Sunbelt Enterprise Agent\"
     strKasperskyAV2012KeyPath = Registry & "KasperskyLab\protected\AVP12\settings\"
     strKasperskyAV60KeyPath = Registry & "KasperskyLab\protected\AVP80\settings\"
-    strSecurityEssentialsKeyPath = "SOFTWARE\Microsoft\Microsoft Antimalware\"
+    strSecurityEssentialsKeyPath = "SOFTWARE\Microsoft\Microsoft Security Client\"
     strEndpointSecurityKeyPath = Registry & "Microsoft\Windows\CurrentVersion\Uninstall\" 
     strKasperskyKES8KeyPath = Registry & "KasperskyLab\protected\KES8\settings\"
     strVIPREBusiness5KeyPath = Registry & "GFI Software\GFI Business Agent\"
@@ -479,44 +488,48 @@ Sub DetectInstalledAV
     strAviraKeyPath = Registry & "Avira\AntiVir Desktop\"
     strAviraServerKeyPath = Registry & "Avira\AntiVir Server\"
     strFSecureRegPath0= "SOFTWARE\Wow6432Node\Data Fellows\F-Secure\F-Secure GUI\PUB\" 
-    strFSecureRegPath00= "SOFTWARE\Data Fellows\F-Secure\F-Secure GUI\PUB\" 
+    strFSecureRegPath00= "SOFTWARE\Data Fellows\F-Secure\F-Secure GUI\PUB\"
+    strFSecureRegPath000= "SOFTWARE\Wow6432Node\F-Secure\OneClient\" 
     strFSecureRegPath1= "SOFTWARE\Wow6432Node\Data Fellows\F-Secure\Anti-Virus\" 
     strFSecureRegPath2= "SOFTWARE\Data Fellows\F-Secure\Anti-Virus\" 
     strFSecureRegPath4= "SOFTWARE\Wow6432Node\F-Secure\Anti-Virus\" 
     strFSecureRegPath3= "SOFTWARE\F-Secure\Anti-Virus\" 
     strFSecureRegPath5= "SOFTWARE\Wow6432Node\Data Fellows\F-Secure\Anti-Virus Definition Databases\" 
-    strFSecureRegPath6= "SOFTWARE\F-Secure\Anti-Virus Definition Databases\" 
+    strFSecureRegPath6= "SOFTWARE\F-Secure\Anti-Virus Definition Databases\"
+    strFSecureRegPath000= "SOFTWARE\Wow6432Node\F-Secure\OneClient\" 
     strKES10KeyPath = Registry & "KasperskyLab\protected\KES10\settings\"
     strKES10KeyPathSP1 = Registry & "KasperskyLab\protected\KES10SP1\settings\"
     strKES10KeyPathSP2 = Registry & "KasperskyLab\protected\KES10SP2\settings\"
     strWindowsDefenderPath = "SOFTWARE\Microsoft\Windows Defender\"
    	strPandaCloudEPPath64 = "Software\wow6432node\panda software\setup"
-	  strPandaCloudEPPath32 = "Software\panda software\setup"
+	strPandaCloudEPPath32 = "Software\panda software\setup"
     stravg2014regpath32 = "Software\Avg\Avg2014"
     stravg2014regpath64 = "Software\Wow6432Node\Avg\Avg2014"
-    stravg2014defpath = "C:\ProgramData\AVG2014\avi"
+    stravg2014defpath = ProgramData & "\AVG2014\avi"
     stravg2013regpath32 = "Software\Avg\Avg2013"
     stravg2013regpath64 = "Software\Wow6432Node\Avg\Avg2013"
-    stravg2013defpath = "C:\ProgramData\AVG2013\avi"
+    stravg2013defpath = ProgramData & "\AVG2013\avi"
     strAvastRegPath32 = "SOFTWARE\AVAST SOFTWARE\Avast"
     strAvastRegPath64 = "SOFTWARE\Wow6432Node\AVAST SOFTWARE\Avast"
     strViprebusinessAgt = "SOFTWARE\VIPRE Business Agent"
     strViprebusiness64Agt = "SOFTWARE\Wow6432Node\VIPRE Business Agent"
     strVipreBusinessAgtLoc= ""
-	  strWebRootStatusPath = Registry & "WRData\Status\"
-	  strWebRootStatusPath32 = "SOFTWARE\WRData\Status\"
-	  mcAfeeEndPointSecurityVersion = "SOFTWARE\McAfee\Endpoint\AV"
-	  mcAfeeEndpointSecurityDefDatePath = "SOFTWARE\McAfee\Endpoint\Common\TPSConnector\Subsystems\Update\Configuration"
-	  strSophosAVVersionPath = Registry & "Sophos\SAVService\Application"
-	  strSophosUpdateStatusPath = Registry & "Sophos\SAVService\Status\"
+	strWebRootStatusPath = Registry & "WRData\Status\"
+	strWebRootStatusPath32 = "SOFTWARE\WRData\Status\"
+	mcAfeeEndPointSecurityVersion = "SOFTWARE\McAfee\Endpoint\AV"
+	mcAfeeEndpointSecurityDefDatePath = "SOFTWARE\McAfee\Endpoint\Common\TPSConnector\Subsystems\Update\Configuration"
+	strSophosAVVersionPath = Registry & "Sophos\SAVService\Application"
+	strSophosUpdateStatusPath = Registry & "Sophos\SAVService\Status\"
     strMalwareBytesRegPath64 = Registry & "Malwarebytes' Anti-Malware"
     strTMMSARegPath = "SOFTWARE\TrendMicro\ScanMail for Exchange\CurrentVersion\"
     strTMDSARegPath = "SOFTWARE\TrendMicro\Deep Security Agent\"
-    stravg2016defpath = "C:\ProgramData\AVG\AV\avi"
+    stravg2016defpath = ProgramData & "\AVG\AV\avi"
     stravg2016regpath =  "Software\Wow6432Node\Avg\AV"
     strNormanregpath32 = "SOFTWARE\Norman Data Defense Systems"
     strNormanregpath64 = "SOFTWARE\Wow6432Node\Norman Data Defense Systems"
     strFortiClientPath = "SOFTWARE\Fortinet\FortiClient\FA_FMON"
+    strPandaAdaptiveDefencePath64 = "Software\wow6432node\Panda Security\Nano Av\Setup"
+    strPandaAdaptiveDefencePath32 = "Software\Panda Security\Nano Av\Setup"
 
     
 
@@ -544,7 +557,7 @@ Sub DetectInstalledAV
     End If
     Set objFSO = CreateObject("Scripting.FileSystemObject")
     ' Check for AV Defender on 64-bit, modern operating systems
-    If (objFSO.FolderExists(WshShell.ExpandEnvironmentStrings("%programdata%") & "\N-able Technologies\AVDefender\Configuration") AND isProcessRunning(".","NableAVDBridge.exe")) Then
+    If (objFSO.FolderExists(ProgramData & "\N-able Technologies\AVDefender\Configuration") AND isProcessRunning(".","NableAVDBridge.exe")) Then
       output.writeline "- AV Defender has been detected on this machine. This should be monitored via the dedicated AV Defender Status Service. This script will now exit."
       wscript.quit(0)
     End If
@@ -603,26 +616,22 @@ Sub DetectInstalledAV
        
     ElseIf RegKeyExists ("HKLM\" & strKasperskyAV60KeyPath & "SettingsVersion") Then
        InstalledAV = "Kaspersky Anti-Virus 6.0"
-
-       
-       
-    ElseIf RegKeyExists ("HKLM\" & strSecurityEssentialsKeyPath & "InstallLocation") Then
-       ' We know that either Microsoft SCEP is installed, or Microsoft Security Essentials. Now let's figure out which one.
-       objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Security Client\","DisplayName",SCEPInstalled
-       If InStr(SCEPInstalled,"System Center Endpoint Protection") Then
-        InstalledAV = "Microsoft System Center Endpoint Protection"
-       ElseIf InStr(SCEPInstalled,"System Center 2012 Endpoint Protection") Then
-        InstalledAV = "Microsoft System Center 2012 Endpoint Protection" 
-       Else
-        InstalledAV = "Microsoft Security Essentials"
-       End If 
-
        
        
     ElseIf RegKeyExists ("HKLM\" & strKasperskyKES8KeyPath & "SettingsVersion") Then
        InstalledAV = "Kaspersky Endpoint Security 8"
-
        
+    '--- Check for VIPRE Business Agent  ---	  
+    ElseIf RegKeyExists ("HKLM\" & strViprebusinessAgt & "\Version") Then
+	   InstalledAV = "VIPRE Business Agent"
+	   objReg.GetExpandedStringValue HKEY_LOCAL_MACHINE,strViprebusinessAgt ,"InstallPath",strVipreBusinessAgtLoc
+        strViprebusinessAgt1 = strViprebusinessAgt
+    ElseIf RegKeyExists ("HKLM\" & strViprebusiness64Agt & "\Version") Then
+	  InstalledAV = "VIPRE Business Agent"
+	  objReg.GetExpandedStringValue HKEY_LOCAL_MACHINE,strViprebusiness64Agt ,"InstallPath",strVipreBusinessAgtLoc
+        strViprebusinessAgt1 = strViprebusiness64Agt
+
+    '--- Check for VIPRE Business Antivirus  ---    
     ElseIf RegKeyExists ("HKLM\" & strVIPREBusiness5KeyPath & "ProductCode") Then
        InstalledAV = "VIPRE Business Antivirus"
        strVIPREEnterpriseKeyPath = Registry & "GFI Software\GFI Business Agent\"
@@ -673,7 +682,17 @@ Sub DetectInstalledAV
     ElseIf RegKeyExists ("HKLM\" & strAviraServerKeyPath & "EngineVersion") Then
        InstalledAV = "Avira AntiVirus"
              
+    ElseIf  WMINamespaceExistanceCheck("FSECURE") Then 'If the F-Secure WMI namespace exists, let's use that. If not, we'll fall back to the alternate method.
+        Set objWMIService = GetObject("winmgmts:\\" & "." & "\root\FSECURE")
+        ' Let's determine what version of F-Secure has been installed
+        Set colItems = objWMIService.ExecQuery("SELECT Version,Name FROM Product", "WQL", wbemFlagReturnImmediately + wbemFlagForwardOnly)
+        For Each objItem in colItems
+            FormattedAVVersion = objItem.Version
+            InstalledAV = objItem.Name
+        Next
+           
     ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath0 & "ProductName") Then
+    output.writeline "- Found it!"
       objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath0,"ProductName",InstalledAV      
 
       If RegKeyExists ("HKLM\" & strFSecureRegPath1 & "InstallationDirectory") Then
@@ -699,7 +718,7 @@ Sub DetectInstalledAV
       ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "Path") Then
                       strFSecureRegPathLoc=strFSecureRegPath5 
       ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath6 
+                      strFSecureRegPathLoc=strFSecureRegPath6  
       End If
                    
                    
@@ -734,6 +753,9 @@ Sub DetectInstalledAV
         End If
 
 
+    ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath000 & "ProductName") Then
+       objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath000,"ProductName",InstalledAV
+       
 
                                                 
 
@@ -751,6 +773,12 @@ Sub DetectInstalledAV
   
   ElseIf RegKeyExists ("HKLM\" & Registry & "KasperskyLab\Components\34\1103\1.0.0.0\Statistics\AVState\" & "Protection_NagentVersion") Then
       InstalledAV = "Kaspersky Endpoint Security 10 for Windows"
+      
+  ElseIf RegKeyExists ( "HKLM\" & strPandaAdaptiveDefencePath32 & "\Path") Then
+      InstalledAV = "Panda Adaptive Defense 360 32 Bit"	
+
+  ElseIf RegKeyExists ( "HKLM\" & strPandaAdaptiveDefencePath64 & "\Path") Then
+      InstalledAV = "Panda Adaptive Defense 360 64 Bit"
 
   ElseIf RegKeyExists ( "HKLM\" & strPandaCloudEPPath32 & "\InitialProductName") Then
       InstalledAV = "Panda Endpoint Protection 10 32 Bit"	
@@ -794,66 +822,54 @@ Sub DetectInstalledAV
 	  objReg.GetExpandedStringValue HKEY_LOCAL_MACHINE,strAvastRegPath64,"ProgramFolder",strAvastInstallPath  
 
 
-  '--- Check for VIPRE Business Agent  ---	  
-  ElseIf RegKeyExists ("HKLM\" & strViprebusinessAgt & "\Version") Then
-	  InstalledAV = "VIPRE Business Agent"
-	  objReg.GetExpandedStringValue HKEY_LOCAL_MACHINE,strViprebusinessAgt ,"InstallPath",strVipreBusinessAgtLoc
-    strViprebusinessAgt1 = strViprebusinessAgt
 
-  '--- Check for VIPRE Business Agent  ---	  
-  ElseIf RegKeyExists ("HKLM\" & strViprebusiness64Agt & "\Version") Then
-	  InstalledAV = "VIPRE Business Agent"
-	  objReg.GetExpandedStringValue HKEY_LOCAL_MACHINE,strViprebusiness64Agt ,"InstallPath",strVipreBusinessAgtLoc
-    strViprebusinessAgt1 = strViprebusiness64Agt
 
   '--- Check for McAfee Endpoint Security V10  ---	  
   ElseIf RegKeyExists ("HKLM\" & mcAfeeEndpointSecurityDefDatePath ) Then
 	  InstalledAV = "McAfee Endpoint Security"
 
 
-  '--- Check for Malwarebytes' Corporate Edition  ---	  
-  ElseIf RegKeyExists ("HKLM\" & strMalwareBytesRegPath64 & "\InstallPath" ) Then
-	  InstalledAV = "Malwarebytes' Corporate Edition"
-
-
   '--- Check for McAfee Endpoint Security V10.1  ---	  
   ElseIf RegKeyExists ("HKLM\" & mcAfeeEndPointSecurityVersion & "\ProductVersion" ) Then
 	  InstalledAV = "McAfee Endpoint Security 10.1"
 
-	'--- Check for Symantec Endpoint.Cloud  ---
-                
-  ElseIf RegKeyExists ("HKLM\SOFTWARE\Norton\") Then
-    strSEPCloudRegPath0 = "SOFTWARE\Norton\"
-    InstalledAV="Symantec Endpoint.Cloud"
-    FoundGUID = FALSE
-    Set oReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
-    Set arrSubKeys = Nothing
-    oReg.EnumKey HKEY_LOCAL_MACHINE, strSEPCloudRegPath0, arrSubKeys
+    '--- Check for Symantec Endpoint Protection Cloud  ---                
+    ElseIf RegKeyExists ("HKLM\SOFTWARE\Norton\SecurityStatusSDK\SDKProduct") Then
+        strSEPCloudRegPath0 = "SOFTWARE\Norton\"
+        InstalledAV="Symantec Endpoint Protection Cloud"
+        FoundGUID = FALSE
+        Set oReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
+        Set arrSubKeys = Nothing
+        oReg.EnumKey HKEY_LOCAL_MACHINE, strSEPCloudRegPath0, arrSubKeys
     
-    For Each subkey In arrSubKeys
-		  ' Endpoint.Cloud stores the information we're after in a GUID-titled sub-key. Let's figure out that GUID.
-      If RegKeyExists("HKLM\" & strSEPCloudRegPath0  & subkey & "\PRODUCTVERSION") Then
-        strSEPCloudRegPath2 = strSEPCloudRegPath0 & subkey
-        FoundGUID = TRUE
-        Exit For         
-			End If 
-		Next
-    
-    ' It looks like newer versions of Endpoint.Cloud no longer log to the Wow6432Node on 64-bit machines. This next bit of code will handle that scenario
-    If FoundGUID = FALSE Then
-
-      Set arrSubKeys = Nothing
-      oReg.EnumKey HKEY_LOCAL_MACHINE, "SOFTWARE\NORTON\", arrSubKeys
-      For Each subkey In arrSubKeys
-  		  ' Endpoint.Cloud stores the information we're after in a GUID-titled sub-key. Let's figure out that GUID.
-        If RegKeyExists("HKLM\SOFTWARE\NORTON\"  & subkey & "\PRODUCTVERSION") Then
-          strSEPCloudRegPath2 = strSEPCloudRegPath0 & subkey
-          Exit For         
-  			End If 
-		  Next
+        If Not IsNull (arrSubKeys) Then
+            For Each subkey In arrSubKeys
+  	         ' Endpoint Cloud stores the information we're after in a GUID-titled sub-key. Let's figure out that GUID.
+                If RegKeyExists("HKLM\" & strSEPCloudRegPath0  & subkey & "\PRODUCTVERSION") Then
+                    strSEPCloudRegPath2 = strSEPCloudRegPath0 & subkey
+                    FoundGUID = TRUE
+                    Exit For         
+  		        End If 
+  	         Next
+      
+        ' It looks like newer versions of Endpoint Cloud no longer log to the Wow6432Node on 64-bit machines. This next bit of code will handle that scenario
+        If FoundGUID = FALSE Then
+            Set arrSubKeys = Nothing
+            oReg.EnumKey HKEY_LOCAL_MACHINE, "SOFTWARE\NORTON\", arrSubKeys
+            For Each subkey In arrSubKeys
+    		  ' Endpoint Cloud stores the information we're after in a GUID-titled sub-key. Let's figure out that GUID.
+                If RegKeyExists("HKLM\SOFTWARE\NORTON\"  & subkey & "\PRODUCTVERSION") Then
+                    strSEPCloudRegPath2 = strSEPCloudRegPath0 & subkey
+                    Exit For         
+    		  End If 
+  		    Next
+        End If
+    Else
+        output.writeline "- Unable to find more details about Symantec Endpoint Protection Cloud from the registry. Is it perhaps uninstalled?"
+        Wscript.Quit
     End If
-    
-              
+
+           
               
 
     
@@ -900,41 +916,80 @@ Sub DetectInstalledAV
      FormattedAVVersion = "Unknown"  
      
     '--- Check for AVG Business Security ---                                    
-    ElseIf objFSO.FileExists("C:\ProgramData\AVG\Persistent Data\Antivirus\Logs\update.log") Then
+    ElseIf objFSO.FileExists(ProgramData & "\AVG\Persistent Data\Antivirus\Logs\update.log") Then
       InstalledAV = "AVG Business Security"
       
-      
+    '--- Check for FortiClient ---   
     ElseIf RegKeyExists ("HKLM\" & strFortiClientPath & "\enabled") Then
         InstalledAV = "FortiClient"
       
-      
-    ElseIf RegKeyExists ("HKLM\" & strSophosAVKeyPath & "SAVService\Application\MarketingVersion") Then
+    '--- Check for Sophos AV ---   
+    ElseIf RegKeyExists ("HKLM\" & strSophosAVVersionPath & "\MarketingVersion") Then
+        objReg.GetStringValue HKEY_LOCAL_MACHINE,strSophosAVVersionPath,"MarketingVersion",RegstrValue
+        If inStr(RegstrValue, "9.")  Then
+            InstalledAV = "Sophos Anti-Virus"
+        ElseIf inStr(RegstrValue, "10.1") OR  inStr(RegstrValue, "10.2") OR  inStr(RegstrValue, "10.3") Then
+            InstalledAV = "Sophos Anti-Virus"
+        ElseIf inStr(RegstrValue, "2.2.")  Then
+            InstalledAV = "Sophos Endpoint Protection"
+        Else
+		    InstalledAV = "Sophos Anti-Virus 10" 
+	   End If
 
-		  strValue = "MarketingVersion"
-      objReg.GetStringValue HKEY_LOCAL_MACHINE,strSophosAVVersionPath,strValue,RegstrValue
-      If inStr(RegstrValue, "9.")  Then
-        InstalledAV = "Sophos Anti-Virus"
-      ElseIf inStr(RegstrValue, "10.1") OR  inStr(RegstrValue, "10.2") OR  inStr(RegstrValue, "10.3") Then
-        InstalledAV = "Sophos Anti-Virus"
-      Else
-		    InstalledAV = "Sophos Anti-Virus 10"
-		    
-	  End If
+    '--- Check for Sophos for Virtual Environments --- 
+    ElseIf RegKeyExists ("HKLM\" & strSophosVirtualAVKeyPath & "SGVM Deployment Service\InstalledPath") Then
+        InstalledAV = "Sophos for Virtual Environments"         
+        
+    '--- Check for Microsoft System Center Endpoint Protection  ---	
+    ElseIf RegKeyExists ("HKLM\" & strSecurityEssentialsKeyPath & "LastSuccessfullyAppliedPolicy") Then
+        InstalledAV = "Microsoft System Center Endpoint Protection"
+    
+    '--- Check for the ATP-managed version of SCEP, and Microsoft Security Essentials  ---    
+    ElseIf RegKeyExists ("HKLM\SOFTWARE\Microsoft\Microsoft Antimalware\InstallLocation") Then
+       ' We know that either Microsoft SCEP is installed, or Microsoft Security Essentials. Now let's figure out which one.
+       objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Security Client\","DisplayName",SCEPInstalled
+       If InStr(SCEPInstalled,"System Center Endpoint Protection") Then
+        InstalledAV = "Microsoft System Center Endpoint Protection"
+       ElseIf InStr(SCEPInstalled,"System Center 2012 Endpoint Protection") Then
+        InstalledAV = "Microsoft System Center 2012 Endpoint Protection" 
+       Else
+        InstalledAV = "Microsoft Security Essentials"
+       End If
  
-              	  
+      
+    '--- Check for Cisco AMP ---
+    ElseIf objFSO.FileExists(ProgramFiles64 & "\Cisco\AMP\local.xml") Then
+        InstalledAV = "Cisco Advanced Malware Protection (AMP)"
+
+      
+    '--- Check for Malwarebytes' Corporate Edition  ---	  
+    ElseIf RegKeyExists ("HKLM\" & strMalwareBytesRegPath64 & "\InstallPath" ) Then
+	   InstalledAV = "Malwarebytes' Corporate Edition"
+       
+       
+    '--- Check for Palo Alto Traps  ---	
+    ElseIf RegKeyExists ("HKLM\SOFTWARE\Palo Alto Networks\Traps\ProtectionStatus") Then
+        InstalledAV = "Palo Alto Networks Traps™"
+ 
+       
+                  	  
 
     Else 
   
     If WMINamespaceExistanceCheck(strWMINameSpace2) = "1" Then 'Check to make sure that the SecurityCenter2 namespace exists before we do this check, lest the script error out when checking for the presence of the AntiVirusProduct WMI class   
-      If WMIClassExists (strWMINameSpace2, strComputer, "AntiVirusProduct") Then
-        output.writeline "- Looking in the root\SecurityCenter2 WMI Namespace."
-        ' This next line calls the 'ObtainSecurityCenter2Data sub-routine, which queries the root\SecurityCenter2 WMI Namespace for info.
-        ObtainSecurityCenter2Data                 
-      ElseIf RegKeyExists ("HKLM\" & strWindowsDefenderPath & "ProductStatus") Then
-        output.writeline "- The root\securityCenter2 namespace exists, but the AntiVirusProduct WMI class does not - that's really weird."
+        If WMIClassExists (strWMINameSpace2, strComputer, "AntiVirusProduct") Then
+            output.writeline "- Looking in the root\SecurityCenter2 WMI Namespace."
+            ' This next line calls the 'ObtainSecurityCenter2Data sub-routine, which queries the root\SecurityCenter2 WMI Namespace for info.
+            ObtainSecurityCenter2Data                 
+        ElseIf RegKeyExists ("HKLM\" & strWindowsDefenderPath & "ProductStatus") Then
+            output.writeline "- The root\securityCenter2 namespace exists, but the AntiVirusProduct WMI class does not - that's really weird."
+            output.writeline "- Windows Defender has been detected, by querying the registry."
+            InstalledAV = "Windows Defender"
+        End If
+    ' If the root\SecurityCenter2 WMI namespace doesn't exist (and it doesn't if you're looking at a Server-class OS, then let's see if Windows Defender is installed)
+    ElseIf RegKeyExists ("HKLM\" & strWindowsDefenderPath & "ProductStatus") Then
         output.writeline "- Windows Defender has been detected, by querying the registry."
         InstalledAV = "Windows Defender"
-       End If
              
     Else 
 
@@ -1372,7 +1427,7 @@ Sub ObtainSophos10AVData
 
   ' Let's figure out when Sophos was last updated
   If RegKeyExists ("HKLM\SOFTWARE\WOW6432Node\Sophos\SavService\Status\UpToDateState") Then
-    Output.Writeline "- The UpToDateState registry key has been found. Let's use that to determine whether or not Sophos is up-to-date."
+    ' output.Writeline "- The UpToDateState registry key has been found. Let's use that to determine whether or not Sophos is up-to-date."
     objReg.GetDWORDValue HKEY_LOCAL_MACHINE,"SOFTWARE\WOW6432Node\Sophos\SavService\Status\","UpToDateState",UpToDateState
     If UpToDateState = 1 Then
       ProductUpToDate = TRUE 
@@ -1380,11 +1435,11 @@ Sub ObtainSophos10AVData
       ProductUpToDate = FALSE
     End If
     
-    Output.Writeline "- Is Sophos up-to-date? " & ProductUpToDate
+    output.Writeline "- Is Sophos up-to-date? " & ProductUpToDate
       
   Else
     ' Note that as of Dec 2018, this mechanism is not recommended by Sophos anymore. I'm only keeping it here for backwards compatibility.
-    Output.Writeline "- The UpToDateState registry was not found. Querying the Sophos API directly."
+    output.Writeline "- The UpToDateState registry was not found. Querying the Sophos API directly."
     Set objNode = objConfigMgr.GetNode(2, "ProductInfo/updateDate")      
     FormattedPatternAge = objNode.GetAttributeValue("year") & "/" & objNode.GetAttributeValue("month") & "/" & objNode.GetAttributeValue("day") 
     output.writeline   "- The A/V Definition file for Sophos was last updated on: " & FormattedPatternAge
@@ -1395,11 +1450,16 @@ Sub ObtainSophos10AVData
   
   
   ' Let's find out what version of Sophos is installed on this machine
-  Set node = objConfigMgr.GetNode(0, "ProductInfo/productVersion")   
-  Dim verString 
-  FormattedAVVersion = node.GetAttributeValue("major") & "." &_
+  If InstalledAV = "Sophos Endpoint Protection" Then
+    FormattedAVVersion = RegstrValue
+  Else 'This chunk of code works perfectly for Sophos AV 10, but not for Sophos Endpoint Protection - so I've split things apart
+    Set node = objConfigMgr.GetNode(0, "ProductInfo/productVersion")   
+    Dim verString 
+    FormattedAVVersion = node.GetAttributeValue("major") & "." &_
             node.GetAttributeValue("minor") & "." _
-     & node.GetAttributeValue("build")
+     & node.GetAttributeValue("build") 
+  End If
+
   
 
   
@@ -1551,13 +1611,13 @@ Function WMINamespaceExistanceCheck(WMINamespace)
                 For Each objNamespace In colNamespaces
                       If instr(objNamespace.Path_.Path,WMINamespace & chr(34)) Then
                         WMINamespaceExistanceCheck = "1"
-                         ' output.writeline "- Found the " & WMINamespace & " WMI namespace."   'Turn this on for debugging purposes, if needed.                     
+                         ' output.writeline "- Found the " & WMINamespace & " WMI namespace."   Turn this on for debugging purposes, if needed.                     
                         Exit For
                       End If
                        
                 Next
                 If WMINamespaceExistanceCheck = "0" Then
-                  output.writeline "- Unable to find the root\" &  WMINamespace & " WMI namespace."
+                  ' output.writeline "- Unable to find the root\" &  WMINamespace & " WMI namespace." Turn this on for debugging purposes, if needed. 
                 End If
                 Set colNamespaces = Nothing
 End Function
@@ -2011,13 +2071,6 @@ Sub ObtainSecurityEssentialsAVData
       Else
         strSecurityEssentialsKeyPath = "Software\Microsoft\Windows Defender\"
       End If
-      
-      ' I've commmented out this section in v2.9 of the script, as I want to get some testing done with the code above before removing the code below  
-      'If RegKeyExists("HKLM\Software\Microsoft\Windows Defender\Signature Updates\AVSignatureBaseVersion") Then
-      ''  strSecurityEssentialsKeyPath = "Software\Microsoft\Windows Defender\"
-      'Else
-      ''  strSecurityEssentialsKeyPath = "Software\Microsoft\Microsoft Antimalware\"
-      'End If
   End If
   
  
@@ -2266,13 +2319,14 @@ End Sub
 ' *************************************
 Sub ObtainKESServerData
    strKasperskyKESServerAVDatePath = Registry & "KasperskyLab\Components\34\1103\1.0.0.0\Statistics\AVState\"
+   strKasperskyKESServerAVVersionPath = Registry & "KasperskyLab\WSEE\10.1\Install\"
   
   'Let's figure out the version number
   If RegKeyExists ("HKLM\" & strKasperskyKESServerKeyPath & "ProdVersion") Then
     objReg.GetStringValue HKEY_LOCAL_MACHINE,strKasperskyKESServerKeyPath,"ProdVersion",FormattedAVVersion
     output.writeline "- The version of Kaspersky running is: " & FormattedAVVersion
-  ElseIf RegKeyExists ("HKLM\" & strKasperskyKESServerAVDatePath & "Protection_NagentFullVersion") Then
-    objReg.GetStringValue HKEY_LOCAL_MACHINE,strKasperskyKESServerAVDatePath,"Protection_NagentFullVersion",FormattedAVVersion
+  ElseIf RegKeyExists ("HKLM\" & strKasperskyKESServerAVVersionPath & "Version") Then
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,strKasperskyKESServerAVVersionPath,"Version",FormattedAVVersion
     output.writeline "- The version of Kaspersky running is: " & FormattedAVVersion
   Else
     output.writeline "- Unable to find what version of Kaspersky is running on this PC."
@@ -2304,25 +2358,33 @@ Sub ObtainKESServerData
       Set objFile = objFSO.OpenTextFile(Path, 1) 
       Set f = objFSO.GetFile(Path)
       Set objFile = objFSO.GetFile(Path) 
-	    AVDatVersion = objFile.DateLastModified
-	    output.writeline "- The file was last modified on: " & AVDatVersion
-	    output.writeline "- The current date is: " & CurrentDate
-	    CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
+	  AVDatVersion = objFile.DateLastModified
+	  output.writeline "- The file was last modified on: " & AVDatVersion
+	  output.writeline "- The current date is: " & CurrentDate
+	  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
       output.writeline "- The last time Kaspersky was updated was " & CalculatedPatternAge & " days ago."
 	
     Else 'If the registry value isn't Null, let's use it to figure things out
     
      'output.writeline "- The age of the Kaspersky A/V defintions is in the registry."  Re-enable this for debugging purposes, if needed
       RawAVDate = LEFT(AVDatVersion,10)
+
     
       'Looks like KES 10 changes things, and store dates in a format that needs transposition. Older versions of KES still do though, so we'll check the 
       'version number and decide which action to take (transpose date values or not).
 
-	    If CInt(Left(FormattedAVVersion,InStr(FormattedAVVersion,".")-1)) <= 10 Then
-        FormattedPatternAge = DateValue(Mid(RawAVDate,7,4) & "/" & Mid(RawAVDate,4,2) & "/" & Left(RawAVDate,2) )
-      Else
-        FormattedPatternAge = RawAVDate
-      End If
+
+        If CInt(Left(FormattedAVVersion,InStr(FormattedAVVersion,".")-1)) <= 10 Then
+            FormattedPatternAge = DateValue(Mid(RawAVDate,7,4) & "/" & Mid(RawAVDate,4,2) & "/" & Left(RawAVDate,2) )
+        Else
+            If GetLocale() = 2057 Then  'If the device is in the UK, let's transpose the day and month, so that we get things right.  
+                FormattedPatternAge = DateValue(Mid(RawAVDate,1,2) & "/" & Mid(RawAVDate,4,2) & "/" & Mid(RawAVDate,7,4) )
+            Else
+                FormattedPatternAge = DateValue(Mid(RawAVDate,4,2) & "/" & Mid(RawAVDate,1,2) & "/" & Right(RawAVDate,4) )
+            End If
+        End If
+
+      
       output.writeline "- The current date is: " & CurrentDate 
       output.writeline "- According to Kaspersky, A/V definitions were last updated on: " & FormattedPatternAge
       CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
@@ -2581,79 +2643,97 @@ End Sub
 ' Sub: ObtainFSecureAVData
 ' *************************************
 Sub ObtainFSecureAVData
-   If RegKeyExists ("HKLM\Software\Wow6432Node\Data Fellows\F-Secure\FSAVCSIN\CurrentVersion") Then
-    objReg.GetStringValue HKEY_LOCAL_MACHINE,"Software\Wow6432Node\Data Fellows\F-Secure\FSAVCSIN","CurrentVersion",Version
-   Else
-    objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPathLoc,"CurrentVersion",Version
-   End If
-   
-   
-   If RegKeyExists("HKLM\" & strFSecureRegPathLoc & "InstallationDirectory") Then
-    objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPathLoc,"InstallationDirectory",strFSecureInstallPath
-   Else
-    objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPathLoc,"Path",strFSecureInstallPath
-   End If
-   
-   
-  ' We're going to look at the 'Last Modified' date of a Total Defense file to determine if the A/V Definitions are up-to-date or not.
-  Set objFSO = CreateObject("Scripting.FileSystemObject") 
 
-  If objFSO.FolderExists(strFSecureInstallPath) Then
-    If objFSO.FileExists(strFSecureInstallPath & "\FS@aqua.ini") Then
-      Path = strFSecureInstallPath & "\FS@aqua.ini"
-    ElseIf objFSO.FileExists(strFSecureInstallPath & "\aquarius\FS@aqua.ini") Then
-      Path = strFSecureInstallPath & "\aquarius\FS@aqua.ini"
-    ElseIf objFSO.FileExists(strFSecureInstallPath & "\FS@hydra.ini") Then
-      Path = strFSecureInstallPath & "\FS@hydra.ini"
-    Else
-      Path = strFSecureInstallPath & "\FS@orion.ini"
-    End If
-    output.writeline "- We'll use the following file to figure out how up-to-date F-Secure might be: " & Path
-
-    ' TWO METHODS POSSIBLE - WE CAN LOOK THROUGH THE FILE TO SEE THE UPDATE DATE, OR LOOK AT THE FILE VERSION DATE. CURRENTLY SET TO UPDATE DATE
-
-    'METHOD 1 
-    Set objFile = objFSO.OpenTextFile(Path) 
-    Do Until objFile.AtEndOfStream 
-    strLine = objFile.ReadLine 
-    If InStr(strLine, "File_set_visible_version=") Then 
-      AVDatVersion= left(right(strLine,13),10)
-    End If 
-    If InStr(strLine, "the requested operation failed") Then 
-    output.writeline "- Operation Failed" 
-    End If 
-    Loop 
-
-    objFile.Close 
-
-    'METHOD 2 - DISABLED
-    
-    ' Set objFile = objFSO.GetFile(Path) 
-    ' AVDatVersion = objFile.DateLastModified
-    ' output.writeline "The file was last modified on: " & AVDatVersion
-
-                                
-                                
-  Else
-    AVDatVersion="01/01/2001"
-  End If
-
-
-  If isProcessRunning(".","fsav32.exe") Then
-    OnAccessScanningEnabled=TRUE
-  Else
-    OnAccessScanningEnabled=FALSE
-  End If
+    If  WMINamespaceExistanceCheck("FSECURE") Then 'If the F-Secure WMI namespace exists, let's use that. If not, we'll fall back to the alternate method.
+        output.writeline "- The F-Secure WMI namespace is present on this device. We'll use that to gather the required information."  
+        
+        Set colItems2 = objWMIService.ExecQuery("SELECT RealTimeScanningEnabled,AvDefinitionsAgeInHours FROM AntiVirus2", "WQL", wbemFlagReturnImmediately + wbemFlagForwardOnly)
   
+        For Each objItem2 in colItems2
+            OnAccessScanningEnabled = objItem2.RealTimeScanningEnabled
+            AVDatVersion = objItem2.AvDefinitionsAgeInHours
+        Next
+        
+        ' The Value we got back from the AvDefinitionsAgeInHours property is measured in hours, and we need it to be in days. Let's do the math.
+        If (AVDatVersion <= 24) Then
+            AVDatVersion = Now
+        Else
+            AVDatVersion=  DateAdd("h","-"& AVDatVersion,Now)
+            output.writeline "- AV DatVersion is: " & AVDatversion
+        End If    
+        
+        
+        
+        
+    Else
+      If RegKeyExists ("HKLM\Software\Wow6432Node\Data Fellows\F-Secure\FSAVCSIN\CurrentVersion") Then
+          objReg.GetStringValue HKEY_LOCAL_MACHINE,"Software\Wow6432Node\Data Fellows\F-Secure\FSAVCSIN","CurrentVersion",FormattedAVVersion
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPathLoc & "CurrentVersion") Then
+          objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPathLoc,"CurrentVersion",FormattedAVVersion
+      ElseIf RegKeyExists ("HKLM\SOFTWARE\Wow6432Node\F-Secure\OneClient\FriendlyVersion") Then
+          objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\Wow6432Node\F-Secure\OneClient\","FriendlyVersion",FormattedAVVersion
+      End If
+     
+     
+      If RegKeyExists("HKLM\" & strFSecureRegPathLoc & "InstallationDirectory") Then
+          objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPathLoc,"InstallationDirectory",strFSecureInstallPath
+      ElseIf RegKeyExists("HKLM\" & strFSecureRegPathLoc & "Path") Then
+          objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPathLoc,"Path",strFSecureInstallPath
+      ElseIf RegKeyExists("HKLM\" & strFSecureRegPath000 & "InstallPath") Then
+          objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath000,"InstallPath",strFSecureInstallPath 
+      End If
+   
+   
+      ' We're going to look at the 'Last Modified' date of a Total Defense file to determine if the A/V Definitions are up-to-date or not.
+      Set objFSO = CreateObject("Scripting.FileSystemObject") 
+    
+      If objFSO.FolderExists(strFSecureInstallPath) Then
+        If objFSO.FileExists(strFSecureInstallPath & "\FS@aqua.ini") Then
+          Path = strFSecureInstallPath & "\FS@aqua.ini"
+        ElseIf objFSO.FileExists(strFSecureInstallPath & "\aquarius\FS@aqua.ini") Then
+          Path = strFSecureInstallPath & "\aquarius\FS@aqua.ini"
+        ElseIf objFSO.FileExists(strFSecureInstallPath & "\FS@hydra.ini") Then
+          Path = strFSecureInstallPath & "\FS@hydra.ini"
+        Else
+          Path = strFSecureInstallPath & "\FS@orion.ini"
+        End If
+        output.writeline "- We'll use the following file to figure out how up-to-date F-Secure might be: " & Path
+  
+  
+        Set objFile = objFSO.OpenTextFile(Path) 
+        Do Until objFile.AtEndOfStream 
+        strLine = objFile.ReadLine 
+        If InStr(strLine, "File_set_visible_version=") Then 
+          AVDatVersion= left(right(strLine,13),10)
+        End If 
+        If InStr(strLine, "the requested operation failed") Then 
+        output.writeline "- Operation Failed" 
+        End If 
+        Loop 
+    
+        objFile.Close 
+                                   
+                                    
+      Else
+        AVDatVersion="01/01/2001"
+      End If
+    
+    
+      If isProcessRunning(".","fsav32.exe") Then
+        OnAccessScanningEnabled=TRUE
+      Else
+        OnAccessScanningEnabled=FALSE
+      End If
+    
+    End If
+    
+    output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
+    output.writeline "- The current date is: " & CurrentDate
+    CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
+    output.writeline "- The last time F-Secure was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+    
+    CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
-  FormattedAVVersion =  Version '& " - " & AVDatVersion
-  output.writeline "- F-Secure is running the following A/V Definition Version: " & FormattedAVVersion 
-
-  output.writeline "- The current date is: " & CurrentDate
-  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
-  output.writeline "- The last time F-Secure was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
-
-  CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
 End Sub
 
@@ -2665,26 +2745,26 @@ End Sub
 ' *************************************
 Sub ObtainSEPCloudData
 
-   ' Let's figure out the last time that Symantec updated it's AV definitions.
+
+   
+                
+   ' Let's figure out the version of Symantec Endpoint Protection Cloud that's being run             
+   If RegKeyExists("HKLM\" & strSEPCloudRegpath2 & "\PRODUCTVERSION") Then
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,strSEPCloudRegpath2 ,"PRODUCTVERSION",Version
+   Else
+    output.writeline "- Unable to find out what version of Symantec Endpoint Protection Cloud is installed on this machine."
+   End If
+   
+   
+   
+   
+   ' Now let's figure out the last time that Symantec updated it's AV definitions. We'll do that by finding out where the versioninfo.dat file is locate, and then looking at when it was last modified.
    If RegKeyExists("HKLM\" & strSEPCloudRegpath2 & "\SharedDefs\SDSDefs\") Then
     objReg.GetStringValue HKEY_LOCAL_MACHINE,strSEPCloudRegpath2 & "\SharedDefs\SDSDefs","AVDEFMGR",strSEPCloudDefPath
    Else
     objReg.GetStringValue HKEY_LOCAL_MACHINE,strSEPCloudRegpath2 & "\SharedDefs\","AVDEFMGR",strSEPCloudDefPath
    End If
-   'output.writeline "- AV Definition date is in the following file: " & strSEPCloudDefPath
-   
-   
-                
-   ' Let's figure out the version of Symantec Endpoint.Cloud that's being run             
-   If RegKeyExists("HKLM\" & strSEPCloudRegpath2 & "\PRODUCTVERSION") Then
-    objReg.GetStringValue HKEY_LOCAL_MACHINE,strSEPCloudRegpath2 ,"PRODUCTVERSION",Version
-   Else
-    output.writeline "- Unable to find out what version of Symantec Endpoint.Cloud is installed on this machine."
-   End If
-   
-   
-   
-   
+ 
   ' We're going to look at the 'Last Modified' date of the versioninfo.dat file to determine if the A/V Definitions are up-to-date or not.
   Set objFSO = CreateObject("Scripting.FileSystemObject") 
   If objFSO.FileExists(strSEPCloudDefPath & "\versioninfo.dat") Then
@@ -2709,7 +2789,7 @@ Sub ObtainSEPCloudData
   
 
   FormattedAVVersion =  Version '& " - " & AVDatVersion
-  output.writeline "- Symantec Endpoint.Cloud is running the following A/V Definition Version: " & FormattedAVVersion 
+  output.writeline "- Symantec Endpoint Protection Cloud is running the following A/V Definition Version: " & FormattedAVVersion 
 
   output.writeline "- The current date is: " & CurrentDate
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
@@ -3002,11 +3082,11 @@ End Sub
 ' *************************************
 Sub ObtainMcAfeeEndpointSecurity
 
-  objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndpointSecurityDefDatePath ,"CasperContentTS",AVDatVersion
-  objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndPointSecurityVersion ,"BuildNumber",mcAfeeEndpointSecurityBuildNum
-  objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndPointSecurityVersion ,"ProductVersion",mcAfeeEndpointSecurityVerNum
-	FormattedAVVersion = mcAfeeEndpointSecurityVerNum & "." & mcAfeeEndpointSecurityBuildNum
-  mcAfeeEndpointSecurityDefDate = AVDatVersion
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndpointSecurityDefDatePath,"CasperContentTS",AVDatVersion
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndPointSecurityVersion,"BuildNumber",mcAfeeEndpointSecurityBuildNum
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndPointSecurityVersion,"ProductVersion",mcAfeeEndpointSecurityVerNum
+    FormattedAVVersion = mcAfeeEndpointSecurityVerNum & "." & mcAfeeEndpointSecurityBuildNum
+    mcAfeeEndpointSecurityDefDate = AVDatVersion
   
 	output.writeline "McAfee Endpoint Protection Version " & mcAfeeEndpointSecurityVerNum & "." & mcAfeeEndpointSecurityBuildNum
   
@@ -3063,11 +3143,21 @@ Sub ObtainMcAfeeEndpointSecurity101
    objReg.GetStringValue HKEY_LOCAL_MACHINE,mcAfeeEndPointSecurityVersion ,"ProductVersion",mcAfeeEndpointSecurityVerNum
 	FormattedAVVersion = mcAfeeEndpointSecurityVerNum & "." & mcAfeeEndpointSecurityBuildNum
   
-	output.writeline "McAfee Endpoint Protection Version " & mcAfeeEndpointSecurityVerNum & "." & mcAfeeEndpointSecurityBuildNum
+	Dim filename,fso,f,Linevalue,bfound,goodline
 
-	dim filename,fso,f,Linevalue,bfound,goodline
-
-	filename = "c:\programdata\mcafee\agent\updatehistory.ini"
+    If objFSO.FileExists (ProgramData & "\mcafee\agent\updatehistory.ini") Then
+	   filename = ProgramData & "\mcafee\agent\updatehistory.ini"
+       ' Enable for Debug purposes output.writeline "- The updatehistory.ini file has been found under %ProgramData%\mcafee\agent\"
+    Else
+        ' Enable for Debug purposes  output.writeline "- The updatehistory.ini file was not found under %ProgramData%\mcafee\agent\ - let's try looking under the Common Framework path."
+        If objFSO.FileExists (ProgramData & "\mcafee\common framework\updatehistory.ini") Then
+            filename = ProgramData & "\mcafee\common framework\updatehistory.ini"
+            ' Enable for Debug purposes output.writeline "- The updatehistory.ini file has been found under %ProgramData%\mcafee\common framework\"
+        Else
+            output.writeline "- Unable to fine the updatehistory.ini file. That's.....not.....good."
+        End If 
+    End If
+    
 	goodline=""
 	Set fso = CreateObject("Scripting.FileSystemObject")
 	Set f = fso.OpenTextFile(filename)
@@ -3086,7 +3176,6 @@ Sub ObtainMcAfeeEndpointSecurity101
 
 	f.Close
 	FormattedPatternAge = goodline
-  output.writeline "Debug: " & FormattedPatternAge
 	AVDatVersion = goodline
 		
 
@@ -3239,7 +3328,7 @@ sub ObtainTrendMicroDeepSecurity
                 
   'Let's figure out when the Deep Security Agent was last updated
   Set fileSystem = CreateObject("Scripting.FileSystemObject") 
-  If fileSystem.FileExists("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages") Then
+  If fileSystem.FolderExists("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages") Then
     Set folder = fileSystem.GetFolder("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages") 
     For Each file In folder.Files         
       If file.DateLastModified > newestfile Then         
@@ -3380,7 +3469,6 @@ Sub ObtainAVGBusinessSecurity
   If RegKeyExists("HKLM\SOFTWARE\WOW6432Node\AVG\Antivirus\Version") Then
     objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\WOW6432Node\AVG\Antivirus\","Version",FormattedAVVersion
     InstalledAV = InstalledAV & " " & FormattedAVVersion
-    output.writeline "- " & InstalledAV & " has been detected."
   End If  
   
   
@@ -3450,7 +3538,7 @@ Sub ObtainAVGBusinessSecurity
   
   ' Let's figure out when AVG Business Security last updated itself
   Set objFSO = CreateObject("Scripting.FileSystemObject") 
-  Set objFile = objFSO.OpenTextFile("C:\ProgramData\AVG\Persistent Data\Antivirus\Logs\update.log", 1) 
+  Set objFile = objFSO.OpenTextFile(ProgramData & "\AVG\Persistent Data\Antivirus\Logs\update.log", 1) 
 
   Dim arrFileLines() 
   i = 0 
@@ -3470,10 +3558,10 @@ Sub ObtainAVGBusinessSecurity
   Next
   
   ' Now that we have the line from the log file, let's grab the date at the very end
-  AVDatVersion = Replace(Right(LastUpdateDate,10),".","/")
+  AVDatVersion = Replace(Mid(LastUpdateDate,7,2) & "/" & Mid(LastUpdateDate,10,2) & "/" & Mid(LastUpdateDate,2,4),"-","/")
   output.writeline "- The last time AVG Business Security was updated was on " & AVDatVersion
  
-  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
+  CalculatedPatternAge = DateDiff("d",DateValue(AVDatVersion),CurrentDate)
   
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
   
@@ -3528,6 +3616,52 @@ Sub ObtainFortiClient
 End Sub
 
 
+'ObtainPandaAdaptiveDefenceData
+' *************************************  
+' Sub: ObtainPandaAdaptiveDefenceData
+' *************************************
+Sub ObtainPandaAdaptiveDefenceData
+
+  Set objFSO = CreateObject("Scripting.FileSystemObject") 
+
+  strPandaAVDefinitionPath = ProgramData & "\Panda Security\Panda Security Protection"
+
+  If objFSO.FolderExists(strPandaAVDefinitionPath) Then
+	  Set objFile = objFSO.GetFile( strPandaAVDefinitionPath & "\NanoRepository.bin") 
+	  AVDatVersion = objFile.DateLastModified
+	  output.writeline "The file was last modified on: " & AVDatVersion
+  else
+  		AVDatVersion="01/01/2001"
+  End If  
+
+	If isProcessRunning(".","PSANHost.exe") Then
+		OnAccessScanningEnabled	=TRUE
+	Else
+		OnAccessScanningEnabled	=FALSE
+	End If
+
+	If RegKeyExists ( "HKLM\" & strPandaCloudEPPath32 & "\Normal") Then
+      objReg.GetStringValue HKEY_LOCAL_MACHINE,strPandaCloudEPPath32 ,"Normal",RawAVVersion 
+  ElseIf RegKeyExists ( "HKLM\" & strPandaCloudEPPath64 & "\Normal") Then
+      objReg.GetStringValue HKEY_LOCAL_MACHINE,strPandaCloudEPPath64 ,"Normal",RawAVVersion 
+  Else
+    	RawAVVersion = "Unknown Version"
+	End If
+
+	FormattedAVVersion =  InstalledAV & " - " & RawAVVersion
+	output.writeline "- " & InstalledAV & " has been found on this device."
+	output.writeline "- Panda Cloud Endpoint Protection is running the following A/V Definition Version: " & FormattedAVVersion 
+
+  output.writeline "- The current date is: " & CurrentDate
+  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
+  output.writeline "- The last time Panda Cloud Endpoint Protection was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  output.writeline "- Is Real-Time Scanning Enabled? " & OnAccessScanningEnabled
+
+  CalculateAVAge 'Call the function to determine how old the A/V Definitions are
+
+End Sub
+
+
 
 ' *****************************  
 ' Sub: OSVersion
@@ -3568,6 +3702,72 @@ Function DecToHex(dblNumber)
     Wend
     DecToHex = ret
 End Function
+
+
+' *************************************  
+' Sub: ObtainCiscoAMPData
+' *************************************
+Sub ObtainCiscoAMPData
+    onAccessScanningEnabled = True 'Real time scanning is controlled through the AMP Management Console so this option is N/A
+    ProductUpToDate = True 'There aren't pattern file versions that can be monitored from the machine itself - only from the Management Console so this option is N/A
+    FormattedAVVersion = "See Cisco AMP Cloud Management Console at https://console.amp.cisco.com/"
+End Sub
+
+
+' *************************************  
+' Sub: ObtainPaloAltoTrapsAVData
+' *************************************
+Sub ObtainPaloAltoTrapsAVData
+    ' Let's determine what version of Palo Alto Traps has been installed
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\Cyvera\Client\","Product Version",FormattedAVVersion
+    
+    ' Let's determine whether or not Real-Time Scanning is enabled
+    objReg.GetDWORDValue HKEY_LOCAL_MACHINE,"SOFTWARE\Palo Alto Networks\Traps\","ProtectionStatus",RawProtectionStatus
+    
+    If RawProtectionStatus=3 Then
+        onAccessScanningEnabled = True
+    Else
+        onAccessScanningEnabled = False
+    End If
+    
+    ' Let's figure out when Palo Alto last updated itself
+    ProductUpToDate = True
+End Sub
+
+
+
+
+' *************************************  
+' Sub: ObtainSophosVirtualAVData
+' *************************************
+Sub ObtainSophosVirtualAVData
+    ' Let's determine whether or not Real-Time Scanning is enabled
+    objReg.GetDWORDValue HKEY_LOCAL_MACHINE,strSophosVirtualAVKeyPath & "SGVM Scanning Service\On-Access Policy\","On-Access Protection",RawOnAccessScanningEnabled
+    If RawOnAccessScanningEnabled = 0 Then
+      OnAccessScanningEnabled = FALSE
+    ElseIf RawOnAccessScanningEnabled = 1 Then
+      OnAccessScanningEnabled = TRUE
+    End If
+    
+    output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
+    
+    
+    ' Let's determine what version of Sophos for Virtual Environments has been installed
+    objReg.GetStringValue HKEY_LOCAL_MACHINE,strSophosVirtualAVKeyPath & "SGVM Management Service\Installed Components\Sophos GVM Scanning Service\","Version",FormattedAVVersion
+    
+    ' Let's figure out when the A/V Definitions were last updated
+    objReg.GetQWORDValue HKEY_LOCAL_MACHINE,strSophosVirtualAVKeyPath & "SGVM Scanning Service\On-Access Policy\","Virus Data Age",AVDatVersion
+    ' The AVDatVersion value is a UNIX timestamp - so this script needs to convert it to a human-readable format before continuing.
+    FormattedPatternAge = DateAdd("s", AVDatVersion, #1/1/1970#)
+    CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
+    output.writeline "- The last time Sophos for Virtual Environments was updated was " & CalculatedPatternAge & " days ago."
+    
+    
+
+    ProductUpToDate = True 'There aren't pattern file versions that can be monitored from the machine itself - only from the Management Console so this option is N/A
+
+End Sub        
+        
 
 ' *************************************  
 ' Sub: ObtainWindowsDefenderData
