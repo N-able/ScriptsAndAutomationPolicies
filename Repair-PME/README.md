@@ -34,7 +34,7 @@ Please ensure you rescan and run a patch detection after running this script to 
 * _Any OS that can install the Solarwinds MSP Patch Management Engine (PME) and is officially supported by Solarwinds (this can be found in the N-Central release notes)._
 
 **PowerShell:**
-* Required: _2.0_
+* Required: _2.0+_
 * Optional: _4.0+_ (required for connectivity tests only)
 
 ### Can I use Repair-PME in an Automation Policy (AMP) within N-Central?
