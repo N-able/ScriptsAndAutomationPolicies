@@ -1,7 +1,7 @@
 <#    
    ****************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.5.0 (14/05/2020)
+    Version:         0.1.5.1 (14/05/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -38,10 +38,11 @@
                                Updated function 'Get-PMESetupDetails' to fallback to HTTP if HTTPS to sis.n-able.com fails
                                or if connectivity tests can't be performed due to low PowerShell version.
                                Moved function 'Set-Start' to execute first so all events can be recorded.
-                               Updated 'Install-PME' to describe exit code 5 and link to documentation for other exit codes.                           
+                               Updated 'Install-PME' to describe exit code 5 and link to documentation for other exit codes.
+                     0.1.5.1   Updated function 'Get-PMESetup' to support HTTPS to HTTP fallback.                                    
    ****************************************************************************************************************************
 #>
-$Version = '0.1.5.0 (14/05/2020)'
+$Version = '0.1.5.1 (14/05/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -298,14 +299,27 @@ Function Clear-PME {
 
 Function Get-PMESetup {
     # Download Setup
-    Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
-    Try {
-        (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)")
+    If ($Fallback -eq "Yes") {
+        $FallbackDownloadURL = ($PMEDetails.DownloadURL).Replace('https','http')
+        Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
+        Try {
+            (New-Object System.Net.WebClient).DownloadFile("$($FallbackDownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)")
+        }
+        Catch {
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+            Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+        }
     }
-    Catch {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
-        Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
-    } 
+    Else {
+        Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
+        Try {
+            (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)")
+        }
+        Catch {
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+            Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+        }
+    }     
 }
 
 Function Install-PME {
