@@ -247,7 +247,7 @@ Function Get-PMESetupDetails {
     Else {
         $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
     }
-        Try {
+    Try {
         $request = $null
         [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
         $PMEDetails = $request.ComponentDetails
