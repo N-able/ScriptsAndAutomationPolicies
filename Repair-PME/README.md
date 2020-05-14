@@ -26,7 +26,7 @@ Repair-PME does the following with logic, error handling and event logging to op
 
 ### Important
 
-Please ensure you rescan any custom PME monitoring you may have and run a patch detection after running this script to ensure patch management (Patch Status v2) is operating fully again.
+Please ensure you rescan any custom PME monitoring you may have and run a patch detection after running this script to ensure Patch Status v2 is operating fully again.
 
 ### System Requirements
 
