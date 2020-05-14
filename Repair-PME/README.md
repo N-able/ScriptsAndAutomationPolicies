@@ -13,9 +13,10 @@ Repair-PME was created as I was getting frustrated with having to spend time try
 
 ### What does Repair-PME do?
 
-Repair-PME does the following with logic and error handling to operate as user-friendly as possible:
-* Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
+Repair-PME does the following with logic, error handling and event logging to operate as user-friendly as possible:
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has started.
+* Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
+* Performs connectivity tests to destinations required for PME (PowerShell 4.0 or above required). Tests will be skipped and download of PMESetup will be obtained via HTTP instead of HTTPS if a lower version is detected.
 * Invokes Solarwinds Diagnostics Tool and silently saves the log capture to **C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs**. These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
 * Terminates any currently running instances of **PMESetup,** **CacheServiceSetup** and **RPCServerServiceSetup**.
 * Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
@@ -33,7 +34,8 @@ Please ensure you rescan and run a patch detection after running this script to 
 * _Any OS that can install the Solarwinds MSP Patch Management Engine (PME) and is officially supported by Solarwinds (this can be found in the N-Central release notes)._
 
 **PowerShell:**
-* _2.0_
+* Required: _2.0_
+* Optional: _4.0+_ (required for connectivity tests only)
 
 ### Can I use Repair-PME in an Automation Policy (AMP) within N-Central?
 
