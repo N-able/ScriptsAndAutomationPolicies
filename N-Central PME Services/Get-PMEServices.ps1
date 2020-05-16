@@ -27,6 +27,7 @@ $RecheckStatus = $Null
 $request = $null
 $Latestversion = $Null
 $pmeprofile = $null
+$diagnosticserrorint = $null
 
 Write-Host "Get-PMEServices $Version"
 
@@ -219,6 +220,12 @@ Function Test-PMEConnectivity {
         $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message  
     }
     $DiagnosticsError = $HTTPSError + $HTTPError
+    if ($diagnosticsError -contains 'Yes' ){
+        $diagnosticserrorInt = '1'
+    }
+    else {
+        $diagnosticserrorInt = '0'
+    }
 }
 
 
@@ -358,4 +365,5 @@ if (($OverallStatus -ne '0') -or ($Diagnostics)) {
 . Test-PMEConnectivity
 # Write-Host "$DiagnosticsInfo`n"
 # Write-Host "$DiagnosticsError"
+Write-Host "Diagnostics Error: " -nonewline; Write-Host "$DiagnosticsErrorInt" -ForegroundColor Green
 }
