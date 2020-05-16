@@ -1,25 +1,38 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.4.9 (12th May 2020)
+    Version: 0.1.5.0 (16th May 2020)
+    Author: Prejay Shah (Doherty Associates)
+    Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
-    Pre-Reqs:    Powershell 3
-    + Improved Detection for PME Services being missing on a device
-    + Improved Detection of Latest PME Version
-    + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
-    + Improved Compatibility of PME Version Check
-    + Updated PME 1.2.x check
-    + Updates PS 2.0/ PS 3.0 Compatibility
+    Pre-Reqs:    PowerShell 2.0 (PowerShell 4.0+ for Connectivity Tests)
+    Version History:    0.1.0.0 - Initial Release.
+                                + Improved Detection for PME Services being missing on a device
+                                + Improved Detection of Latest PME Version
+                                + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
+                                + Improved Compatibility of PME Version Check
+                                + Updated to include better PME 1.2.x Latest Versioncheck
+                                + Updated for better PS 2.0 Compatibility
+                        0.1.5.0 + Added PME Profile Detection, and Diagnostics information courtesy of Ashley How's Repair-PME
     ************************************************************************************************************
 #>
-$Version = '0.1.4.9 (12th May 2020)'
+Param (
+        [Parameter(Mandatory=$false,Position=1)]
+        [switch] $Diagnostics
+    )
+
+$Version = '0.1.5.0 (16th May 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
 $Latestversion = $Null
-
+$pmeprofile = $null
 
 Write-Host "Get-PMEServices $Version"
+
+if ($Diagnostics){
+    Write-Host "Diagnostics Mode Enabled" -foregroundcolor Yellow
+}
 
 #region Functions
 
@@ -116,6 +129,98 @@ Function Get-PMEServiceVersions {
     }
 
 }
+
+Function Get-PMEProfile {
+if ($SolarWindsMSPPMEAgentStatus -ne $null) {
+$xml = [xml](Get-Content "C:\ProgramData\SolarWinds MSP\PME\config\PmeConfig.xml")
+$pmeprofile = $xml.Configuration.Profile  
+}
+else {
+    $pmeprofile = 'N/A'
+}
+Write-Host "PME Profile: " -nonewline; Write-Host "$pmeprofile`n" -foregroundcolor Green
+}
+
+Function Test-PMEConnectivity {
+    $DiagnosticsError = $null
+    $diagnosticsinfo = $null
+    # Performs connectivity tests to destinations required for PME
+    If ($PSVersionTable.PSVersion -ge "4.0") {
+        Write-Host "Performing HTTPS connectivity tests for PME required destinations..." -ForegroundColor Cyan
+        $List1= @("sis.n-able.com")
+        $HTTPSError = @()
+        $List1 | ForEach-Object {
+            $Test1 = Test-NetConnection $_ -port 443
+            If ($Test1.tcptestsucceeded -eq $True) {
+                $Message = "OK: Connectivity to https://$_ ($(($Test1).RemoteAddress.IpAddressToString)) established"
+                Write-Host "$Message" -ForegroundColor Green
+                $HTTPSError += "No" 
+                $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message
+            }
+            Else {
+                $Message = "ERROR: Unable to establish connectivity to https://$_ ($(($Test1).RemoteAddress.IpAddressToString))"
+                Write-Host "$Message" -ForegroundColor Red
+                $HTTPSError += "Yes"
+                $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message
+            }
+        }
+
+        Write-Host "Performing HTTP connectivity tests for PME required destinations..." -ForegroundColor Cyan
+        $HTTPError = @()
+        $List2= @("sis.n-able.com","download.windowsupdate.com","fg.ds.b1.download.windowsupdate.com")
+        $List2 | ForEach-Object {
+            $Test1 = Test-NetConnection $_ -port 80
+            If ($Test1.tcptestsucceeded -eq $True) {
+                $Message = "OK: Connectivity to http://$_ ($(($Test1).RemoteAddress.IpAddressToString)) established"
+                Write-Host "$Message" -ForegroundColor Green
+                $HTTPError += "No"
+                $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message 
+            }
+            Else {
+                $message = "ERROR: Unable to establish connectivity to http://$_ ($(($Test1).RemoteAddress.IpAddressToString))"
+                Write-Host $message -ForegroundColor Red
+                $HTTPError += "Yes"
+                $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message 
+            }
+        }
+
+        If (($HTTPError[0] -like "*Yes*") -and ($HTTPSError[0] -like "*Yes*")) {
+            $Message = "ERROR: No connectivity to $($List2[0]) can be established"
+            Write-EventLog -LogName Application -Source "Get-PMEServices" -EntryType Information -EventID 100 -Message "$Message, aborting.`nScript: Get-PMEServices.ps1"  
+            $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message
+            Throw "ERROR: No connectivity to $($List2[0]) can be established, aborting"
+        }
+        ElseIf (($HTTPError[0] -like "*Yes*") -or ($HTTPSError[0] -like "*Yes*")) {
+            $Message = "WARNING: Partial connectivity to $($List2[0]) established, falling back to HTTP."
+            Write-EventLog -LogName Application -Source "Get-PMEServices" -EntryType Information -EventID 100 -Message "$Message`nScript: Get-PMEServices.ps1"  
+            Write-Host "$Message" -ForegroundColor Yellow
+            $Fallback = "Yes"
+            $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message
+        }
+
+        If ($HTTPError[1] -like "*Yes*") {
+            $Message = "WARNING: No connectivity to $($List[1]) can be established"
+            Write-EventLog -LogName Application -Source "Get-PMEServices" -EntryType Information -EventID 100 -Message "$Message, you will be unable to download Microsoft Updates!`nScript: Get-PMEServices.ps1"  
+            Write-Host "$Message, you will be unable to download Microsoft Updates!" -ForegroundColor Red
+            $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message
+        }
+
+        If ($HTTPError[2] -like "*Yes*") {
+            $Message = "WARNING: No connectivity to $($List[2]) can be established"
+            Write-EventLog -LogName Application -Source "Get-PMEServices" -EntryType Information -EventID 100 -Message "$Message, you will be unable to download Windows Feature Updates!`nScript: Get-PMEServices.ps1"  
+            Write-Host "$Message, you will be unable to download Windows Feature Updates!" -ForegroundColor Red  
+            $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message
+    }
+}
+    Else {
+        $Message = "Skipping connectivity tests for PME required destinations as Powershell 4.0 or above is not installed"
+        Write-Output $Message
+        $Fallback = "Yes" 
+        $diagnosticsinfo = $diagnosticsinfo + '<br>' + $Message  
+    }
+    $DiagnosticsError = $HTTPSError + $HTTPError
+}
+
 
 Function Write-Status {
 Write-Host "`nSolarWinds MSP Cache Service Status: $SolarWindsMSPCacheStatus"
@@ -237,7 +342,7 @@ Write-Host "Status: $OverallStatus"
 . Get-PMEServiceVersions
 . Get-LatestPMEVersion
 . Validate-PME
-
+. Get-PMEProfile
 
 if ($RecheckStartup -eq $True) {
  . Get-PMEServicesStartup   
@@ -247,4 +352,10 @@ if ($RecheckStartup -eq $True) {
 if ($RecheckStatus -eq $True) {
  . Get-PMEServicesStatus   
  . Write-Status
+}
+
+if (($OverallStatus -ne '0') -or ($Diagnostics)) {
+. Test-PMEConnectivity
+# Write-Host "$DiagnosticsInfo`n"
+# Write-Host "$DiagnosticsError"
 }
