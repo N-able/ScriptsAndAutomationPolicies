@@ -1,7 +1,7 @@
 <#    
    ****************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.6.0 (20/05/2020)
+    Version:         0.1.6.1 (20/05/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -19,28 +19,28 @@
                                Update Install-PME function to resolve issue with hashing not working due to invalid parameter. 
                                Improve error handling of Get-LegacyHash, Get-PMESetup, Cleanup-PME and Install-PME functions.
                                New function 'Download-PME' to avoid duplicate code.
-                     0.1.4.0   Update script to PSScriptAnalyzer best practices.
+                     0.1.4.0 - Update script to PSScriptAnalyzer best practices.
                                Rename Function 'Cleanup-PME' to 'Clear-PME' to conform to approved verbs for PS.
                                Rename Function 'Download-PME' to 'Get-PMESetup' to conform to approved verbs for PS.
                                Rename Function 'Get-PMESetup' to 'Get-PMESetupDetails' to release use for above function.
                                New function 'Stop-PMESetup' moving code from 'Clear-PME' function.
                                New function 'Set-Start' and 'Set-End' to write event log entries.
-                     0.1.4.1   New function 'Invoke-SolarwindsDiagnostics' to capture logs for support prior to repair.
-                     0.1.4.2   New function 'Confirm-Elevation' to confirm/debug UAC issues.
+                     0.1.4.1 - New function 'Invoke-SolarwindsDiagnostics' to capture logs for support prior to repair.
+                     0.1.4.2 - New function 'Confirm-Elevation' to confirm/debug UAC issues.
                                Updated function 'Invoke-SolarwindsDiagnostics' to create destination folder rather than
                                relying upon the tool to create it. 
                                Added DEBUG output to determinate parameters given to Solarwinds Diagnostics tool.
                                Moved function 'Get-PMESetupDetails' to run later on to avoid hung installer issues.
                                Updated function 'Stop-PMESetup' to also kill CacheServiceSetup and RPCServerServiceSetup.
-                     0.1.5.0   New function 'Test-Connectivity' to perform connectivity tests to destinations required for PME
+                     0.1.5.0 - New function 'Test-Connectivity' to perform connectivity tests to destinations required for PME
                                PowerShell 4.0 or above required, connectivity tests will be skipped for any versions below.
                                Updated script to record all throws into the event log. 
                                Updated function 'Get-PMESetupDetails' to fallback to HTTP if HTTPS to sis.n-able.com fails
                                or if connectivity tests can't be performed due to low PowerShell version.
                                Moved function 'Set-Start' to execute first so all events can be recorded.
                                Updated 'Install-PME' to describe exit code 5 and link to documentation for other exit codes.
-                     0.1.5.1   Updated function 'Get-PMESetup' to support HTTPS to HTTP fallback.
-                     0.1.6.0   Updated 'Stop-PMESetup' function to colour code status if running interactively.
+                     0.1.5.1 - Updated function 'Get-PMESetup' to support HTTPS to HTTP fallback.
+                     0.1.6.0 - Updated 'Stop-PMESetup' function to colour code status if running interactively.
                                Updated 'Stop-PMESetup' function to check for and terminate _iu14D2N.tmp or similar process.
                                Updated 'Install-PME' function to to set PME to write install logs to 
                                'C:\ProgramData\SolarWinds MSP\Repair-PME\' instead of default location.
@@ -51,9 +51,10 @@
                                access is denied errors as the installer doesn't have logic to forcefully terminate if 
                                still running after after a timeout.
                                Remove debug output from 'Invoke-SolarwindsDiagnostics' function as no longer required.
+                     0.1.6.1 - Updated 'Stop-PMEServices' to fix issue with sc.exe not reverting recovery options correctly.         
    ****************************************************************************************************************************
 #>
-$Version = '0.1.6.0 (20/05/2020)'
+$Version = '0.1.6.1 (20/05/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -287,7 +288,7 @@ Function Stop-PMEServices {
             #Set-Service -Name $Service -StartupType Disabled
             sc.exe failure "$Service" reset= 0 actions= // >null
             Stop-Process -Name $Process* -Force
-            sc.exe failure "$Service" actions= restart/0/restart/0 reset= 0 >null       
+            sc.exe failure "$Service" actions= restart/0/restart/0//0 reset= 0 >null       
         }
     }
     
@@ -306,7 +307,7 @@ Function Stop-PMEServices {
             #Set-Service -Name $Service -StartupType Disabled
             sc.exe failure "$Service" reset= 0 actions= // >null
             Stop-Process -Name $Process* -Force
-            sc.exe failure "$Service" actions= restart/0/restart/0 reset= 0 >null              
+            sc.exe failure "$Service" actions= restart/0/restart/0//0 reset= 0 >null              
         }
     }
     
@@ -325,7 +326,7 @@ Function Stop-PMEServices {
             #Set-Service -Name $Service -StartupType Disabled
             sc.exe failure "$Service" reset= 0 actions= // >null
             Stop-Process -Name $Process* -Force
-            sc.exe failure "$Service" actions= restart/0/restart/0 reset= 0 >null                    
+            sc.exe failure "$Service" actions= restart/0/restart/0//0 reset= 0 >null                    
         }
     }
 }
