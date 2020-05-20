@@ -18,10 +18,11 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
 * Performs connectivity tests to destinations required for PME (PowerShell 4.0 or above required). Tests will be skipped and download of PMESetup will be obtained via HTTP instead of HTTPS if a lower version is detected.
 * Invokes Solarwinds Diagnostics Tool and silently saves the log capture to **C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs**. These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
-* Terminates any currently running instances of **PMESetup,** **CacheServiceSetup** and **RPCServerServiceSetup**.
+* Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **RPCServerServiceSetup** **and _iu14D2N or similar.**
+* Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
 * Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
-* Silently installs PME (PME Agent, Cache Service and RPC Server Service).
+* Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install log to **'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs\'**.
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has ended.
 
 ### Important
@@ -29,6 +30,18 @@ Repair-PME does the following with logic, error handling and event logging to op
 Please ensure you rescan any custom PME monitoring you may have and run a patch detection after running this script to ensure Patch Status v2 is operating fully again.
 
 ### System Requirements
+
+**Internet Connectivity:**
+
+An internet connection is required for this script to reach out to
+
+HTTP (Port 80)
+* _sis.n-able.com_
+* _download.windowsupdate.com_
+* _fg.ds.b1.download.windowsupdate.com_
+
+HTTPS (Port 443)
+* _sis.n-able.com_
 
 **Operating System:**
 * _Any OS that can install the Solarwinds MSP Patch Management Engine (PME) and is officially supported by Solarwinds (this can be found in the N-Central release notes)._
