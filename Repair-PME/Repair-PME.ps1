@@ -51,7 +51,7 @@
                                access is denied errors as the installer doesn't have logic to forcefully terminate if 
                                still running after after a timeout.
                                Remove debug output from 'Invoke-SolarwindsDiagnostics' function as no longer required.
-                     0.1.6.1 - Updated 'Stop-PMEServices' to fix issue with sc.exe not reverting recovery options correctly.         
+                     0.1.6.1 - Updated 'Stop-PMEServices' function to fix sc.exe not reverting recovery options correctly.         
    ****************************************************************************************************************************
 #>
 $Version = '0.1.6.1 (20/05/2020)'
