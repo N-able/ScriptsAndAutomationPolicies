@@ -43,7 +43,7 @@
                      0.1.6.0   Updated 'Stop-PMESetup' function to colour code status if running interactively.
                                Updated 'Stop-PMESetup' function to check for and terminate _iu14D2N.tmp or similar process.
                                Updated 'Install-PME' function to to set PME to write install logs to 
-                               'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs\' instead of default location.
+                               'C:\ProgramData\SolarWinds MSP\Repair-PME\' instead of default location.
                                Updated 'Test-Connectivity' function to resolve issues where Win 7/2008 R2 has PS 4.0+.
                                Updated 'Invoke-SolarwindsDiagnostics' function for clearer output.
                                New Function 'Get-OSVersion' required for update to 'Test-Connectivity' function.   
