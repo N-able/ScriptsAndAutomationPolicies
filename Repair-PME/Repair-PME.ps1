@@ -51,10 +51,11 @@
                                access is denied errors as the installer doesn't have logic to forcefully terminate if 
                                still running after after a timeout.
                                Remove debug output from 'Invoke-SolarwindsDiagnostics' function as no longer required.
-                     0.1.6.1 - Updated 'Stop-PMEServices' function to fix sc.exe not reverting recovery options correctly.         
+                     0.1.6.1 - Updated 'Stop-PMEServices' function to fix sc.exe not reverting recovery options correctly.
+                     0.1.6.2 - Updated Test-Connectivity' function as did not actually commit the code as stated in 0.1.6.0.        
    ****************************************************************************************************************************
 #>
-$Version = '0.1.6.1 (20/05/2020)'
+$Version = '0.1.6.2 (20/05/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -103,7 +104,7 @@ Function Get-OSVersion {
 
 Function Test-Connectivity {
     # Performs connectivity tests to destinations required for PME
-    If ($PSVersionTable.PSVersion -ge "4.0") {
+    If (($PSVersionTable.PSVersion -ge "4.0") -and (!($OSVersion -match 'Windows 7')) -and (!($OSVersion -match '2008 R2'))) {
         Write-Host "Windows: $OSVersion `nPowershell: $($PSVersionTable.PSVersion)"
         Write-Host "Performing HTTPS connectivity tests for PME required destinations..." -ForegroundColor Cyan
         $List1= @("sis.n-able.com")
