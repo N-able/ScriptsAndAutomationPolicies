@@ -63,7 +63,7 @@ Yes, if you wish to do so. Please be aware your execution policy is set to allow
 The answer is yes but with caution. If you are using the **[**Get-PMEServices**](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/N-Central%20PME%20Services/Get-PMEServices.ps1)** script or similar code to monitor PME status it will threshold if it is out of date while a update is pending. An update normally takes up to 24 hours before it installs from time of upload on sis.n-able.com. During this time it may trigger your custom service to fail/warn. If you set to self-heal with this script it will force an upgrade rather than wait for the agent to gracefully update it.
 
 ### Where can I get the latest version of Repair-PME?
-**https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME.ps1**
+**https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1**
 
 ### Demonstration
 Below is an GIF of Repair-PME in action run from PowerShell.
