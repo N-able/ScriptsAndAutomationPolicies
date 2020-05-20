@@ -22,7 +22,7 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
 * Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
-* Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install log to **'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs\'**.
+* Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'**.
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has ended.
 
 ### Important
