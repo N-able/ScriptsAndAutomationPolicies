@@ -1,7 +1,7 @@
 <#    
    ****************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.5.1 (14/05/2020)
+    Version:         0.1.6.0 (20/05/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -39,10 +39,21 @@
                                or if connectivity tests can't be performed due to low PowerShell version.
                                Moved function 'Set-Start' to execute first so all events can be recorded.
                                Updated 'Install-PME' to describe exit code 5 and link to documentation for other exit codes.
-                     0.1.5.1   Updated function 'Get-PMESetup' to support HTTPS to HTTP fallback.                                    
+                     0.1.5.1   Updated function 'Get-PMESetup' to support HTTPS to HTTP fallback.
+                     0.1.6.0   Updated 'Stop-PMESetup' function to colour code status if running interactively.
+                               Updated 'Stop-PMESetup' function to check for and terminate _iu14D2N.tmp or similar process.
+                               Updated 'Install-PME' function to to set PME to write install logs to 
+                               'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs\' instead of default location.
+                               Updated 'Test-Connectivity' function to resolve issues where Win 7/2008 R2 has PS 4.0+.
+                               Updated 'Invoke-SolarwindsDiagnostics' function for clearer output.
+                               New Function 'Get-OSVersion' required for update to 'Test-Connectivity' function.   
+                               New function 'Stop-PMEServices' to stop services prior to install of PME to prevent
+                               access is denied errors as the installer doesn't have logic to forcefully terminate if 
+                               still running after after a timeout.
+                               Remove debug output from 'Invoke-SolarwindsDiagnostics' function as no longer required.
    ****************************************************************************************************************************
 #>
-$Version = '0.1.5.1 (14/05/2020)'
+$Version = '0.1.6.0 (20/05/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -53,7 +64,7 @@ Function Set-Start {
 
 Function Confirm-Elevation {
     # Confirms script is running as an administrator
-    Write-Host "Checking for elevated permissions"
+    Write-Output "Checking for elevated permissions"
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
         [Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again.`nScript: Repair-PME.ps1"    
@@ -80,10 +91,19 @@ function Get-LegacyHash {
         Throw "Unable to performing hashing, aborting. Error: $($_.Exception.Message)"
     }
 }
+Function Get-OSVersion {
+    # Get OS version
+    $OSVersion = (Get-WmiObject Win32_OperatingSystem).Caption
+    #Workaround for WMI timeout or WMI returning no data
+    If (($null -eq $OSVersion) -or ($OSVersion -like "*OS - Alias not found*")) {
+        $OSVersion = (get-item "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").GetValue('ProductName')
+    }
+}
 
 Function Test-Connectivity {
     # Performs connectivity tests to destinations required for PME
     If ($PSVersionTable.PSVersion -ge "4.0") {
+        Write-Host "Windows: $OSVersion `nPowershell: $($PSVersionTable.PSVersion)"
         Write-Host "Performing HTTPS connectivity tests for PME required destinations..." -ForegroundColor Cyan
         $List1= @("sis.n-able.com")
         $HTTPSError = @()
@@ -135,7 +155,7 @@ Function Test-Connectivity {
         }
     }
     Else {
-        Write-Output "Skipping connectivity tests for PME required destinations as Powershell 4.0 or above is not installed"
+        Write-Output "Windows: $OSVersion `nPowershell: $($PSVersionTable.PSVersion) `nSkipping connectivity tests for PME required destinations as OS is Windows 7/Server 2008 R2 and/or Powershell 4.0 or above is not installed"
         $Fallback = "Yes"    
     }
 }
@@ -149,7 +169,8 @@ Function Invoke-SolarwindsDiagnostics {
         $SolarwindsDiagnosticsFolderPath = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")+"\SolarWinds MSP\PME\Diagnostics"
         $SolarwindsDiagnosticsExePath = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")+"\SolarWinds MSP\PME\Diagnostics\SolarwindsDiagnostics.exe"
         If (Test-Path $SolarwindsDiagnosticsExePath) {
-            Write-Output "Processor architecture is $OSArch, Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
+            Write-Output "Processor Architecture: $OSArch"
+            Write-Output "Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
             If (Test-Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs") {
                 Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' already exists, no need to create directory"
             }
@@ -164,7 +185,7 @@ Function Invoke-SolarwindsDiagnostics {
                 }
             }     
             Write-Output "Starting Solarwinds Diagnostics"
-            Write-Output "DEBUG: Solarwinds Diagnostics started with:- Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait"
+            #Write-Output "DEBUG: Solarwinds Diagnostics started with:- Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait"
             Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait
             Write-Output "Solarwinds Diagnostics completed, file saved to 'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs'"    
         }
@@ -177,7 +198,8 @@ Function Invoke-SolarwindsDiagnostics {
         $SolarwindsDiagnosticsFolderPath = [Environment]::GetEnvironmentVariable("ProgramFiles")+"\SolarWinds MSP\PME\Diagnostics"
         $SolarwindsDiagnosticsExePath = [Environment]::GetEnvironmentVariable("ProgramFiles")+"\SolarWinds MSP\PME\Diagnostics\SolarwindsDiagnostics.exe"
         If (Test-Path $SolarwindsDiagnosticsExePath) {
-            Write-Output "Processor architecture is $OSArch, Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
+            Write-Output "Processor Architecture: $OSArch"
+            Write-Output "Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
             If (Test-Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs") {
                 Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs', no need to create directory"
             }
@@ -192,7 +214,7 @@ Function Invoke-SolarwindsDiagnostics {
                 }
             }     
             Write-Output "Starting Solarwinds Diagnostics"
-            Write-Output "DEBUG: Solarwinds Diagnostics started with:- Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait"
+            #Write-Output "DEBUG: Solarwinds Diagnostics started with:- Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait"
             Start-Process -FilePath "$SolarwindsDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$SolarwindsDiagnosticsFolderPath" -Verb RunAs -Wait
             Write-Output "Solarwinds Diagnostics completed, file saved to 'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs'"   
         }
@@ -208,36 +230,105 @@ Function Invoke-SolarwindsDiagnostics {
 
 Function Stop-PMESetup {
     # Kill any running instances of PMESetup.exe to ensure that we can download & install successfully
-    Write-Output "Checking if PMESetup is currently running"
+    Write-Host "Checking if PMESetup is currently running..." -ForegroundColor Cyan
     $PMESetupRunning = Get-Process PMESetup* -ErrorAction SilentlyContinue
         If ($PMESetupRunning) {
-            Write-Output "PMESetup is currently running, forcefully terminating"
+            Write-Host "WARNING: PMESetup is currently running, terminating" -ForegroundColor Yellow
             $PMESetupRunning | Stop-Process -Force
         }
         Else {
-            Write-Output "PMESetup is not currently running, proceeding"
+            Write-Host "OK: PMESetup is not currently running, proceeding" -ForegroundColor Green
         }
     
-    Write-Output "Checking if CacheServiceSetup is currently running"
+    Write-Host "Checking if CacheServiceSetup is currently running..." -ForegroundColor Cyan
     $PMESetupRunning = Get-Process CacheServiceSetup* -ErrorAction SilentlyContinue
         If ($PMESetupRunning) {
-            Write-Output "CacheServiceSetup is currently running, forcefully terminating"
+            Write-Host "WARNING: CacheServiceSetup is currently running, terminating" -ForegroundColor Yellow
             $PMESetupRunning | Stop-Process -Force
         }
         Else {
-            Write-Output "CacheServiceSetup is not currently running, proceeding"
+            Write-Host "OK: CacheServiceSetup is not currently running, proceeding" -ForegroundColor Green
         }
     
-    Write-Output "Checking if RPCServerServiceSetup is currently running"
+    Write-Host "Checking if RPCServerServiceSetup is currently running..." -ForegroundColor Cyan
     $PMESetupRunning = Get-Process RPCServerServiceSetup* -ErrorAction SilentlyContinue
         If ($PMESetupRunning) {
-            Write-Output "RPCServerServiceSetup is currently running, forcefully terminating"
+            Write-Host "WARNING: RPCServerServiceSetup is currently running, terminating" -ForegroundColor Yellow
             $PMESetupRunning | Stop-Process -Force
         }
         Else {
-            Write-Output "RPCServerServiceSetup is not currently running, proceeding"
-        }          
+            Write-Host "OK: RPCServerServiceSetup is not currently running, proceeding" -ForegroundColor Green
+        }
+    
+    Write-Host "Checking if _iu14D2N.tmp instances are currently running..." -ForegroundColor Cyan
+    $PMESetupRunning = Get-Process _iu* -ErrorAction SilentlyContinue
+        If ($PMESetupRunning) {
+            Write-Host "WARNING: _iu14D2N.tmp instances are currently running, terminating" -ForegroundColor Yellow
+            $PMESetupRunning | Stop-Process -Force
+        }
+        Else {
+            Write-Host "OK: _iu14D2N.tmp instances are not currently running, proceeding" -ForegroundColor Green
+        }      
 }   
+
+Function Stop-PMEServices {
+    $Service = "SolarWinds.MSP.PME.Agent.PmeService"
+    $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
+    $Process = "SolarWinds.MSP.PME.Agent"
+    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping")){
+        Write-Host "$Service is $ServiceStatus, attempting to stop..." -ForegroundColor Cyan
+        Stop-Service -Name $Service -Force
+        $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
+        If ($ServiceStatus -eq "Stopped") {
+            Write-Host "OK: $Service service successfully stopped" -ForegroundColor Green    
+        }
+        Else {
+            Write-Host "WARNING: $Service still running, temporarily disabling recovery and terminating" -ForegroundColor Yellow   
+            #Set-Service -Name $Service -StartupType Disabled
+            sc.exe failure "$Service" reset= 0 actions= // >null
+            Stop-Process -Name $Process* -Force
+            sc.exe failure "$Service" actions= restart/0/restart/0 reset= 0 >null       
+        }
+    }
+    
+    $Service = "SolarWinds.MSP.RpcServerService"
+    $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
+    $Process = "SolarWinds.MSP.RpcServerService"
+    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping")){
+        Write-Host "$Service is $ServiceStatus, attempting to stop..." -ForegroundColor Cyan
+        Stop-Service -Name $Service -Force
+        $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
+        If ($ServiceStatus -eq "Stopped") {
+            Write-Host "OK: $Service service successfully stopped" -ForegroundColor Green    
+        }
+        Else {
+            Write-Host "WARNING: $Service still running, temporarily disabling recovery and terminating" -ForegroundColor Yellow   
+            #Set-Service -Name $Service -StartupType Disabled
+            sc.exe failure "$Service" reset= 0 actions= // >null
+            Stop-Process -Name $Process* -Force
+            sc.exe failure "$Service" actions= restart/0/restart/0 reset= 0 >null              
+        }
+    }
+    
+    $Service = "SolarWinds.MSP.CacheService"
+    $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
+    $Process = "SolarWinds.MSP.CacheService"
+    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping")){
+        Write-Host "$Service is $ServiceStatus, attempting to stop..." -ForegroundColor Cyan
+        Stop-Service -Name $Service -Force
+        $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
+        If ($ServiceStatus -eq "Stopped") {
+            Write-Host "OK: $Service service successfully stopped" -ForegroundColor Green    
+        }
+        Else {
+            Write-Host "WARNING: $Service still running, temporarily disabling recovery and terminating" -ForegroundColor Yellow   
+            #Set-Service -Name $Service -StartupType Disabled
+            sc.exe failure "$Service" reset= 0 actions= // >null
+            Stop-Process -Name $Process* -Force
+            sc.exe failure "$Service" actions= restart/0/restart/0 reset= 0 >null                    
+        }
+    }
+}
 
 Function Get-PMESetupDetails {
     # Declare static URI of PMESetup_details.xml
@@ -330,8 +421,9 @@ Function Install-PME {
         $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
-                Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct, installing"
-                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -Passthru
+                Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct, installing - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
+                $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                     If ($Install.ExitCode -eq 0) {
                         Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                     }
@@ -353,8 +445,9 @@ Function Install-PME {
                 $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
                     If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                         # Install
-                        Write-Output "Hash of file is correct, installing $($PMEDetails.FileName)"
-                        $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -Passthru
+                        Write-Output "Hash of file is correct, installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
+                        $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                        $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                         If ($Install.ExitCode -eq 0) {
                             Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                         }
@@ -396,8 +489,9 @@ Function Install-PME {
         $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
-                Write-Output "Hash of file is correct, installing $($PMEDetails.FileName)"
-                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -Passthru
+                Write-Output "Hash of file is correct, installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
+                $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                 If ($Install.ExitCode -eq 0) {
                     Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                 }
@@ -424,9 +518,11 @@ Function Set-End {
 
 . Set-Start
 . Confirm-Elevation
+. Get-OSVersion
 . Test-Connectivity
 . Invoke-SolarwindsDiagnostics 
 . Stop-PMESetup
+. Stop-PMEServices
 . Clear-PME
 . Get-PMESetupDetails
 . Install-PME
