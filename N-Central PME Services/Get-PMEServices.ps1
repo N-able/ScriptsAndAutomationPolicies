@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.5.2 (19th May 2020)
+    Version: 0.1.5.3 (21st May 2020)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -16,12 +16,13 @@
                         0.1.5.0 + Added PME Profile Detection, and Diagnostics information courtesy of Ashley How's Repair-PME via a disagnostics parameter
                         0.1.5.1 + Improved TLS Support, Updated Error Message for PME connectivity Test not working on Windows 7
                         0.1.5.2 + PME 1.2.4 has been made GA for the default stream so have had to alter detection methods
+                        0.1.5.3 + Improved Compatibility with Server 2008 R2
 
     Examples: 
     .\get-pmeservices.ps1
     Runs Normally and only engages diagnostcs for connectibity testing if PME is not up to date or missing a service.
     
-    .\get-pme-services.ps1 -diagnostics
+    .\get-pmeservices.ps1 -diagnostics
     Force Diagnostics Mode to be enabled on the run regardless of PME Status
 
     ************************************************************************************************************
@@ -181,7 +182,7 @@ Function Test-PMEConnectivity {
     $diagnosticsinfo = $null
     # Performs connectivity tests to destinations required for PME
     $OSVersion = (Get-WmiObject Win32_OperatingSystem).Caption
-    If (($PSVersionTable.PSVersion -ge "4.0") -and (!($OSVersion -match 'Windows 7')))  {
+    If (($PSVersionTable.PSVersion -ge "4.0") -and (!($OSVersion -match 'Windows 7')) -and (!($OSVersion -match '2008 R2'))) {
         Write-Host "Performing HTTPS connectivity tests for PME required destinations..." -ForegroundColor Cyan
         $List1= @("sis.n-able.com")
         $HTTPSError = @()
@@ -249,7 +250,7 @@ Function Test-PMEConnectivity {
     }
 }
     Else {
-        $Message = "Windows: $OSVersion`n>Powershell: $($PSVersionTable.PSVersion)`nSkipping connectivity tests for PME required destinations as OS is Windows 7 and/or Powershell 4.0 or above is not installed"
+        $Message = "Windows: $OSVersion`n>Powershell: $($PSVersionTable.PSVersion)`nSkipping connectivity tests for PME required destinations as OS is Windows 7/ Server 2008 R2 and/or Powershell 4.0 or above is not installed"
         Write-Output $Message
         $Fallback = "Yes" 
         $diagnosticsinfo = $diagnosticsinfo + '`n' + $Message  
