@@ -1,7 +1,7 @@
 <#    
    ****************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.6.1 (20/05/2020)
+    Version:         0.1.6.2 (20/05/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
