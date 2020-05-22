@@ -1,7 +1,7 @@
 <#    
    ****************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.6.2 (20/05/2020)
+    Version:         0.1.6.3 (22/05/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -52,10 +52,12 @@
                                still running after after a timeout.
                                Remove debug output from 'Invoke-SolarwindsDiagnostics' function as no longer required.
                      0.1.6.1 - Updated 'Stop-PMEServices' function to fix sc.exe not reverting recovery options correctly.
-                     0.1.6.2 - Updated Test-Connectivity' function as did not actually commit the code as stated in 0.1.6.0.        
+                     0.1.6.2 - Updated 'Test-Connectivity' function as did not actually commit the code as stated in 0.1.6.0.
+                     0.1.6.3 - Updated 'Test-Connectivity' function to fix error on lines 150/151/155/156. 
+                               Thanks for Clint Conner for finding.        
    ****************************************************************************************************************************
 #>
-$Version = '0.1.6.2 (20/05/2020)'
+$Version = '0.1.6.3 (22/05/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -147,13 +149,13 @@ Function Test-Connectivity {
         }
 
         If ($HTTPError[1] -like "*Yes*") {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: No connectivity to $($List[1]) can be established, you will be unable to download Microsoft Updates!`nScript: Repair-PME.ps1"  
-            Write-Host "WARNING: No connectivity to $($List[1]) can be established, you will be unable to download Microsoft Updates!" -ForegroundColor Red
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: No connectivity to $($List2[1]) can be established, you will be unable to download Microsoft Updates!`nScript: Repair-PME.ps1"  
+            Write-Host "WARNING: No connectivity to $($List2[1]) can be established, you will be unable to download Microsoft Updates!" -ForegroundColor Red
         }
 
         If ($HTTPError[2] -like "*Yes*") {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: No connectivity to $($List[2]) can be established, you will be unable to download Windows Feature Updates!`nScript: Repair-PME.ps1"  
-            Write-Host "WARNING: No connectivity to $($List[2]) can be established, you will be unable to download Windows Feature Updates!" -ForegroundColor Red    
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!`nScript: Repair-PME.ps1"  
+            Write-Host "WARNING: No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!" -ForegroundColor Red    
         }
     }
     Else {
