@@ -13,7 +13,8 @@ Repair-PME was created as I was getting frustrated with having to spend time try
 
 ### What does Repair-PME do?
 
-Repair-PME does the following with logic, error handling and event logging to operate as user-friendly as possible:
+Repair-PME does the following with logic, error handling and event logging to operate as user-friendly as possible. Any errors during execution of the script will throw to powershell and will also be reported to the event log.
+
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has started.
 * Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
 * Performs connectivity tests to destinations required for PME (PowerShell 4.0 or above required). Tests will be skipped and download of PMESetup will be obtained via HTTP instead of HTTPS if a lower version is detected.
