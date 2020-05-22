@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.5.3 (21st May 2020)
+    Version: 0.1.5.4 (22nd May 2020)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -17,6 +17,7 @@
                         0.1.5.1 + Improved TLS Support, Updated Error Message for PME connectivity Test not working on Windows 7
                         0.1.5.2 + PME 1.2.4 has been made GA for the default stream so have had to alter detection methods
                         0.1.5.3 + Improved Compatibility with Server 2008 R2
+                        0.1.5.4 + Updated 'Test-PMEConnectivity' function to fix a message typo. Thanks for Clint Conner for finding. 
 
     Examples: 
     .\get-pmeservices.ps1
@@ -32,7 +33,7 @@ Param (
         [switch] $Diagnostics
     )
 
-$Version = '0.1.5.2 (19th May 2020)'
+$Version = '0.1.5.4 (22nd May 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -236,14 +237,14 @@ Function Test-PMEConnectivity {
         }
 
         If ($HTTPError[1] -like "*Yes*") {
-            $Message = "WARNING: No connectivity to $($List[1]) can be established"
+            $Message = "WARNING: No connectivity to $($List2[1]) can be established"
             Write-EventLog -LogName Application -Source "Get-PMEServices" -EntryType Information -EventID 100 -Message "$Message, you will be unable to download Microsoft Updates!`nScript: Get-PMEServices.ps1"  
             Write-Host "$Message, you will be unable to download Microsoft Updates!" -ForegroundColor Red
             $diagnosticsinfo = $diagnosticsinfo + '`n' + $Message
         }
 
         If ($HTTPError[2] -like "*Yes*") {
-            $Message = "WARNING: No connectivity to $($List[2]) can be established"
+            $Message = "WARNING: No connectivity to $($List2[2]) can be established"
             Write-EventLog -LogName Application -Source "Get-PMEServices" -EntryType Information -EventID 100 -Message "$Message, you will be unable to download Windows Feature Updates!`nScript: Get-PMEServices.ps1"  
             Write-Host "$Message, you will be unable to download Windows Feature Updates!" -ForegroundColor Red  
             $diagnosticsinfo = $diagnosticsinfo + '`n' + $Message
