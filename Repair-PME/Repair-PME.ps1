@@ -55,8 +55,8 @@
                      0.1.6.2 - Updated 'Test-Connectivity' function as did not actually commit the code as stated in 0.1.6.0.
                      0.1.6.3 - Updated 'Test-Connectivity' function to fix error on lines 150/151/155/156. 
                                Thanks for Clint Conner for finding.
-                     0.1.6.4 - Updated 'Get-PMESetup and 'Install-PME' functions to fix change made since version 1.2.4.2303
-                               where 'PMESetup.exe' is downloaded as 'PMESetup_versionnumber.exe'. This was causing
+                     0.1.6.4 - Updated 'Get-PMESetup and 'Install-PME' functions to address change made since PME version
+                               1.2.4.2303 where 'PMESetup.exe' is downloaded as 'PMESetup_versionnumber.exe' This was causing
                                the installer to be downloaded unnecessarily.                   
    ****************************************************************************************************************************
 #>
