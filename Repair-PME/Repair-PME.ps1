@@ -1,7 +1,7 @@
 <#    
    ****************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.6.3 (22/05/2020)
+    Version:         0.1.6.4 (03/06/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -54,10 +54,13 @@
                      0.1.6.1 - Updated 'Stop-PMEServices' function to fix sc.exe not reverting recovery options correctly.
                      0.1.6.2 - Updated 'Test-Connectivity' function as did not actually commit the code as stated in 0.1.6.0.
                      0.1.6.3 - Updated 'Test-Connectivity' function to fix error on lines 150/151/155/156. 
-                               Thanks for Clint Conner for finding.        
+                               Thanks for Clint Conner for finding.
+                     0.1.6.4 - Updated 'Get-PMESetup and 'Install-PME' functions to fix change made since version 1.2.4.2303
+                               where 'PMESetup.exe' is downloaded as 'PMESetup_versionnumber.exe'. This was causing
+                               the installer to be downloaded unnecessarily.                   
    ****************************************************************************************************************************
 #>
-$Version = '0.1.6.3 (22/05/2020)'
+$Version = '0.1.6.4 (03/06/2020)'
 
 Write-Output "Repair-PME $Version`n"
 
@@ -398,7 +401,7 @@ Function Get-PMESetup {
         $FallbackDownloadURL = ($PMEDetails.DownloadURL).Replace('https','http')
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
         Try {
-            (New-Object System.Net.WebClient).DownloadFile("$($FallbackDownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)")
+            (New-Object System.Net.WebClient).DownloadFile("$($FallbackDownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe")
         }
         Catch {
             Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
@@ -408,7 +411,7 @@ Function Get-PMESetup {
     Else {
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
         Try {
-            (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)")
+            (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe")
         }
         Catch {
             Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
@@ -419,15 +422,15 @@ Function Get-PMESetup {
 
 Function Install-PME {
     # Check Setup Exists in PME Archive Directory
-    If (Test-Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)") {
+    If (Test-Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe") {
         # Check Hash
-        Write-Output "Checking hash of local file at 'C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)'"
-        $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
+        Write-Output "Checking hash of local file at 'C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe'"
+        $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe"
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
                 Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct, installing - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
                 $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
-                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
+                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                     If ($Install.ExitCode -eq 0) {
                         Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                     }
@@ -445,13 +448,13 @@ Function Install-PME {
                 Write-Output "Hash of local file ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, downloading the latest available version"
                 . Get-PMESetup   
                 # Check Hash
-                Write-Output "Checking hash of local file at 'C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)'"
-                $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
+                Write-Output "Checking hash of local file at 'C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe'"
+                $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe"
                     If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                         # Install
                         Write-Output "Hash of file is correct, installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
                         $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
-                        $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
+                        $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                         If ($Install.ExitCode -eq 0) {
                             Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                         }
@@ -489,13 +492,13 @@ Function Install-PME {
         # Download
         . Get-PMESetup
         # Check Hash
-        Write-Output "Checking hash of local file at 'C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)'"
-        $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)"
+        Write-Output "Checking hash of local file at 'C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe'"
+        $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe"
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
                 Write-Output "Hash of file is correct, installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
                 $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
-                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\$($PMEDetails.FileName)" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
+                $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                 If ($Install.ExitCode -eq 0) {
                     Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
                 }
