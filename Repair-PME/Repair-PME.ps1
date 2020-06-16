@@ -149,10 +149,10 @@ Function Get-OSArch {
     Write-Output "OS Architecture: $OSArch"
     If ($OSArch -like "*64*") {
         $NCentralLog = "C:\Program Files (x86)\N-able Technologies\Windows Agent\log"
-        }
-        Else {
+    }
+    Else {
         $NCentralLog = "C:\Program Files\N-able Technologies\Windows Agent\log"
-        }
+    }
 }
 
 Function Get-PSVersion {
