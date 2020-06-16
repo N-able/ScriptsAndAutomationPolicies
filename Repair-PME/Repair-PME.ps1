@@ -88,7 +88,6 @@
    *******************************************************************************************************************************
 #>
 $Version = '0.1.7.1 (16/06/2020)'
-Write-Host "Repair-PME $Version`n" -ForegroundColor Yellow
 
 # Settings
 # *******************************************************************************************************************************
@@ -97,6 +96,8 @@ $RepairAfterUpdateDays = "2"
 # Change this variable to "No" if you don't want to apply fix for "System.OutOfMemoryException". Default is Yes.
 $NCPM4407 = "Yes"
 # *******************************************************************************************************************************
+
+Write-Host "Repair-PME $Version`n" -ForegroundColor Yellow
 
 Function Set-Start {
     New-EventLog -LogName Application -Source "Repair-PME" -ErrorAction SilentlyContinue
