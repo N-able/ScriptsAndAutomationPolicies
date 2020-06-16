@@ -70,9 +70,10 @@
                              - New function 'Get-PMEConfigurationDetails' to obtain latest PME release date used in 
                                'Confirm-PMEUpdatePending' function.
                              - New function 'Confirm-PMEUpdatePending' safeguards running this script if PME is awaiting update
-                               but has not updated yet. Change $Days = "2" variable to number of desired days to force
-                               repair after new version of PME released. Change to $Days = "0" if you want this script to run
-                               without safeguards. This new function means this script can finally be used for self-healing.
+                               but has not updated yet. Change $RepairAfterUpdateDays = "2" variable to number of desired days
+                               to force repair after new version of PME released. Change to $RepairAfterUpdateDays = "0" if you
+                               want this script to run without safeguards. This new function means this script can finally be
+                               used for self-healing.
                              - Moved OS architecture detection out into its own function 'Get-OSArch'.
                              - Moved PowerShell detection out into its own function 'Get-PSVersion'.  
                              - Moved functions around to better suit new changes made.     
