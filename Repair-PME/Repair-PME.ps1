@@ -1,7 +1,7 @@
 <#    
-   ****************************************************************************************************************************
+   *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.6.4 (03/06/2020)
+    Version:         0.1.7.1 (16/06/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -57,12 +57,46 @@
                                Thanks for Clint Conner for finding.
                      0.1.6.4 - Updated 'Get-PMESetup and 'Install-PME' functions to address change made since PME version
                                1.2.4.2303 where 'PMESetup.exe' is downloaded as 'PMESetup_versionnumber.exe' This was causing
-                               the installer to be downloaded unnecessarily.                   
-   ****************************************************************************************************************************
+                               the installer to be downloaded unnecessarily.
+                0.1.7.0 Beta - New function 'Set-PMEConfig' to apply fix for NCPM-4407 (System.OutOfMemoryException) this
+                               will be applied by default however if you wish to change this behaviour change variable 
+                               $NCPM4407 = "Yes" to $NCPM4407 = "No". Please note memory usage is increased slightly. PME must
+                               already be installed and at version 1.2.5 or above to apply.
+                             - New function 'Read-PMEConfig' to check PME Config and inform of possible misconfiguration.
+                             - Updated 'Stop-PMEServices' function to deal with situations where services are suspended.
+                             - New function 'Confirm-PMEInstalled' to confirm if PME is already installed.
+                             - Updated function 'Get-PMESetupDetails' to create $LatestVersion variable used in
+                               'Get-PMEConfigurationDetails' function. 
+                             - New function 'Get-PMEConfigurationDetails' to obtain latest PME release date used in 
+                               'Confirm-PMEUpdatePending' function.
+                             - New function 'Confirm-PMEUpdatePending' safeguards running this script if PME is awaiting update
+                               but has not updated yet. Change $Days = "2" variable to number of desired days to force
+                               repair after new version of PME released. Change to $Days = "0" if you want this script to run
+                               without safeguards. This new function means this script can finally be used for self-healing.
+                             - Moved OS architecture detection out into its own function 'Get-OSArch'.
+                             - Moved PowerShell detection out into its own function 'Get-PSVersion'.  
+                             - Moved functions around to better suit new changes made.     
+                             - Updated 'Read-PMEConfig' function to detect if Cache Service cache size is not set to default size.
+                             - Updates to colour coding status in various areas of script.
+                             - Various minor adjustments.
+                     0.1.7.1 - Updated 'Read-PMEConfig','Set-PMEConfig','Confirm-PMEUpdatePending' and 'Get-OSArch' functions to 
+                               fix 32-bit OS issues and when files don't exist, thanks to Prejay Shah for testing and code changes.
+                             - Updated 'Confirm-PMEInstalled' function to fix issue where it was unable to correctly detect if 
+                               PME is not installed.
+                             - Various minor adjustments and fixes.
+                             - Variables for settings moved to a dedicated section.                                   
+   *******************************************************************************************************************************
 #>
-$Version = '0.1.6.4 (03/06/2020)'
+$Version = '0.1.7.1 (16/06/2020)'
+Write-Host "Repair-PME $Version`n" -ForegroundColor Yellow
 
-Write-Output "Repair-PME $Version`n"
+# Settings
+# *******************************************************************************************************************************
+# Change this variable to number of days (must be a number!) to begin repair after new version of PME is released. Default is 2.
+$RepairAfterUpdateDays = "2"
+# Change this variable to "No" if you don't want to apply fix for "System.OutOfMemoryException". Default is Yes.
+$NCPM4407 = "Yes"
+# *******************************************************************************************************************************
 
 Function Set-Start {
     New-EventLog -LogName Application -Source "Repair-PME" -ErrorAction SilentlyContinue
@@ -71,14 +105,14 @@ Function Set-Start {
 
 Function Confirm-Elevation {
     # Confirms script is running as an administrator
-    Write-Output "Checking for elevated permissions"
+    Write-Host "Checking for elevated permissions" -ForegroundColor Cyan
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
         [Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again.`nScript: Repair-PME.ps1"    
         Throw "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again."
     }
     Else {
-    Write-Output "Script is running as administrator, proceeding"
+    Write-Host "OK: Script is running as administrator" -ForegroundColor Green
     }
 }
 
@@ -105,12 +139,182 @@ Function Get-OSVersion {
     If (($null -eq $OSVersion) -or ($OSVersion -like "*OS - Alias not found*")) {
         $OSVersion = (get-item "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").GetValue('ProductName')
     }
+    Write-Output "OS: $OSVersion"
+}
+
+Function Get-OSArch {
+    $OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+    Write-Output "OS Architecture: $OSArch"
+    If ($OSArch -like "*64*") {
+        $NCentralLog = "C:\Program Files (x86)\N-able Technologies\Windows Agent\log"
+        }
+        Else {
+        $NCentralLog = "C:\Program Files\N-able Technologies\Windows Agent\log"
+        }
+}
+
+Function Get-PSVersion {
+    $PSVersion = $($PSVersionTable.PSVersion)
+    Write-Output "PowerShell: $($PSVersionTable.PSVersion)"
+}
+
+Function Confirm-PMEInstalled {
+    # Check if PME is currently installed
+    If ($OSArch -like '*64*') {
+        Write-Host "Checking if PME is already installed..." -ForegroundColor Cyan
+        $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")       
+        $SOFTWARE = "SolarWinds MSP Patch Management Engine"
+        ForEach ($path in $PATHS) {
+            $installed = Get-ChildItem -Path $path |
+            ForEach-Object { Get-ItemProperty $_.PSPath } |
+            Where-Object { $_.DisplayName -match $SOFTWARE } |
+            Select-Object -Property DisplayName,DisplayVersion,InstallDate
+            
+            If ($null -ne $installed) {    
+                ForEach ($app in $installed) {
+                    If ($($app.DisplayName) -eq "SolarWinds MSP Patch Management Engine") {
+                        $InstallDate = $($app.InstallDate)
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
+                        $IsPMEInstalled = "Yes"
+                        Write-Host "PME Already Installed: Yes" -ForegroundColor Green
+                        Write-Output "Installed PME Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME Date: $InstallDateFormatted"
+                    }
+                }       
+            }
+            Else {
+                $IsPMEInstalled = "No"
+                Write-Host "PME Already Installed: No" -ForegroundColor Yellow 
+            } 
+        }
+    }
+    
+    If ($OSArch -like '*32*') {
+        Write-Host "Checking if PME is already installed..." -ForegroundColor Cyan
+        $PATHS = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")       
+        $SOFTWARE = "SolarWinds MSP Patch Management Engine"
+        ForEach ($path in $PATHS) {
+            $installed = Get-ChildItem -Path $path |
+            ForEach-Object { Get-ItemProperty $_.PSPath } |
+            Where-Object { $_.DisplayName -match $SOFTWARE } |
+            Select-Object -Property DisplayName,DisplayVersion,InstallDate
+    
+            If ($null -ne $installed) {    
+                ForEach ($app in $installed) {
+                    If ($($app.DisplayName) -eq "SolarWinds MSP Patch Management Engine") {
+                        $InstallDate = $($app.InstallDate)
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
+                        $IsPMEInstalled = "Yes"
+                        Write-Host "PME Already Installed: Yes" -ForegroundColor Green
+                        Write-Output "Installed PME Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME Date: $InstallDateFormatted"
+                    }
+                }       
+            }
+            Else {
+                $IsPMEInstalled = "No"
+                Write-Host "PME Already Installed: No" -ForegroundColor Yellow 
+            } 
+        }
+    }   
+}
+
+Function Get-PMESetupDetails {
+    # Declare static URI of PMESetup_details.xml
+    If ($Fallback -eq "Yes") {
+        $PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml" 
+    }
+    Else {
+        $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
+    }
+    Try {
+        $request = $null
+        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
+        $PMEDetails = $request.ComponentDetails
+        $LatestVersion = $request.ComponentDetails.Version
+    }
+    Catch [System.Net.WebException] {
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+        Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
+    }
+    Catch [System.Management.Automation.MetadataException] {
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+        Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
+    }
+    Catch {
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+        Throw "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message)"
+     }     
+}
+
+Function Get-PMEConfigurationDetails {
+    # Declare static URI of PmeConfiguration_details.xml
+     $PMEConfigurationDetailsURI = "https://sis.n-able.com/ComponentData/RMM/all/PmeConfiguration_details.xml"  
+     Try {
+         $request = $null
+         [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMEConfigurationDetailsURI") -split '<\?xml.*\?>')[-1]
+         $PMEConfigurationDetails = $request.ComponentDetails
+         $PMEConfigurationDate = $PMEConfigurationDetails.Version
+         $PMEConfigurationDate = $PMEConfigurationDate.Substring(0,$PMEConfigurationDate.Length-3)
+         Write-Output "Latest PME Version: $LatestVersion"
+         Write-Output "Latest PME Release Date: $PMEConfigurationDate"
+     }
+     Catch [System.Net.WebException] {
+        Write-Output "Error fetching PMESetup_Details.xml check your source URL!"
+        Throw
+     }
+     Catch [System.Management.Automation.MetadataException] {
+        Write-Output "Error casting to XML; could not parse PMESetup_details.xml"
+        Throw
+     }   
+ }
+
+Function Confirm-PMEUpdatePending {
+    # Check if PME is awaiting update for new release but has not updated yet (normally within 48 hours)
+    $PMEWrapperFile = "$NcentralLog\PMEWrapper.log"
+
+    If (Test-Path $PMEWrapperFile) {
+        $PMEWrapper = get-content "$NcentralLog\PMEWrapper.log" 
+        $NewVersion = "Newer PME version detected"
+        $LastInstall = "Installing PME"
+        If (($IsPMEInstalled -eq "Yes") -and ($PMEWrapper -ne "") -and ($PMEWrapper -match $NewVersion) -and ($PMEWrapper -match $LastInstall)) {
+            $Date = Get-Date -Format 'yyyy.MM.dd'
+            Write-Output "Current Date: $Date"
+            $NewVersionMatch = ($PMEWrapper -match $NewVersion)[-1] 
+            $LastInstallDateVersion = $NewVersionMatch.Split('')[10].Trim("(),")
+            $LastInstallMatch = ($PMEWrapper -match $LastInstall)[-1]
+            $LastInstallDate = $LastInstallMatch.Split('')[1].Trim() + " " + $LastInstallMatch.Split('')[2].Trim()
+            Write-Host "INFO: Last automatic PME check detected version ($LastInstallDateVersion) and installed it on ($LastInstallDate)" -ForegroundColor Cyan
+            $ConvertPMEConfigurationDate = Get-Date "$PMEConfigurationDate"
+            $SelfHealingDate = $ConvertPMEConfigurationDate.AddDays($RepairAfterUpdateDays).ToString('yyyy.MM.dd')
+            Write-Host "INFO: Repair-PME will only proceed ($RepairAfterUpdateDays) days after a new version of PME has been released" -ForegroundColor Cyan
+            $DaysElapsed = (New-TimeSpan -Start $SelfHealingDate -End $Date).Days
+            $DaysElapsedReversed = (New-TimeSpan -Start $Date -End $SelfHealingDate).Days
+
+            # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than $LastInstallDateVersion
+            If (($Date -ge $SelfHealingDate) -and ($LatestVersion -ge $LastInstallDateVersion)) {
+                Write-Output "($DaysElapsed) days has elapsed since a new version of PME has been released, script will proceed"
+            }
+            Else {
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Only ($DaysElapsed) days has elapsed since a new version of PME has been released, aborting.`nScript: Repair-PME.ps1"
+            Throw "Only ($DaysElapsedReversed) of ($RepairAfterUpdateDays) set days has elapsed since a new version of PME has been released, aborting."
+            Break
+            }
+        }
+        Else {
+            Write-Host "WARNING: Skipping update pending check as PMEWrapper.log does not currently contain update information" -ForegroundColor Yellow
+        } 
+    }
+    Else {
+        Write-Host "WARNING: Skipping update pending check as PMEWrapper.log does not currently exist" -ForegroundColor Yellow    
+    } 
 }
 
 Function Test-Connectivity {
     # Performs connectivity tests to destinations required for PME
     If (($PSVersionTable.PSVersion -ge "4.0") -and (!($OSVersion -match 'Windows 7')) -and (!($OSVersion -match '2008 R2'))) {
-        Write-Host "Windows: $OSVersion `nPowershell: $($PSVersionTable.PSVersion)"
         Write-Host "Performing HTTPS connectivity tests for PME required destinations..." -ForegroundColor Cyan
         $List1= @("sis.n-able.com")
         $HTTPSError = @()
@@ -162,7 +366,7 @@ Function Test-Connectivity {
         }
     }
     Else {
-        Write-Output "Windows: $OSVersion `nPowershell: $($PSVersionTable.PSVersion) `nSkipping connectivity tests for PME required destinations as OS is Windows 7/Server 2008 R2 and/or Powershell 4.0 or above is not installed"
+        Write-Host "WARNING: Skipping connectivity tests as OS is Windows 7/Server 2008 R2 and/or Powershell 4.0 or above is not installed" -ForegroundColor Yellow
         $Fallback = "Yes"    
     }
 }
@@ -170,13 +374,11 @@ Function Test-Connectivity {
 Function Invoke-SolarwindsDiagnostics {
     # Invokes Solarwinds official diagnostics tool to capture logs for support
     $ZipPath = "/`"ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs/SWDiagnostics$(Get-Date -Format 'yyyyMMdd-hhmmss').zip`""
-    $OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
     If ($OSArch -like '*64*') {
         # 32-bit program files on 64-bit
         $SolarwindsDiagnosticsFolderPath = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")+"\SolarWinds MSP\PME\Diagnostics"
         $SolarwindsDiagnosticsExePath = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")+"\SolarWinds MSP\PME\Diagnostics\SolarwindsDiagnostics.exe"
         If (Test-Path $SolarwindsDiagnosticsExePath) {
-            Write-Output "Processor Architecture: $OSArch"
             Write-Output "Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
             If (Test-Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs") {
                 Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' already exists, no need to create directory"
@@ -197,7 +399,7 @@ Function Invoke-SolarwindsDiagnostics {
             Write-Output "Solarwinds Diagnostics completed, file saved to 'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs'"    
         }
         Else {
-            Write-Output "Unable to detect Solarwinds Diagnostics at '$SolarwindsDiagnosticsExePath', skipping log capture"    
+            Write-Host "WARNING: Unable to detect Solarwinds Diagnostics, skipping log capture" -ForegroundColor Yellow    
         }    
     }
     ElseIf ($OSArch -like '*32*') {
@@ -205,7 +407,6 @@ Function Invoke-SolarwindsDiagnostics {
         $SolarwindsDiagnosticsFolderPath = [Environment]::GetEnvironmentVariable("ProgramFiles")+"\SolarWinds MSP\PME\Diagnostics"
         $SolarwindsDiagnosticsExePath = [Environment]::GetEnvironmentVariable("ProgramFiles")+"\SolarWinds MSP\PME\Diagnostics\SolarwindsDiagnostics.exe"
         If (Test-Path $SolarwindsDiagnosticsExePath) {
-            Write-Output "Processor Architecture: $OSArch"
             Write-Output "Solarwinds Diagnostics located at '$SolarwindsDiagnosticsExePath'"
             If (Test-Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs") {
                 Write-Output "Directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs', no need to create directory"
@@ -226,7 +427,7 @@ Function Invoke-SolarwindsDiagnostics {
             Write-Output "Solarwinds Diagnostics completed, file saved to 'C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs'"   
         }
         Else {
-            Write-Output "Unable to detect Solarwinds Diagnostics at '$SolarwindsDiagnosticsExePath', skipping log capture"    
+            Write-Host "WARNING: Unable to detect Solarwinds Diagnostics, skipping log capture" -ForegroundColor Yellow  
         }   
     }
     Else {
@@ -282,7 +483,7 @@ Function Stop-PMEServices {
     $Service = "SolarWinds.MSP.PME.Agent.PmeService"
     $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
     $Process = "SolarWinds.MSP.PME.Agent"
-    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping")){
+    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping") -or ($ServiceStatus -eq "Suspended")) {
         Write-Host "$Service is $ServiceStatus, attempting to stop..." -ForegroundColor Cyan
         Stop-Service -Name $Service -Force
         $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
@@ -301,7 +502,7 @@ Function Stop-PMEServices {
     $Service = "SolarWinds.MSP.RpcServerService"
     $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
     $Process = "SolarWinds.MSP.RpcServerService"
-    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping")){
+    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping") -or ($ServiceStatus -eq "Suspended")) {
         Write-Host "$Service is $ServiceStatus, attempting to stop..." -ForegroundColor Cyan
         Stop-Service -Name $Service -Force
         $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
@@ -320,7 +521,7 @@ Function Stop-PMEServices {
     $Service = "SolarWinds.MSP.CacheService"
     $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
     $Process = "SolarWinds.MSP.CacheService"
-    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping")){
+    If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping") -or ($ServiceStatus -eq "Suspended")) {
         Write-Host "$Service is $ServiceStatus, attempting to stop..." -ForegroundColor Cyan
         Stop-Service -Name $Service -Force
         $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
@@ -335,33 +536,6 @@ Function Stop-PMEServices {
             sc.exe failure "$Service" actions= restart/0/restart/0//0 reset= 0 >null                    
         }
     }
-}
-
-Function Get-PMESetupDetails {
-    # Declare static URI of PMESetup_details.xml
-    If ($Fallback -eq "Yes") {
-        $PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml" 
-    }
-    Else {
-        $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"  
-    }
-    Try {
-        $request = $null
-        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
-        $PMEDetails = $request.ComponentDetails
-    }
-    Catch [System.Net.WebException] {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
-        Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
-    }
-    Catch [System.Management.Automation.MetadataException] {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
-        Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
-    }
-    Catch {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message)"
-     }     
 }
 
 Function Clear-PME {
@@ -420,6 +594,65 @@ Function Get-PMESetup {
     }     
 }
 
+Function Read-PMEConfig {
+    # Check PME Config and inform of possible misconfigurations
+    $CacheServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
+
+    If (Test-Path "$CacheServiceConfigFile") {
+        $CacheServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
+
+        If ($CacheServiceConfig -match '<CanBypassProxyCacheService>false</CanBypassProxyCacheService>') {
+            Write-Host "WARNING: Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!" -ForegroundColor Yellow
+        }
+        ElseIf ($CacheServiceConfig -match '<CanBypassProxyCacheService>true</CanBypassProxyCacheService>') {
+            Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Cyan
+        }
+        Else {
+        Write-Host "WARNING: Unable to determine if patch profile allows PME to fallback to external sources" -ForegroundColor Yellow   
+        }
+
+        $CacheSize = ($CacheServiceConfig -match '<CacheSizeInMB>')[-1].Trim()
+        $CacheSize = $CacheSize.Trim('<CacheSizeInMB>,</CacheSizeInMB>')
+
+        If ($CacheServiceConfig -match '<CacheSizeInMB>10240</CacheSizeInMB>') {
+            Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Cyan
+        }
+        Else {
+            Write-Host "WARNING: Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!" -ForegroundColor Yellow
+        }
+    }
+    Else {
+        Write-Host "WARNING: Cache Service config file does not exist, skipping Cache Service settings checks" -ForegroundColor Yellow
+    }
+}    
+
+Function Set-PMEConfig {
+    # NCPM-4407 – This solution covers a specific case that can trigger PME to be Misconfigured with error "System.OutOfMemoryException". This issue seems to be caused by not having enough continuous blocks of free memory, even if there is plenty of memory available. This is usually why PME will work for an amount of time after a reboot of the device. This solution will instead keep PME in memory rather than unloading, to ensure resources are made available to it. To trigger this feature, the value of "UnloadModuleAppDomainAfterEachRequest" must be changed from "true" to "false" in C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml
+    $RPCServerServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
+
+    If (Test-Path "$RPCServerServiceConfigFile") {
+        $RpcServerServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
+
+        If ($RpcServerServiceConfig -match '<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>') {
+            Write-Host "INFO: RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException) is already applied" -ForegroundColor Cyan
+        }    
+
+        If (($NCPM4407 -eq "Yes") -and ($RpcServerServiceConfig -match '<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>')) {
+            Try {
+                Write-Output "Changing RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException)"
+                $RpcServerServiceConfig -replace "<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>","<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>" | Set-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
+                }
+            Catch {
+                Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+                Throw "Unable to change RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message)"
+            }						  
+        }
+    }
+    Else {
+    Write-Host "WARNING: RPC Server Service config file does not exist, fix for NCPM-4407 can't be applied" -ForegroundColor Yellow
+    }
+}
+
 Function Install-PME {
     # Check Setup Exists in PME Archive Directory
     If (Test-Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe") {
@@ -428,11 +661,11 @@ Function Install-PME {
         $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe"
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
-                Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct, installing - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
-                $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct"
+                Write-Host "Installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'" -ForegroundColor Cyan
                 $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                     If ($Install.ExitCode -eq 0) {
-                        Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
+                        Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
                     }
                     ElseIf ($Install.ExitCode -eq 5) {
                         Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
@@ -452,11 +685,11 @@ Function Install-PME {
                 $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe"
                     If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                         # Install
-                        Write-Output "Hash of file is correct, installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
-                        $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                        Write-Output "Hash of file is correct"
+                        Write-Host "Installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'" -ForegroundColor Cyan
                         $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                         If ($Install.ExitCode -eq 0) {
-                            Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
+                            Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
                         }
                         ElseIf ($Install.ExitCode -eq 5) {
                             Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
@@ -477,7 +710,7 @@ Function Install-PME {
         Write-Output "$($PMEDetails.FileName) does not exist, begin download and install phase"
             # Check for PME Archive Directory
             If (Test-Path "C:\ProgramData\SolarWinds MSP\PME\archives") {
-                Write-Output "Directory 'C:\ProgramData\SolarWinds MSP\PME\archives already exists', no need to create directory"
+                Write-Output "Directory 'C:\ProgramData\SolarWinds MSP\PME\archives' already exists, no need to create directory"
             }
             Else {
                 Try {
@@ -496,11 +729,11 @@ Function Install-PME {
         $Download = Get-LegacyHash -Path "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe"
             If ($Download -eq $($PMEDetails.SHA256Checksum)) {
                 # Install
-                Write-Output "Hash of file is correct, installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'"
-                $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
+                Write-Output "Hash of file is correct"
+                Write-Host "Installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'" -ForegroundColor Cyan
                 $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                 If ($Install.ExitCode -eq 0) {
-                    Write-Output "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed"
+                    Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
                 }
                 ElseIf ($Install.ExitCode -eq 5) {
                     Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
@@ -526,11 +759,18 @@ Function Set-End {
 . Set-Start
 . Confirm-Elevation
 . Get-OSVersion
+. Get-OSArch
+. Get-PSVersion
+. Confirm-PMEInstalled
+. Get-PMESetupDetails
+. Get-PMEConfigurationDetails
+. Confirm-PMEUpdatePending
 . Test-Connectivity
 . Invoke-SolarwindsDiagnostics 
 . Stop-PMESetup
 . Stop-PMEServices
 . Clear-PME
-. Get-PMESetupDetails
+. Read-PMEConfig
+. Set-PMEConfig
 . Install-PME
 . Set-End
