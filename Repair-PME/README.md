@@ -25,7 +25,7 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **RPCServerServiceSetup** **and _iu14D2N or similar.**
 * Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
 * Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
-* Checks existing PME config and informs of possible misconfigurations.
+* Checks existing PME config and informs of possible misconfigurations (cache size, fallback to external sources).
 * Checks existing PME config and applies fix for NCPM-4407 (System.OutOfMemoryException). This can be changed, see settings below for further information. Please note this will only apply if PME has already been installed.
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
 * Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'**.
