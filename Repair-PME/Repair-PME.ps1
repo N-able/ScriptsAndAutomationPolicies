@@ -1,7 +1,7 @@
 <#    
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.7.1 (16/06/2020)
+    Version:         0.1.7.2 (25/06/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -85,10 +85,12 @@
                              - Updated 'Confirm-PMEInstalled' function to fix issue where it was unable to correctly detect if 
                                PME is not installed.
                              - Various minor adjustments and fixes.
-                             - Variables for settings moved to a dedicated section.                                   
+                             - Variables for settings moved to a dedicated section.
+                     0.1.7.2 - Updated functions 'Read-PMEConfig' and 'Set-PMEConfig' to handle situations where an exception
+                               could be thrown stopping script execution when config files are empty.                                            
    *******************************************************************************************************************************
 #>
-$Version = '0.1.7.1 (16/06/2020)'
+$Version = '0.1.7.2 (25/06/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -603,29 +605,33 @@ Function Read-PMEConfig {
     If (Test-Path "$CacheServiceConfigFile") {
         $CacheServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
 
-        If ($CacheServiceConfig -match '<CanBypassProxyCacheService>false</CanBypassProxyCacheService>') {
-            Write-Host "WARNING: Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!" -ForegroundColor Yellow
-        }
-        ElseIf ($CacheServiceConfig -match '<CanBypassProxyCacheService>true</CanBypassProxyCacheService>') {
-            Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Cyan
+        If ($null -ne $CacheServiceConfig) {
+            If ($CacheServiceConfig -match '<CanBypassProxyCacheService>false</CanBypassProxyCacheService>') {
+                Write-Host "WARNING: Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!" -ForegroundColor Yellow
+            }
+            ElseIf ($CacheServiceConfig -match '<CanBypassProxyCacheService>true</CanBypassProxyCacheService>') {
+                Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Cyan
+            }
+            Else {
+            Write-Host "WARNING: Unable to determine if patch profile allows PME to fallback to external sources" -ForegroundColor Yellow   
+            }
+
+            If ($CacheServiceConfig -match '<CacheSizeInMB>10240</CacheSizeInMB>') {
+                Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Cyan
+            }
+            Else {
+                $CacheSize = ($CacheServiceConfig -match '<CacheSizeInMB>')[-1].Trim()
+                $CacheSize = $CacheSize.Trim('<CacheSizeInMB>,</CacheSizeInMB>')
+                Write-Host "WARNING: Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!" -ForegroundColor Yellow
+            }
         }
         Else {
-        Write-Host "WARNING: Unable to determine if patch profile allows PME to fallback to external sources" -ForegroundColor Yellow   
+            Write-Host "WARNING: Cache Service config file is empty, skipping Cache Service settings checks" -ForegroundColor Yellow    
         }
-
-        $CacheSize = ($CacheServiceConfig -match '<CacheSizeInMB>')[-1].Trim()
-        $CacheSize = $CacheSize.Trim('<CacheSizeInMB>,</CacheSizeInMB>')
-
-        If ($CacheServiceConfig -match '<CacheSizeInMB>10240</CacheSizeInMB>') {
-            Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Cyan
-        }
-        Else {
-            Write-Host "WARNING: Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!" -ForegroundColor Yellow
-        }
-    }
-    Else {
-        Write-Host "WARNING: Cache Service config file does not exist, skipping Cache Service settings checks" -ForegroundColor Yellow
-    }
+    }    
+    Else {        
+        Write-Host "WARNING: Cache Service config file does not exist, skipping Cache Service settings checks" -ForegroundColor Yellow        
+    }    
 }    
 
 Function Set-PMEConfig {
@@ -635,20 +641,25 @@ Function Set-PMEConfig {
     If (Test-Path "$RPCServerServiceConfigFile") {
         $RpcServerServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
 
-        If ($RpcServerServiceConfig -match '<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>') {
-            Write-Host "INFO: RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException) is already applied" -ForegroundColor Cyan
-        }    
+        If ($null -ne $RpcServerServiceConfig) {
+            If ($RpcServerServiceConfig -match '<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>') {
+                Write-Host "INFO: RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException) is already applied" -ForegroundColor Cyan
+            }    
 
-        If (($NCPM4407 -eq "Yes") -and ($RpcServerServiceConfig -match '<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>')) {
-            Try {
-                Write-Output "Changing RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException)"
-                $RpcServerServiceConfig -replace "<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>","<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>" | Set-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
-                }
-            Catch {
-                Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
-                Throw "Unable to change RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message)"
-            }						  
-        }
+            If (($NCPM4407 -eq "Yes") -and ($RpcServerServiceConfig -match '<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>')) {
+                Try {
+                    Write-Output "Changing RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException)"
+                    $RpcServerServiceConfig -replace "<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>","<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>" | Set-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
+                    }
+                Catch {
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+                    Throw "Unable to change RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message)"
+                }						  
+            }
+        }    
+        Else {
+            Write-Host "WARNING: RPC Server Service config file is empty, fix for NCPM-4407 can't be applied" -ForegroundColor Yellow    
+        }    
     }
     Else {
     Write-Host "WARNING: RPC Server Service config file does not exist, fix for NCPM-4407 can't be applied" -ForegroundColor Yellow
