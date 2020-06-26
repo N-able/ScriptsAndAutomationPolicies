@@ -1,7 +1,7 @@
 <#    
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.7.2 (25/06/2020)
+    Version:         0.1.7.3 (27/06/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -87,10 +87,18 @@
                              - Various minor adjustments and fixes.
                              - Variables for settings moved to a dedicated section.
                      0.1.7.2 - Updated functions 'Read-PMEConfig' and 'Set-PMEConfig' to handle situations where an exception
-                               could be thrown stopping script execution when config files are empty.                                            
+                               could be thrown stopping script execution when config files are empty.
+                     0.1.7.3 - New function 'Get-NCAgentVersion' which checks and provides information on currently installed
+                               N-Central agent. If agent is not installed or incompatible with PME script will be aborted.
+                             - Move function 'Set-Start' to start after confirming elevation due to issue where event log write
+                               could not be saved if no administrator rights.
+                             - Updated function 'Confirm-Elevation' to remove event log write as no administrator rights will
+                               cause an additional unwanted error.
+                             - Updated event log writing to more accurately record the event level rather than defaulting to
+                               information throughout the script.                                                            
    *******************************************************************************************************************************
 #>
-$Version = '0.1.7.2 (25/06/2020)'
+$Version = '0.1.7.3 (27/06/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -102,22 +110,20 @@ $NCPM4407 = "Yes"
 
 Write-Host "Repair-PME $Version`n" -ForegroundColor Yellow
 
-Function Set-Start {
-    New-EventLog -LogName Application -Source "Repair-PME" -ErrorAction SilentlyContinue
-    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Repair-PME has started, running version $Version.`nScript: Repair-PME.ps1"
-}
-
 Function Confirm-Elevation {
     # Confirms script is running as an administrator
     Write-Host "Checking for elevated permissions" -ForegroundColor Cyan
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
-        [Security.Principal.WindowsBuiltInRole] "Administrator")) {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again.`nScript: Repair-PME.ps1"    
+        [Security.Principal.WindowsBuiltInRole] "Administrator")) { 
         Throw "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again."
     }
     Else {
     Write-Host "OK: Script is running as administrator" -ForegroundColor Green
     }
+}
+Function Set-Start {
+    New-EventLog -LogName Application -Source "Repair-PME" -ErrorAction SilentlyContinue
+    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Repair-PME has started, running version $Version.`nScript: Repair-PME.ps1"
 }
 
 function Get-LegacyHash {
@@ -132,7 +138,7 @@ function Get-LegacyHash {
         Return $ComputedHash
     }
     Catch {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to performing hashing, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to performing hashing, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
         Throw "Unable to performing hashing, aborting. Error: $($_.Exception.Message)"
     }
 }
@@ -160,6 +166,89 @@ Function Get-OSArch {
 Function Get-PSVersion {
     $PSVersion = $($PSVersionTable.PSVersion)
     Write-Output "PowerShell: $($PSVersionTable.PSVersion)"
+}
+
+Function Get-NCAgentVersion {
+    # Check if N-Central Agent is currently installed
+    If ($OSArch -like '*64*') {
+        Write-Host "Checking if N-Central Agent is already installed..." -ForegroundColor Cyan
+        $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")       
+        $SOFTWARE = "Windows Agent"
+        ForEach ($path in $PATHS) {
+            $installed = Get-ChildItem -Path $path |
+            ForEach-Object { Get-ItemProperty $_.PSPath } |
+            Where-Object { $_.DisplayName -match $SOFTWARE } |
+            Select-Object -Property DisplayName,DisplayVersion,Publisher,InstallDate
+            
+            If ($null -ne $installed) {    
+                ForEach ($app in $installed) {
+                    If ($($app.DisplayName) -eq "Windows Agent" -and $($app.Publisher) -eq "N-able Technologies") {
+                        $InstallDate = $($app.InstallDate)
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
+                        $IsNCAgentInstalled = "Yes"
+                        Write-Host "N-Central Agent Installed: Yes" -ForegroundColor Green
+                        Write-Output "N-Central Agent Version: $($app.DisplayVersion)"
+                        Write-Output "N-Central Agent Install Date: $InstallDateFormatted"
+                        If ($($app.DisplayVersion) -ge "12.2.0.274") {
+                            Write-Host "N-Central Agent PME Compatible: Yes" -ForegroundColor Green    
+                        }
+                        Else {
+                            Write-Host "N-Central Agent PME Compatible: No" -ForegroundColor Red
+                            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Installed N-Central Agent ($($app.DisplayVersion)) is not compatible with PME, aborting.`nScript: Repair-PME.ps1"  
+                            Throw "Installed N-Central Agent ($($app.DisplayVersion)) is not compatible with PME, aborting."  
+                        }
+                    }
+                }       
+            }
+            Else {
+                $IsNCAgentInstalled = "No"
+                Write-Host "N-Central Agent Installed: No" -ForegroundColor Red
+                Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "N-Central Agent is not installed, PME requires an agent, aborting.`nScript: Repair-PME.ps1"  
+                Throw "N-Central Agent is not installed, PME requires an agent, aborting."  
+            } 
+        }
+    }
+    
+    If ($OSArch -like '*32*') {
+        Write-Host "Checking if N-Central Agent is already installed..." -ForegroundColor Cyan
+        $PATHS = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")       
+        $SOFTWARE = "Windows Agent"
+        ForEach ($path in $PATHS) {
+            $installed = Get-ChildItem -Path $path |
+            ForEach-Object { Get-ItemProperty $_.PSPath } |
+            Where-Object { $_.DisplayName -match $SOFTWARE } |
+            Select-Object -Property DisplayName,DisplayVersion,Publisher,InstallDate
+            
+            If ($null -ne $installed) {    
+                ForEach ($app in $installed) {
+                    If ($($app.DisplayName) -eq "Windows Agent" -and $($app.Publisher) -eq "N-able Technologies") {
+                        $InstallDate = $($app.InstallDate)
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
+                        $IsNCAgentInstalled = "Yes"
+                        Write-Host "N-Central Agent Installed: Yes" -ForegroundColor Green
+                        Write-Output "N-Central Agent Version: $($app.DisplayVersion)"
+                        Write-Output "N-Central Agent Install Date: $InstallDateFormatted"
+                        If ($($app.DisplayVersion) -ge "12.2.0.274") {
+                            Write-Host "N-Central Agent PME Compatible: Yes" -ForegroundColor Green    
+                        }
+                        Else {
+                            Write-Host "N-Central Agent PME Compatible: No" -ForegroundColor Red
+                            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Installed N-Central Agent ($($app.DisplayVersion)) is not compatible with PME, aborting.`nScript: Repair-PME.ps1"  
+                            Throw "Installed N-Central Agent ($($app.DisplayVersion)) is not compatible with PME, aborting."  
+                        }
+                    }
+                }       
+            }
+            Else {
+                $IsNCAgentInstalled = "No"
+                Write-Host "N-Central Agent Installed: No" -ForegroundColor Red
+                Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "N-Central Agent is not installed, PME requires an agent, aborting.`nScript: Repair-PME.ps1"  
+                Throw "N-Central Agent is not installed, PME requires an agent, aborting."  
+            } 
+        }
+    }
 }
 
 Function Confirm-PMEInstalled {
@@ -240,15 +329,15 @@ Function Get-PMESetupDetails {
         $LatestVersion = $request.ComponentDetails.Version
     }
     Catch [System.Net.WebException] {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
         Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
     }
     Catch [System.Management.Automation.MetadataException] {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
         Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
     }
     Catch {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
         Throw "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message)"
      }     
 }
@@ -302,7 +391,7 @@ Function Confirm-PMEUpdatePending {
                 Write-Output "($DaysElapsed) days has elapsed since a new version of PME has been released, script will proceed"
             }
             Else {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Only ($DaysElapsed) days has elapsed since a new version of PME has been released, aborting.`nScript: Repair-PME.ps1"
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Warning -EventID 100 -Message "Only ($DaysElapsed) days has elapsed since a new version of PME has been released, aborting.`nScript: Repair-PME.ps1"
             Throw "Only ($DaysElapsedReversed) of ($RepairAfterUpdateDays) set days has elapsed since a new version of PME has been released, aborting."
             Break
             }
@@ -350,22 +439,22 @@ Function Test-Connectivity {
         }
 
         If (($HTTPError[0] -like "*Yes*") -and ($HTTPSError[0] -like "*Yes*")) {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "ERROR: No connectivity to $($List2[0]) can be established, aborting.`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "ERROR: No connectivity to $($List2[0]) can be established, aborting.`nScript: Repair-PME.ps1"  
             Throw "ERROR: No connectivity to $($List2[0]) can be established, aborting"    
         }
         ElseIf (($HTTPError[0] -like "*Yes*") -or ($HTTPSError[0] -like "*Yes*")) {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: Partial connectivity to $($List2[0]) established, falling back to HTTP.`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Warning -EventID 100 -Message "WARNING: Partial connectivity to $($List2[0]) established, falling back to HTTP.`nScript: Repair-PME.ps1"  
             Write-Host "WARNING: Partial connectivity to $($List2[0]) established, falling back to HTTP" -ForegroundColor Yellow
             $Fallback = "Yes"
         }
 
         If ($HTTPError[1] -like "*Yes*") {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: No connectivity to $($List2[1]) can be established, you will be unable to download Microsoft Updates!`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Warning -EventID 100 -Message "WARNING: No connectivity to $($List2[1]) can be established, you will be unable to download Microsoft Updates!`nScript: Repair-PME.ps1"  
             Write-Host "WARNING: No connectivity to $($List2[1]) can be established, you will be unable to download Microsoft Updates!" -ForegroundColor Red
         }
 
         If ($HTTPError[2] -like "*Yes*") {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "WARNING: No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Warning -EventID 100 -Message "WARNING: No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!`nScript: Repair-PME.ps1"  
             Write-Host "WARNING: No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!" -ForegroundColor Red    
         }
     }
@@ -393,7 +482,7 @@ Function Invoke-SolarwindsDiagnostics {
                     New-Item -ItemType Directory -Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs" -Force | Out-Null
                 }
                 Catch {
-                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                     Throw "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message)"
                 }
             }     
@@ -421,7 +510,7 @@ Function Invoke-SolarwindsDiagnostics {
                     New-Item -ItemType Directory -Path "C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs" -Force | Out-Null
                 }
                 Catch {
-                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                     Throw "Unable to create directory 'C:\ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs' required for saving log capture. Error: $($_.Exception.Message)"
                 }
             }     
@@ -435,7 +524,7 @@ Function Invoke-SolarwindsDiagnostics {
         }   
     }
     Else {
-        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to detect processor architecture, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to detect processor architecture, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
         Throw "Unable to detect processor architecture, aborting. Error: $($_.Exception.Message)"
     }      
 }
@@ -550,7 +639,7 @@ Function Clear-PME {
             Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.*" -Force -Confirm:$false | Out-Null
         }
         Catch {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to cleanup 'C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.*' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to cleanup 'C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.*' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
             Throw "Unable to cleanup 'C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\*.*' aborting. Error: $($_.Exception.Message)"
         }    
     } 
@@ -564,7 +653,7 @@ Function Clear-PME {
             Remove-Item "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache\*.*" -Force -Confirm:$false | Out-Null
         }
         Catch {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to cleanup C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache\*.*' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to cleanup C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache\*.*' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
             Throw "Unable to cleanup C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache\*.*' aborting. Error: $($_.Exception.Message)"            
         }  
     } 
@@ -582,7 +671,7 @@ Function Get-PMESetup {
             (New-Object System.Net.WebClient).DownloadFile("$($FallbackDownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe")
         }
         Catch {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
             Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
         }
     }
@@ -592,7 +681,7 @@ Function Get-PMESetup {
             (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)","C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe")
         }
         Catch {
-            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
             Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
         }
     }     
@@ -652,7 +741,7 @@ Function Set-PMEConfig {
                     $RpcServerServiceConfig -replace "<UnloadModuleAppDomainAfterEachRequest>true</UnloadModuleAppDomainAfterEachRequest>","<UnloadModuleAppDomainAfterEachRequest>false</UnloadModuleAppDomainAfterEachRequest>" | Set-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
                     }
                 Catch {
-                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
                     Throw "Unable to change RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message)"
                 }						  
             }
@@ -681,11 +770,11 @@ Function Install-PME {
                         Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
                     }
                     ElseIf ($Install.ExitCode -eq 5) {
-                        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
+                        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
                         Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode)"
                     }
                     Else {
-                        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"  
+                        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"  
                         Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'"
                     }
             }
@@ -705,16 +794,16 @@ Function Install-PME {
                             Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
                         }
                         ElseIf ($Install.ExitCode -eq 5) {
-                            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
+                            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
                             Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode)"
                         }
                         Else {
-                            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"  
+                            Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"  
                             Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'"
                         }
                     }
                     Else {
-                        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting.`nScript: Repair-PME.ps1"  
+                        Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting.`nScript: Repair-PME.ps1"  
                         Throw "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting"
                     }
             }
@@ -731,7 +820,7 @@ Function Install-PME {
                     New-Item -ItemType Directory -Path "C:\ProgramData\SolarWinds MSP\PME\archives" -Force | Out-Null
                 }
                 Catch {
-                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Unable to create directory 'C:\ProgramData\SolarWinds MSP\PME\archives' required for download, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Unable to create directory 'C:\ProgramData\SolarWinds MSP\PME\archives' required for download, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"  
                     Throw "Unable to create directory 'C:\ProgramData\SolarWinds MSP\PME\archives' required for download, aborting. Error: $($_.Exception.Message)"
                 } 
             }
@@ -749,16 +838,16 @@ Function Install-PME {
                     Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
                 }
                 ElseIf ($Install.ExitCode -eq 5) {
-                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"  
                     Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode)"
                 }
                 Else {
-                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"  
+                    Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"  
                     Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'"
                 }
             }
             Else {
-                Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting.`nScript: Repair-PME.ps1"  
+                Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Error -EventID 100 -Message "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting.`nScript: Repair-PME.ps1"  
                 Throw "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting"
             }
     }
@@ -769,11 +858,12 @@ Function Set-End {
     Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Information -EventID 100 -Message "Repair-PME has finished.`nScript: Repair-PME.ps1"
 }
 
-. Set-Start
 . Confirm-Elevation
+. Set-Start
 . Get-OSVersion
 . Get-OSArch
 . Get-PSVersion
+. Get-NCAgentVersion
 . Confirm-PMEInstalled
 . Get-PMESetupDetails
 . Get-PMEConfigurationDetails
