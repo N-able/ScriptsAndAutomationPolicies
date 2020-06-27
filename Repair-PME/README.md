@@ -15,9 +15,10 @@ Repair-PME was created as I was getting frustrated with having to spend time try
 
 Repair-PME does the following with logic, error handling and event logging to operate as user-friendly as possible. Any errors during execution of the script will throw to PowerShell and will also be reported to the event log (Event ID 100).
 
-* Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has started.
 * Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
+* Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has started.
 * Gets operating system version, operating system architecture and PowerShell version.
+* Checks if N-Central Agent is installed, reports status and compataiblity with PME.
 * Checks if PME is already installed and reports status.
 * Checks if PME has an update pending and reports status. If an update is pending within the configured period (2 days) then script will be aborted. This can be changed, see settings below for further information.
 * Performs connectivity tests to destinations required for PME (PowerShell 4.0 or above required). Tests will be skipped and download of PMESetup will be obtained via HTTP instead of HTTPS if a lower version is detected.
