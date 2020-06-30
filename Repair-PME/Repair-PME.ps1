@@ -1,7 +1,7 @@
 <#    
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.7.3 (27/06/2020)
+    Version:         0.1.7.4 (30/06/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -95,10 +95,13 @@
                              - Updated function 'Confirm-Elevation' to remove event log write as no administrator rights will
                                cause an additional unwanted error.
                              - Updated event log writing to more accurately record the event level rather than defaulting to
-                               information throughout the script.                                                            
+                               information throughout the script.
+                     0.1.7.4 - New function 'Restore-Date' to fix issue where the install month of a program is unusually
+                               represented as a single digit in the registry. Thanks to Casper Stekelenburg for the provided code.
+                             - Functions 'Get-NCAgentVersion' and 'Confirm-PMEInstalled' updated to call this function.                                                                     
    *******************************************************************************************************************************
 #>
-$Version = '0.1.7.3 (27/06/2020)'
+$Version = '0.1.7.4 (30/06/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -168,6 +171,14 @@ Function Get-PSVersion {
     Write-Output "PowerShell: $($PSVersionTable.PSVersion)"
 }
 
+Function Restore-Date {
+    If ($InstallDate.Length -le 7) {
+        $MMdd = $InstallDate.Substring(4,3)
+        $Year = $InstallDate.Substring(0,4)
+        $InstallDate = $($Year + "0" + $MMdd)
+    }    
+}
+
 Function Get-NCAgentVersion {
     # Check if N-Central Agent is currently installed
     If ($OSArch -like '*64*') {
@@ -184,6 +195,7 @@ Function Get-NCAgentVersion {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "Windows Agent" -and $($app.Publisher) -eq "N-able Technologies") {
                         $InstallDate = $($app.InstallDate)
+                        . Restore-Date
                         $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
                         $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
                         $IsNCAgentInstalled = "Yes"
@@ -224,6 +236,7 @@ Function Get-NCAgentVersion {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "Windows Agent" -and $($app.Publisher) -eq "N-able Technologies") {
                         $InstallDate = $($app.InstallDate)
+                        . Restore-Date
                         $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
                         $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
                         $IsNCAgentInstalled = "Yes"
@@ -267,6 +280,7 @@ Function Confirm-PMEInstalled {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "SolarWinds MSP Patch Management Engine") {
                         $InstallDate = $($app.InstallDate)
+                        . Restore-Date
                         $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
                         $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
                         $IsPMEInstalled = "Yes"
@@ -297,6 +311,7 @@ Function Confirm-PMEInstalled {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "SolarWinds MSP Patch Management Engine") {
                         $InstallDate = $($app.InstallDate)
+                        . Restore-Date
                         $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
                         $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
                         $IsPMEInstalled = "Yes"
