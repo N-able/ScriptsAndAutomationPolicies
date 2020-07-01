@@ -1,7 +1,7 @@
 <#    
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.7.4 (30/06/2020)
+    Version:         0.1.7.5 (01/07/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -98,10 +98,12 @@
                                information throughout the script.
                      0.1.7.4 - New function 'Restore-Date' to fix issue where the install month of a program is unusually
                                represented as a single digit in the registry. Thanks to Casper Stekelenburg for the provided code.
-                             - Functions 'Get-NCAgentVersion' and 'Confirm-PMEInstalled' updated to call this function.                                                                     
+                             - Functions 'Get-NCAgentVersion' and 'Confirm-PMEInstalled' updated to call this function.
+                     0.1.7.5 - Update 'Install-PME' function to fix issue where $datetime variable was missing which caused PME
+                               install log files to not be timestamped.                                                                             
    *******************************************************************************************************************************
 #>
-$Version = '0.1.7.4 (30/06/2020)'
+$Version = '0.1.7.5 (01/07/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -780,6 +782,7 @@ Function Install-PME {
                 # Install
                 Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct"
                 Write-Host "Installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'" -ForegroundColor Cyan
+                $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
                 $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                     If ($Install.ExitCode -eq 0) {
                         Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
@@ -804,6 +807,7 @@ Function Install-PME {
                         # Install
                         Write-Output "Hash of file is correct"
                         Write-Host "Installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'" -ForegroundColor Cyan
+                        $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
                         $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                         If ($Install.ExitCode -eq 0) {
                             Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
@@ -848,6 +852,7 @@ Function Install-PME {
                 # Install
                 Write-Output "Hash of file is correct"
                 Write-Host "Installing $($PMEDetails.FileName) - logs will be saved to 'C:\ProgramData\Solarwinds MSP\Repair-PME\'" -ForegroundColor Cyan
+                $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
                 $Install = Start-process -FilePath "C:\ProgramData\SolarWinds MSP\PME\archives\PMESetup_$($PMEDetails.Version).exe" -Argumentlist "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=`"C:\ProgramData\Solarwinds MSP\Repair-PME\Setup Log $DateTime.txt`"" -Wait -Passthru
                 If ($Install.ExitCode -eq 0) {
                     Write-Host "$($PMEDetails.Name) version $($PMEDetails.Version) successfully installed" -ForegroundColor Green
