@@ -1,7 +1,7 @@
 <#    
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.8.0 (08/07/2020)
+    Version:         0.1.8.1 (08/07/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -111,10 +111,13 @@
                                turn off older protocols such as TLS 1.0 on sis.n-able.com.
                              - Updated function 'Confirm-PMEUpdatePending' to fix issue where it would not correctly report
                                elapsed days since PME has been released in situations where an update has just been released.
-                             - Fixed some minor grammatical errors throughout script.                                                                                                
+                             - Fixed some minor grammatical errors throughout script.
+                     0.1.8.1 - Fixed issue in 'Confirm-PMEUpdatePending' function to avoid using the PMEWrapper.log to detect if
+                               install is pending as this is not reliable and caused the script to force the update rather than
+                               gracefully wait until the $RepairAfterUpdateDays variable has passed.                                                                                                         
    *******************************************************************************************************************************
 #>
-$Version = '0.1.8.0 (07/07/2020)'
+$Version = '0.1.8.1 (07/07/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -576,42 +579,27 @@ Function Get-PMEConfigurationDetails {
 
 Function Confirm-PMEUpdatePending {
     # Check if PME is awaiting update for new release but has not updated yet (normally within 48 hours)
-    $PMEWrapperFile = "$NcentralLog\PMEWrapper.log"
+    If ($IsPMEInstalled -eq "Yes") {
+        $Date = Get-Date -Format 'yyyy.MM.dd'
+        Write-Output "Current Date: $Date"
+        $ConvertPMEConfigurationDate = Get-Date "$PMEConfigurationDate"
+        $SelfHealingDate = $ConvertPMEConfigurationDate.AddDays($RepairAfterUpdateDays).ToString('yyyy.MM.dd')
+        Write-Host "INFO: Repair-PME will only proceed ($RepairAfterUpdateDays) days after a new version of PME has been released" -ForegroundColor Cyan
+        $DaysElapsed = (New-TimeSpan -Start $SelfHealingDate -End $Date).Days
+        $DaysElapsedReversed = (New-TimeSpan -Start $PMEConfigurationDate -End $Date).Days
 
-    If (Test-Path $PMEWrapperFile) {
-        $PMEWrapper = get-content "$NcentralLog\PMEWrapper.log" 
-        $NewVersion = "Newer PME version detected"
-        $LastInstall = "Installing PME"
-        If (($IsPMEInstalled -eq "Yes") -and ($PMEWrapper -ne "") -and ($PMEWrapper -match $NewVersion) -and ($PMEWrapper -match $LastInstall)) {
-            $Date = Get-Date -Format 'yyyy.MM.dd'
-            Write-Output "Current Date: $Date"
-            $NewVersionMatch = ($PMEWrapper -match $NewVersion)[-1] 
-            $LastInstallDateVersion = $NewVersionMatch.Split('')[10].Trim("(),")
-            $LastInstallMatch = ($PMEWrapper -match $LastInstall)[-1]
-            $LastInstallDate = $LastInstallMatch.Split('')[1].Trim() + " " + $LastInstallMatch.Split('')[2].Trim()
-            Write-Host "INFO: Last automatic PME check detected version ($LastInstallDateVersion) and installed it on ($LastInstallDate)" -ForegroundColor Cyan
-            $ConvertPMEConfigurationDate = Get-Date "$PMEConfigurationDate"
-            $SelfHealingDate = $ConvertPMEConfigurationDate.AddDays($RepairAfterUpdateDays).ToString('yyyy.MM.dd')
-            Write-Host "INFO: Repair-PME will only proceed ($RepairAfterUpdateDays) days after a new version of PME has been released" -ForegroundColor Cyan
-            $DaysElapsed = (New-TimeSpan -Start $SelfHealingDate -End $Date).Days
-            $DaysElapsedReversed = (New-TimeSpan -Start $PMEConfigurationDate -End $Date).Days
-
-            # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than $LastInstallDateVersion
-            If (($Date -ge $SelfHealingDate) -and ($LatestVersion -ge $LastInstallDateVersion)) {
-                Write-Output "($DaysElapsed) days has elapsed since a new version of PME has been released and is allowed to be installed, script will proceed"
-            }
-            Else {
+        # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than $LastInstallDateVersion
+        If (($Date -ge $SelfHealingDate) -and ($LatestVersion -ge $($app.DisplayVersion))) {
+            Write-Output "($DaysElapsed) days has elapsed since a new version of PME has been released and is allowed to be installed, script will proceed"
+        }
+        Else {
             Write-EventLog -LogName Application -Source "Repair-PME" -EntryType Warning -EventID 100 -Message "($DaysElapsedReversed) days has elapsed since a new version of PME has been released, PME will only install after ($RepairAfterUpdateDays) days, aborting.`nScript: Repair-PME.ps1"
             Throw "($DaysElapsedReversed) days has elapsed since a new version of PME has been released, PME will only install after ($RepairAfterUpdateDays) days, aborting."
             Break
-            }
         }
-        Else {
-            Write-Host "WARNING: Skipping update pending check as PMEWrapper.log does not currently contain update information" -ForegroundColor Yellow
-        } 
     }
     Else {
-        Write-Host "WARNING: Skipping update pending check as PMEWrapper.log does not currently exist" -ForegroundColor Yellow    
+        Write-Host "WARNING: Skipping update pending check as PME is not currently installed" -ForegroundColor Yellow
     } 
 }
 
