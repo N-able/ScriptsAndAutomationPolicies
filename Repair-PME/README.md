@@ -18,10 +18,11 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has started.
 * Gets operating system version, operating system architecture and PowerShell version.
-* Checks if N-Central Agent is installed, reports status and compataiblity with PME.
+* Performs connectivity tests to destinations required for PME. Download of PMESetup will be obtained via HTTP instead of HTTPS if issues with HTTPS connectivity is detected.
+* Performs certificates test to HTTPS destination required for PME (sis.n-able.com). Test will be bypassed if issues with HTTPS connectivity is detected.
+* Checks if N-Central Agent is installed, reports status and compatibility with PME.
 * Checks if PME is already installed and reports status.
 * Checks if PME has an update pending and reports status. If an update is pending within the configured period (2 days) then script will be aborted. This can be changed, see settings below for further information.
-* Performs connectivity tests to destinations required for PME (PowerShell 4.0 or above required). Tests will be skipped and download of PMESetup will be obtained via HTTP instead of HTTPS if a lower version is detected.
 * Invokes Solarwinds Diagnostics Tool and silently saves the log capture to **C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs**. These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
 * Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **RPCServerServiceSetup** **and _iu14D2N or similar.**
 * Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
@@ -63,7 +64,9 @@ HTTPS (Port 443)
 
 **PowerShell:**
 * Required: _2.0+_
-* Optional: _4.0+_ (required for connectivity tests only)
+
+**N-Central:**
+* Required: _12.2.0.274+_
 
 ### Can I use Repair-PME in an Automation Policy (AMP) within N-Central?
 
