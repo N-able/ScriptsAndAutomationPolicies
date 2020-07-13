@@ -1,11 +1,11 @@
   ' *************************************************************************************************************************************************
 ' Script: AVStatus.vbs
-' Version: 2.32
+' Version: 2.33
 ' Maintained by : Chris Reid @SolarWinds MSP
 ' Description: This script checks the status of the A/V software installed on 
 '              the machine, and writes data about the A/V software to the 
 '              AntiVirusProduct WMI Class in the root\SecurityCenter WMI namespace.
-' Date: April 23rd, 2020
+' Date: June 4th, 2020
 ' Compatibility : It is tested on the current versions of Windows but it also should work on all desktop and server versions, from Windows XP to Windows Server 2019.
 ' Usage in N-Central : avstatus.vbs WRITE     OR     avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
 ' Usage in Windows Command Prompt : CSCRIPT avstatus.vbs WRITE     OR     CSCRIPT avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
@@ -54,12 +54,12 @@ Dim strMalwareBytesRegPath64, SCEPInstalled, FoundGUID, StatusCode, StatusText
 Dim sMonth, sDay, sYear, sHour, sMinutes, sSeconds, strTMMSARegPath, recentFile, NamespacetoCheck, strTMDSARegPath, fileSystem, folder, file, newestfile, ProgramFiles64, stravg2016defpath, stravg2016regpath, colServices, objService
 Dim strNormanregpath32, strNormanregpath64, strNormanrootpath, boolNormanversion9, strNormandefpath, strKasperskyStandAlonePath, LastUpdateDate, AVGBusSecDataFolder, arrIniFileLines, ProviderRealTimeScanningEnabled, UserRealTimeScanningDisabled
 Dim objFileToRead, objFileToWrite, node, UpToDateState, strFortiClientPath, FortiClientInstallPath, objApp, strKasperskyKESServerAVVersionPath, strSophosVirtualAVKeyPath, RawProtectionStatus, strPandaAdaptiveDefencePath64, strPandaAdaptiveDefencePath32
-Dim ProgramData
+Dim ProgramData, objFolder, objSubFolders, objSubFolder, oShell, oExec, sLine, sExecPath, sNewestFolder, dPrevDate
 
 
 ' Specify values for some of the variables
 
-Version = "2.32"
+Version = "2.33"
 
 HKEY_LOCAL_MACHINE = &H80000002
 strComputer = "."
@@ -385,6 +385,9 @@ End If
   ElseIf InstalledAV="Palo Alto Networks Traps™" Then
     ObtainPaloAltoTrapsAVData 'Call the function to grab info about Palo Alto Networks Traps™  
 
+  ElseIf InstalledAV="SentinelOne" Then
+    ObtainSentinelOneData 'Call the function to grab info about SentinelOne  
+
  
   End If
 
@@ -450,6 +453,10 @@ Next
   
 ' Let's grab the %ProgramData% value, as it'll be used in detecting the installed AV product
 ProgramData = WshShell.ExpandEnvironmentStrings("%PROGRAMDATA%")
+
+' Let's figure out the locale of this device, so that we can correctly grab/parse dates in the correct format.
+output.writeline "- This device is in the following locale: " & GetLocale()
+
 End Sub   
 
 
@@ -569,17 +576,20 @@ Sub DetectInstalledAV
     End If
   
 
-
     'Check to see what A/V product is installed
+    
     If RegKeyExists("HKLM\" & strTrendKeyPath & "ProductName") Then
       strValue = "ProductName"
       objReg.GetStringValue HKEY_LOCAL_MACHINE,strTrendKeyPath,strValue,RegstrValue
       InstalledAV = RegstrValue
 
+    ElseIf objFSO.FolderExists(ProgramFiles64 & "\SentinelOne") Then
+    'ElseIf (objFSO.FolderExists(ProgramFiles64 & "\SentinelOne") AND isProcessRunning(".","SentinelAgent.exe")) Then
+      InstalledAV = "SentinelOne"
+
 
     ElseIf RegKeyExists("HKLM\" & strTrendKeyPath & "ProgramVer") Then
       InstalledAV = "Trend Micro OfficeScan"
-
                                                                               
 
     Elseif RegKeyExists("HKLM\" & strSymantecESKeyPath & "ScanEngineVendor") Then
@@ -903,7 +913,7 @@ Sub DetectInstalledAV
     ElseIf RegKeyExists("HKLM\SOFTWARE\Cylance\Desktop\Path") Then
       InstalledAV = "Cylance PROTECT"
       'Cylance is a different type of AV product - it doesn't have the traditional concept of AV definition updates.
-      ' As a result, as we're looking for here is if the Cylance process is running; all other values will be hard-coded.
+      ' As a result, all we're looking for here is if the Cylance process is running; all other values will be hard-coded.
       ServiceActive = isProcessRunning(strComputer,"cylancesvc.exe")
 	    If (ServiceActive) Then
 		    OnAccessScanningEnabled = TRUE
@@ -2170,19 +2180,15 @@ Sub ObtainKES8Data
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
-                Dim oShell, oExec, sLine, sExecPath
-
-                Set oShell = CreateObject("WScript.Shell")
-                set oExec = oShell.Exec(ProgramFiles & "\Kaspersky Lab\Kaspersky Endpoint Security 8 for Windows\avp.com status FM")
-
-                sLine = oExec.StdOut.ReadLine
-
-
-                If InStr(sLine, "running") <> 0 Then
-                                OnAccessScanningEnabled = TRUE
-                Else
-                                OnAccessScanningEnabled = FALSE
-                End If 
+    Set oShell = CreateObject("WScript.Shell")
+    Set oExec = oShell.Exec(ProgramFiles & "\Kaspersky Lab\Kaspersky Endpoint Security 8 for Windows\avp.com status FM")
+    sLine = oExec.StdOut.ReadLine
+    If InStr(sLine, "running") <> 0 Then
+        OnAccessScanningEnabled = TRUE
+    Else
+        OnAccessScanningEnabled = FALSE
+    End If
+                 
   output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
 
   
@@ -2377,7 +2383,7 @@ Sub ObtainKESServerData
         If CInt(Left(FormattedAVVersion,InStr(FormattedAVVersion,".")-1)) <= 10 Then
             FormattedPatternAge = DateValue(Mid(RawAVDate,7,4) & "/" & Mid(RawAVDate,4,2) & "/" & Left(RawAVDate,2) )
         Else
-            If GetLocale() = 2057 Then  'If the device is in the UK, let's transpose the day and month, so that we get things right.  
+            If (GetLocale() = 2057 OR GetLocale()=1031 OR GetLocale()=1043) Then  'If the device is in the UK, Germany or the Netherlands, let's transpose the day and month, so that we get things right.  
                 FormattedPatternAge = DateValue(Mid(RawAVDate,1,2) & "/" & Mid(RawAVDate,4,2) & "/" & Mid(RawAVDate,7,4) )
             Else
                 FormattedPatternAge = DateValue(Mid(RawAVDate,4,2) & "/" & Mid(RawAVDate,1,2) & "/" & Right(RawAVDate,4) )
@@ -3250,54 +3256,51 @@ Sub ObtainSecurityCenter2Data
 
     If colItems.Count > 0 Then
       For Each objItem In colItems
-      Do
       If  objItem.displayName = "Windows Defender" Then
         InstalledAV = objItem.displayName
-        If  objItem.displayName = "Windows Defender" Then Exit Do
       End If
       
       If ((objItem.displayName <> "AVG update module") AND (objItem.displayName <> "Windows Defender")) Then
         
-          onAccessScanningEnabled = "FALSE"
-          ProductUpToDate = "FALSE"
+        onAccessScanningEnabled = "FALSE"
+        ProductUpToDate = "FALSE"
   		
-  			 InstalledAV = objItem.displayName
-  			 FormattedAVVersion = "Unable to detect the version of A/V Definitions being used - this information is not available through the Windows Security Center."
-  			 output.writeline "- " & InstalledAV & " has been detected."
-  			 
-  			 ' The 'ProductState' value needs to be converted into HEX, and the parsed into 3 different sub-values, according to the following article: 
-  			 ' http://neophob.com/2010/03/wmi-query-windows-securitycenter2/
-  			 ' Keep this line around for debugging purposes. output.writeline "- According to WMI, the state of " & InstalledAV & " is " & objItem.ProductState
-  			 HexProductState = Hex(objItem.ProductState)
-  			 ' Keep this line around for debugging purposes. output.writeline "- Converting that value to HEX, we get " & HexProductState
+        InstalledAV = objItem.displayName
+  		FormattedAVVersion = "Unable to detect the version of A/V Definitions being used - this information is not available through the Windows Security Center."
+  		output.writeline "- " & InstalledAV & " has been detected."
+  		
+  		' The 'ProductState' value needs to be converted into HEX, and the parsed into 3 different sub-values, according to the following article: 
+  		' http://neophob.com/2010/03/wmi-query-windows-securitycenter2/
+  		' Keep this line around for debugging purposes. output.writeline "- According to WMI, the state of " & InstalledAV & " is " & objItem.ProductState
+  		HexProductState = Hex(objItem.ProductState)
+  		' Keep this line around for debugging purposes. output.writeline "- Converting that value to HEX, we get " & HexProductState
   
-  			 ' The middle of the 3 HEX values equates to the scanner state
-  			 HexScannerState =  Mid(HexProductState,2,2)
-  			 ' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexScannerState)
+  		' The middle of the 3 HEX values equates to the scanner state
+  		HexScannerState =  Mid(HexProductState,2,2)
+  		' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexScannerState)
   			 
          
-         If CLng("&H" & HexScannerState) = 16 Then
-  			   OnAccessScanningEnabled = TRUE
-  			 Else
-  			   OnAccessScanningEnabled = FALSE
-  			 End If
-  			 output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled  
+        If CLng("&H" & HexScannerState) = 16 Then
+  		    OnAccessScanningEnabled = TRUE
+  			Else
+  		        OnAccessScanningEnabled = FALSE
+  			End If
+  			output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled  
   			
-  			 ' The last of the 3 HEX values tells us if the A/V definition files are up-to-date or not
-  			 HexAVDefState =  Right(HexProductState,2)
-  			 ' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexAVDefState)
-  			 If CLng("&H" & HexAVDefState) = 0 Then
-  			  ProductUpToDate = TRUE
-  			 Else
-  			  ProductUpToDate = FALSE
-  			 End If
+  			' The last of the 3 HEX values tells us if the A/V definition files are up-to-date or not
+  			HexAVDefState =  Right(HexProductState,2)
+  			' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexAVDefState)
+  			If CLng("&H" & HexAVDefState) = 0 Then
+  			   ProductUpToDate = TRUE
+  			Else
+  			    ProductUpToDate = FALSE
+  			End If
   			output.writeline "- Are the AV Definitions up-to-date? " & ProductUpToDate
         
-        CalculateAVAge 'Call the function to determine how old the A/V Definitions are 
+            CalculateAVAge 'Call the function to determine how old the A/V Definitions are 
 
   		End If
-      'Exit For   ' If there is more than one entry in the root\SecurityCenter2 namespace, and the first one that we find isn't Windows Defender, then let's stop there. No need to over-write good information about a 3rd party AV with information about Windows Defender.
-      Loop While False 
+        If  InStr(objItem.displayName,"FireEye Endpoint Security") Then Exit For
     Next
     End If    
       
@@ -3735,7 +3738,56 @@ Sub ObtainPaloAltoTrapsAVData
 End Sub
 
 
+  
+' *************************************  
+' Sub: ObtainSentinelOneData
+' *************************************
+Sub ObtainSentinelOneData
+    'SentinelOne is a different type of AV product - it doesn't have the traditional concept of AV definition updates.
+    ' As a result, we're going to run the SentinelCtl executable to find out how the product is doing.
+    
+    ' First, we need to find the location of the SentinelCtl executable, as it's stored in a folder whose name changes with each version of SentinelOne.
+    ' As there could be many folders (for example, if multiple versions of SentinelOne have been installed) we need to find the newest folder
+    Set objFolder = objFSO.GetFolder(ProgramFiles64 & "\SentinelOne")
+    Set objSubFolders = objFolder.SubFolders
+    sNewestFolder = NULL
+    For Each objSubFolder In objSubFolders
+        If IsNull(sNewestFolder) Then
+            sNewestFolder = objSubFolder.Path
+            dPrevDate = objSubFolder.DateLastModified
+        ElseIf dPrevDate < objSubFolder.DateLastModified Then
+            sNewestFolder = objSubFolder.Path
+        End If
+    Next
+    
+    If objFSO.FileExists (sNewestFolder & "\SentinelCtl.exe") Then
+        output.writeline "- " & "The SentinelCtl executable is located under " & sNewestFolder & "\"
+    Else
+        output.writeline "- The SentinelCtl executable was not found under the most recently modified folder (" & sNewestFolder & "). That is not good. Exiting, as we cannot determine the status of SentinelOne."
+        wscript.quit(1)
+    End If
 
+    
+    ' Now that we know where to go to find the SentinelCtl executable, let's run it and parse the output.
+    set oExec = WshShell.Exec(sNewestFolder & "\SentinelCtl.exe status")
+    sLine = oExec.StdOut.ReadLine
+                
+    If InStr(sLine, "SentinelMonitor is loaded") <> 0 Then
+        OnAccessScanningEnabled = TRUE
+    Else
+        OnAccessScanningEnabled = FALSE
+    End If
+     
+     output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled 
+     
+     ' Note that because we have no way of determining if SentinelOne is up-to-date or not, the ProductUpToDate value is hardcoded to be TRUE
+     ProductUpToDate = "TRUE"
+     
+     ' The only way that I've found to grab the version of SentinelOne is to look at the last 8 characters of the folder structure
+     FormattedAVVersion = Right(objSubFolder,8)
+
+End Sub   
+     
 
 ' *************************************  
 ' Sub: ObtainSophosVirtualAVData
