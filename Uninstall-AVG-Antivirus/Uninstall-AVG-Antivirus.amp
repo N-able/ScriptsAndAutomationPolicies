@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{57fd7cfa-fb54-49d4-95c1-925b73984a15}" Name="Remove AVG" Description="cmVtb3ZlIEFWRw==" Version="1.6.2.4" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="9999">
+  <Object ID="{a2e48fe2-5219-4165-ac89-987587c36e4a}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;UninstallersixtyfourBIT&quot; Label=&quot;Uninstaller 64 BIT URL AVG&quot; ParameterType=&quot;string&quot; Value=&quot;http://SERVERADDRESS/avguninstall64Bit.exe &quot; /&gt;&lt;Parameter ParameterName=&quot;UninstallerthirtytwoBIT&quot; Label=&quot;Uninstaller 32bit AVG&quot; ParameterType=&quot;string&quot; Value=&quot;http://SERVERADDRESS/avguninstall32bit.exe &quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>e92497e4-5576-43a7-b9c2-b7e40814b331</d2p1:m_Item1>
+        <d2p1:m_Item2>5493fda7-4f25-45d4-9e04-fe5ce00b87c7</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfElse, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>b734113f-5028-47df-ac68-4243ff8a0e3a</d2p1:m_Item1>
+        <d2p1:m_Item2>4bd9163b-1353-4fa3-8e09-77abd5797502</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.UninstallersixtyfourBIT</d2p1:m_Item1>
+        <d2p1:m_Item2>10748dda-ee2f-4bf6-af07-93654238976e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DownloadFileFromURL, PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>RemoteFileURL</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.UninstallerthirtytwoBIT</d2p1:m_Item1>
+        <d2p1:m_Item2>89051bf5-cdab-4705-81bd-a52ef4abfeec</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.DownloadFileFromURL, PolicyExecutionEngine, Version=1.6.2.4, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>RemoteFileURL</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1002,1584</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="962,1544" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:FolderExists Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional_27]" DisplayName="Folder Exists" Folder="c:\temp" Folder_DisplayArg="c:\temp" sap:VirtualizedContainerService.HintSize="942,57" Moniker="b734113f-5028-47df-ac68-4243ff8a0e3a" Result="[FolderExists_Result_28]" ScriptDirectory="goog" TypeName="FolderExists" m_bTextLinkChange="False" />
+        <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="942,339" Moniker="4bd9163b-1353-4fa3-8e09-77abd5797502" Result="[IfObject_Result_29]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="False" ValueString_DisplayArg="False" VariableString="[FolderExists_Conditional_27]" VariableString_DisplayArg="FolderExists.Conditional" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="298,179" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:CreateFolder Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Create Folder" Folder="c:\temp" FolderInfo="[CreateFolder_FolderInfo_30]" FolderInfo_Item="[CreateFolder_FolderInfo_Item_31]" Folder_DisplayArg="c:\temp" sap:VirtualizedContainerService.HintSize="278,57" Moniker="63420fcc-8e3a-4d2a-ad11-970e94ada0a8" Result="[CreateFolder_Result_32]" ScriptDirectory="goog" TypeName="CreateFolder" m_bTextLinkChange="False" />
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="CreateFolder_FolderInfo_30" />
+                  <Variable x:TypeArguments="x:Object" Name="CreateFolder_FolderInfo_Item_31" />
+                  <Variable x:TypeArguments="x:Double" Name="CreateFolder_Result_32" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfObject.IfOption>
+        </p:IfObject>
+        <p:GetOSArchitecture Computer_Item="{x:Null}" Computer_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Computer="localhost" Computer_DisplayArg="localhost" DisplayName="Get OS Architecture" sap:VirtualizedContainerService.HintSize="942,57" Moniker="e92497e4-5576-43a7-b9c2-b7e40814b331" Result="[GetOSArchitecture_Result_17]" ScriptDirectory="goog" TypeName="GetOSArchitecture" Value="[GetOSArchitecture_Value_16]" m_bTextLinkChange="False" />
+        <p:IfElse ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString_Item="{x:Null}" VariableString_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="942,814" Moniker="5493fda7-4f25-45d4-9e04-fe5ce00b87c7" Result="[IfElse_Result_18]" ScriptDirectory="goog" Type="string" TypeName="IfElse" ValueString="64-bit" ValueString_DisplayArg="64-bit" VariableString="[GetOSArchitecture_Value_16]" VariableString_DisplayArg="GetOSArchitecture.Value" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="454,654" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="434,57" LogMessage="[Log_LogMessage_21]" Message="32-bit architecture found" Message_DisplayArg="32-bit architecture found" Moniker="41ea6958-7a6f-4fdc-a7be-1d825f66ab5d" Result="[Log_Result_22]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                  <p:DownloadFileFromURL RemoteFileURL_Item="{x:Null}" RemoteFileURL_ItemProp="{x:Null}" SaveAsFileName_Item="{x:Null}" SaveAsFileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Download File from URL" sap:VirtualizedContainerService.HintSize="434,126" Moniker="89051bf5-cdab-4705-81bd-a52ef4abfeec" OverwriteExistingFile="True" RemoteFileURL="[UninstallerthirtytwoBIT]" RemoteFileURL_DisplayArg="StartObject.UninstallerthirtytwoBIT" Result="[DownloadFileFromURL_Result_12]" SaveAsFileName="c:\temp\avguninstall32bit.exe" SaveAsFileName_DisplayArg="c:\temp\avguninstall32bit.exe" ScriptDirectory="goog" TypeName="DownloadFileFromURL" m_bTextLinkChange="False" />
+                  <p:RunScript RunAsCLU="{x:Null}" genArgEvent="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Run Script" sap:VirtualizedContainerService.HintSize="434,269" Moniker="08305acf-e761-49e3-bf2f-181cfd1ad142" Result="[RunScript_Result_24]" ScriptDirectory="goog" TypeName="RunScript" m_bTextLinkChange="False" script="YzpcdGVtcFxhdmd1bmluc3RhbGwzMmJpdC5leGUgL25vcmVzdGFydCAvc2lsZW50IC9kZWxldGVkaXJmb3JjZWRoYXJk">
+                    <p:RunScript.InArgs>
+                      <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+                    </p:RunScript.InArgs>
+                    <p:RunScript.OutArgs>
+                      <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+                    </p:RunScript.OutArgs>
+                  </p:RunScript>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="Log_LogMessage_21" />
+                  <Variable x:TypeArguments="x:Double" Name="Log_Result_22" />
+                  <Variable x:TypeArguments="x:Double" Name="RunScript_Result_24" />
+                  <Variable x:TypeArguments="x:Double" Name="DownloadFileFromURL_Result_12" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <ActivityAction>
+              <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="454,654" Name="SequenceActivity">
+                <p:SequenceActivity.Activities>
+                  <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="434,57" LogMessage="[Log_LogMessage_19]" Message="64-bit architecture found" Message_DisplayArg="64-bit architecture found" Moniker="cb74868c-883b-428b-96aa-d508d3e199b8" Result="[Log_Result_20]" ScriptDirectory="goog" TypeName="Log" m_bTextLinkChange="False" />
+                  <p:DownloadFileFromURL RemoteFileURL_Item="{x:Null}" RemoteFileURL_ItemProp="{x:Null}" SaveAsFileName_Item="{x:Null}" SaveAsFileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Download File from URL" sap:VirtualizedContainerService.HintSize="434,126" Moniker="10748dda-ee2f-4bf6-af07-93654238976e" OverwriteExistingFile="True" RemoteFileURL="[UninstallersixtyfourBIT]" RemoteFileURL_DisplayArg="StartObject.UninstallersixtyfourBIT" Result="[DownloadFileFromURL_Result_11]" SaveAsFileName="c:\temp\avguninstall64bit.exe" SaveAsFileName_DisplayArg="c:\temp\avguninstall64bit.exe" ScriptDirectory="goog" TypeName="DownloadFileFromURL" m_bTextLinkChange="False" />
+                  <p:RunScript RunAsCLU="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Run Script" sap:VirtualizedContainerService.HintSize="434,269" Moniker="e3cf7d53-7392-4a8d-aed1-8348f44b5a80" Result="[RunScript_Result_23]" ScriptDirectory="goog" TypeName="RunScript" genArgEvent="7145ed2a-836f-4c55-a9df-0aafb5b38a70" m_bTextLinkChange="False" script="YzpcdGVtcFxhdmd1bmluc3RhbGw2NGJpdC5leGUgL25vcmVzdGFydCAvc2lsZW50IC9kZWxldGVkaXJmb3JjZWRoYXJk">
+                    <p:RunScript.InArgs>
+                      <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+                    </p:RunScript.InArgs>
+                    <p:RunScript.OutArgs>
+                      <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+                    </p:RunScript.OutArgs>
+                  </p:RunScript>
+                </p:SequenceActivity.Activities>
+                <p:SequenceActivity.Variables>
+                  <Variable x:TypeArguments="x:String" Name="Log_LogMessage_19" />
+                  <Variable x:TypeArguments="x:Double" Name="Log_Result_20" />
+                  <Variable x:TypeArguments="x:Double" Name="RunScript_Result_23" />
+                  <Variable x:TypeArguments="x:Double" Name="DownloadFileFromURL_Result_11" />
+                </p:SequenceActivity.Variables>
+              </p:SequenceActivity>
+            </ActivityAction>
+          </p:IfElse.IfOption>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="GetOSArchitecture_Value_16" />
+        <Variable x:TypeArguments="x:Double" Name="GetOSArchitecture_Result_17" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_18" />
+        <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_27" />
+        <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_28" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_29" />
+        <Variable x:TypeArguments="x:String" Default="http://SERVERADDRESS/avguninstall64Bit.exe " Name="UninstallersixtyfourBIT" />
+        <Variable x:TypeArguments="x:String" Default="http://SERVERADDRESS/avguninstall32bit.exe " Name="UninstallerthirtytwoBIT" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

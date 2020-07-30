@@ -1,0 +1,1 @@
+This script will uninstall AVG 8.x and 9.x Be CAREFUL! The script will cause the workstation/server to be rebooted!

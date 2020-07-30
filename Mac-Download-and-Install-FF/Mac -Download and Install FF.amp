@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{d2f1cc69-d90b-406d-9c96-5f8ca84d74e3}" Name="Mac -Download and Install FF" Description="RG93bmxvYWRzIGFuZCBJbnN0YWxscyBGaXJlZm94IG9uIGEgTWFjIE9TIFggZGV2aWNlLg==" Version="1.7.2.53" RemoteCategory="2" ExecutionType="Local" PS3ObjectCount="0" VariableSuffix="79">
+  <Object ID="{8b72f133-5559-4eab-9a1a-7b4cc9200ffb}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;SaveAs&quot; Label=&quot;Save As Command&quot; ParameterType=&quot;string&quot; Value=&quot;~/Downloads/ff.dmg&quot; /&gt;&lt;Parameter ParameterName=&quot;DeviceIP&quot; Label=&quot;Device IP Address&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Username&quot; Label=&quot;Username&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Password&quot; Label=&quot;Password&quot; ParameterType=&quot;password&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;Port&quot; Label=&quot;Port&quot; ParameterType=&quot;number&quot; Value=&quot;22&quot; /&gt;&lt;Parameter ParameterName=&quot;DownloadLink&quot; Label=&quot;Download Link&quot; ParameterType=&quot;string&quot; Value=&quot;http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/40.0/mac/en-US/Firefox%2040.0.dmg&quot; /&gt;&lt;Parameter ParameterName=&quot;DownloadTime&quot; Label=&quot;Download Time&quot; ParameterType=&quot;number&quot; Value=&quot;60&quot; /&gt;&lt;Parameter ParameterName=&quot;FFMountPoint&quot; Label=&quot;Firefox Mount Point Name&quot; ParameterType=&quot;string&quot; Value=&quot;/Volumes/Firefox&quot; /&gt;&lt;Parameter ParameterName=&quot;InstallFolder&quot; Label=&quot;Install Folder&quot; ParameterType=&quot;string&quot; Value=&quot;/Applications/&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DeviceIP</d2p1:m_Item1>
+        <d2p1:m_Item2>9fab8ba1-494f-4199-af8d-b8dc56c56836</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SSHServer</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Username</d2p1:m_Item1>
+        <d2p1:m_Item2>9fab8ba1-494f-4199-af8d-b8dc56c56836</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>UserName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Password</d2p1:m_Item1>
+        <d2p1:m_Item2>9fab8ba1-494f-4199-af8d-b8dc56c56836</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Password</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.Port</d2p1:m_Item1>
+        <d2p1:m_Item2>9fab8ba1-494f-4199-af8d-b8dc56c56836</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.OpenSession, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>PortNumber</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.SaveAs</d2p1:m_Item1>
+        <d2p1:m_Item2>cb09ccdb-1cfb-4f6a-b54c-5f1cea32246d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DownloadLink</d2p1:m_Item1>
+        <d2p1:m_Item2>cb09ccdb-1cfb-4f6a-b54c-5f1cea32246d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>cb09ccdb-1cfb-4f6a-b54c-5f1cea32246d</d2p1:m_Item1>
+        <d2p1:m_Item2>a244792a-7fdd-4503-a0f3-595f3cd40340</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SendCommandsandReceiveResponse, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SSHCommand</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.DownloadTime</d2p1:m_Item1>
+        <d2p1:m_Item2>14722a08-41ef-4f5f-8d8d-08d05e9c1cb6</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.Wait, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>WaitTime</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.SaveAs</d2p1:m_Item1>
+        <d2p1:m_Item2>5a4de6cb-55be-45a4-9b8b-bb105976a9ae</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>5a4de6cb-55be-45a4-9b8b-bb105976a9ae</d2p1:m_Item1>
+        <d2p1:m_Item2>0103ec98-5bab-415b-9e8a-7bbb9436ed0c</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SendCommandsandReceiveResponse, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SSHCommand</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.FFMountPoint</d2p1:m_Item1>
+        <d2p1:m_Item2>9de0bef2-2f97-48f3-8021-18244c36028a</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>9de0bef2-2f97-48f3-8021-18244c36028a</d2p1:m_Item1>
+        <d2p1:m_Item2>084634cc-15cc-4448-bc9d-fb0228803ab3</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SendCommandsandReceiveResponse, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SSHCommand</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.FFMountPoint</d2p1:m_Item1>
+        <d2p1:m_Item2>000b987c-9cc0-4e1f-b423-508d4fd971be</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input0</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.InstallFolder</d2p1:m_Item1>
+        <d2p1:m_Item2>000b987c-9cc0-4e1f-b423-508d4fd971be</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.FormatString, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>Input1</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>000b987c-9cc0-4e1f-b423-508d4fd971be</d2p1:m_Item1>
+        <d2p1:m_Item2>b5413f28-5f1f-446d-b1bf-ea784ab4f17e</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SendCommandsandReceiveResponse, PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>SSHCommand</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>604,1962</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="564,1922" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:OpenSession Connected="{x:Null}" Password_Item="{x:Null}" Password_ItemProp="{x:Null}" PortNumber_Item="{x:Null}" PortNumber_ItemProp="{x:Null}" RemoveTerminalEmulationCharacters="{x:Null}" SSHServer_Item="{x:Null}" SSHServer_ItemProp="{x:Null}" ShellConnected="{x:Null}" ShellOpened="{x:Null}" UserName_Item="{x:Null}" UserName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" Cipher="[OpenSession_Cipher_2]" ClientVersion="[OpenSession_ClientVersion_5]" DisplayName="Open Session - Connect to Mac" ExpectPattern="[OpenSession_ExpectPattern_1]" sap:VirtualizedContainerService.HintSize="544,160" Host="[OpenSession_Host_6]" HostKey="[OpenSession_HostKey_8]" Host_Name_Arrow="[OpenSession_Host_Name_Arrow_7]" IO="[OpenSession_IO_0]" Mac="[OpenSession_Mac_3]" Moniker="9fab8ba1-494f-4199-af8d-b8dc56c56836" Password="[Password]" Password_DisplayArg="StartObject.Password" Port="[OpenSession_Port_9]" PortNumber="[Port]" PortNumber_DisplayArg="StartObject.Port" Pwd="[OpenSession_Pwd_10]" Result="[OpenSession_Result_13]" SSHOutput="[OpenSession_SSHOutput_12]" SSHServer="[DeviceIP]" SSHServer_DisplayArg="StartObject.DeviceIP" ScriptDirectory="Unused" ServerVersion="[OpenSession_ServerVersion_4]" TypeName="OpenSession" UserName="[Username]" UserName_DisplayArg="StartObject.Username" Username="[OpenSession_Username_11]" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Format String - Create Download Command" FormattedString="[FormatString_FormattedString_60]" sap:VirtualizedContainerService.HintSize="544,119" Input0="[SaveAs]" Input0_DisplayArg="StartObject.SaveAs" Input1="[DownloadLink]" Input1_DisplayArg="StartObject.DownloadLink" Moniker="cb09ccdb-1cfb-4f6a-b54c-5f1cea32246d" Result="[FormatString_Result_61]" ScriptDirectory="Unused" Text="curl -o {0} {1}" Text_DisplayArg="curl -o {0} {1}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:SendCommandsandReceiveResponse SSHCommand_Item="{x:Null}" SSHCommand_ItemProp="{x:Null}" SSHOutputExpect="{x:Null}" SSHOutputExpect_DisplayArg="{x:Null}" SSHOutputExpect_Item="{x:Null}" SSHOutputExpect_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Send Commands and Receive Response - Initiate Download" sap:VirtualizedContainerService.HintSize="544,98" Moniker="a244792a-7fdd-4503-a0f3-595f3cd40340" Result="[SendCommandsandReceiveResponse_Result_51]" SSHCommand="[FormatString_FormattedString_60]" SSHCommand_DisplayArg="FormatString-CreateDownloadCommand.FormattedString" SSHOutput="[SendCommandsandReceiveResponse_SSHOutput_50]" ScriptDirectory="Unused" TypeName="SendCommandsandReceiveResponse" m_bTextLinkChange="False" />
+        <p:Wait WaitTime_Item="{x:Null}" WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Wait for Download" sap:VirtualizedContainerService.HintSize="544,57" Moniker="14722a08-41ef-4f5f-8d8d-08d05e9c1cb6" Result="[Wait_Result_54]" ScriptDirectory="Unused" TypeName="Wait" WaitTime="[DownloadTime]" WaitTime_DisplayArg="StartObject.DownloadTime" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1="{x:Null}" Input1_DisplayArg="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Format String - Create Mount Command" FormattedString="[FormatString_FormattedString_62]" sap:VirtualizedContainerService.HintSize="544,119" Input0="[SaveAs]" Input0_DisplayArg="StartObject.SaveAs" Moniker="5a4de6cb-55be-45a4-9b8b-bb105976a9ae" Result="[FormatString_Result_63]" ScriptDirectory="Unused" Text="hdiutil attach {0}" Text_DisplayArg="hdiutil attach {0}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:SendCommandsandReceiveResponse SSHCommand_Item="{x:Null}" SSHCommand_ItemProp="{x:Null}" SSHOutput="{x:Null}" SSHOutputExpect="{x:Null}" SSHOutputExpect_DisplayArg="{x:Null}" SSHOutputExpect_Item="{x:Null}" SSHOutputExpect_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Send Commands and Receive Response - Mount Installer Package" sap:VirtualizedContainerService.HintSize="544,98" Moniker="0103ec98-5bab-415b-9e8a-7bbb9436ed0c" SSHCommand="[FormatString_FormattedString_62]" SSHCommand_DisplayArg="FormatString-CreateMountCommand.FormattedString" ScriptDirectory="Unused" TypeName="SendCommandsandReceiveResponse" m_bTextLinkChange="False" />
+        <p:Wait WaitTime_Item="{x:Null}" WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Wait" sap:VirtualizedContainerService.HintSize="544,57" Moniker="7ca92f4e-149e-4514-ac5b-9b81ee446e8f" Result="[Wait_Result_57]" ScriptDirectory="Unused" TypeName="Wait" WaitTime="10" WaitTime_DisplayArg="10" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Format String - Create Copy Command" FormattedString="[FormatString_FormattedString_77]" sap:VirtualizedContainerService.HintSize="544,119" Input0="[FFMountPoint]" Input0_DisplayArg="StartObject.FFMountPoint" Input1="[InstallFolder]" Input1_DisplayArg="StartObject.InstallFolder" Moniker="000b987c-9cc0-4e1f-b423-508d4fd971be" Result="[FormatString_Result_78]" ScriptDirectory="Unused" Text="cp -a {0}/. {1}" Text_DisplayArg="cp -a {0}/. {1}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:SendCommandsandReceiveResponse SSHCommand_Item="{x:Null}" SSHCommand_ItemProp="{x:Null}" SSHOutputExpect="{x:Null}" SSHOutputExpect_DisplayArg="{x:Null}" SSHOutputExpect_Item="{x:Null}" SSHOutputExpect_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Send Commands and Receive Response - Copy Firefox App to Applications" sap:VirtualizedContainerService.HintSize="544,98" Moniker="b5413f28-5f1f-446d-b1bf-ea784ab4f17e" Result="[SendCommandsandReceiveResponse_Result_71]" SSHCommand="[FormatString_FormattedString_77]" SSHCommand_DisplayArg="FormatString-CreateCopyCommand.FormattedString" SSHOutput="[SendCommandsandReceiveResponse_SSHOutput_70]" ScriptDirectory="Unused" TypeName="SendCommandsandReceiveResponse" m_bTextLinkChange="False" />
+        <p:Wait WaitTime_Item="{x:Null}" WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Wait" sap:VirtualizedContainerService.HintSize="544,57" Moniker="07a43974-89db-4588-98f5-f3033d511374" Result="[Wait_Result_76]" ScriptDirectory="Unused" TypeName="Wait" WaitTime="10" WaitTime_DisplayArg="10" m_bTextLinkChange="False" />
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1="{x:Null}" Input1_DisplayArg="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Format String - Create Unmount Command" FormattedString="[FormatString_FormattedString_66]" sap:VirtualizedContainerService.HintSize="544,119" Input0="[FFMountPoint]" Input0_DisplayArg="StartObject.FFMountPoint" Moniker="9de0bef2-2f97-48f3-8021-18244c36028a" Result="[FormatString_Result_67]" ScriptDirectory="Unused" Text="hdiutil detach {0}" Text_DisplayArg="hdiutil detach {0}" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:SendCommandsandReceiveResponse SSHCommand_Item="{x:Null}" SSHCommand_ItemProp="{x:Null}" SSHOutputExpect="{x:Null}" SSHOutputExpect_DisplayArg="{x:Null}" SSHOutputExpect_Item="{x:Null}" SSHOutputExpect_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Send Commands and Receive Response - Unmount Installer Package" sap:VirtualizedContainerService.HintSize="544,98" Moniker="084634cc-15cc-4448-bc9d-fb0228803ab3" Result="[SendCommandsandReceiveResponse_Result_59]" SSHCommand="[FormatString_FormattedString_66]" SSHCommand_DisplayArg="FormatString-CreateUnmountCommand.FormattedString" SSHOutput="[SendCommandsandReceiveResponse_SSHOutput_58]" ScriptDirectory="Unused" TypeName="SendCommandsandReceiveResponse" m_bTextLinkChange="False" />
+        <p:CloseConnection AssemblyName="PolicyExecutionEngine, Version=1.7.2.53, Culture=neutral, PublicKeyToken=null" DisplayName="Close Connection" sap:VirtualizedContainerService.HintSize="544,51" Moniker="e2343560-6c55-4601-abbf-651fec8b476c" Result="[CloseConnection_Result_75]" SSHOutput="[CloseConnection_SSHOutput_74]" ScriptDirectory="Unused" TypeName="CloseConnection" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="OpenSession_IO_0" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ExpectPattern_1" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Cipher_2" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Mac_3" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ServerVersion_4" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ClientVersion_5" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Host_6" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Host_Name_Arrow_7" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_HostKey_8" />
+        <Variable x:TypeArguments="x:Int32" Name="OpenSession_Port_9" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Pwd_10" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Username_11" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_SSHOutput_12" />
+        <Variable x:TypeArguments="x:Double" Name="OpenSession_Result_13" />
+        <Variable x:TypeArguments="x:String" Name="SendCommandsandReceiveResponse_SSHOutput_50" />
+        <Variable x:TypeArguments="x:Double" Name="SendCommandsandReceiveResponse_Result_51" />
+        <Variable x:TypeArguments="x:Double" Name="Wait_Result_54" />
+        <Variable x:TypeArguments="x:Double" Name="Wait_Result_57" />
+        <Variable x:TypeArguments="x:String" Name="SendCommandsandReceiveResponse_SSHOutput_58" />
+        <Variable x:TypeArguments="x:Double" Name="SendCommandsandReceiveResponse_Result_59" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_60" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_61" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_62" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_63" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_66" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_67" />
+        <Variable x:TypeArguments="x:String" Name="SendCommandsandReceiveResponse_SSHOutput_70" />
+        <Variable x:TypeArguments="x:Double" Name="SendCommandsandReceiveResponse_Result_71" />
+        <Variable x:TypeArguments="x:String" Name="CloseConnection_SSHOutput_74" />
+        <Variable x:TypeArguments="x:Double" Name="CloseConnection_Result_75" />
+        <Variable x:TypeArguments="x:Double" Name="Wait_Result_76" />
+        <Variable x:TypeArguments="x:String" Default="~/Downloads/ff.dmg" Name="SaveAs" />
+        <Variable x:TypeArguments="x:String" Default="10.19.6.42" Name="DeviceIP" />
+        <Variable x:TypeArguments="x:String" Default="http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/40.0/mac/en-US/Firefox%2040.0.dmg" Name="DownloadLink" />
+        <Variable x:TypeArguments="x:Double" Default="60" Name="DownloadTime" />
+        <Variable x:TypeArguments="x:String" Default="/Volumes/Firefox" Name="FFMountPoint" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_77" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result_78" />
+        <Variable x:TypeArguments="x:String" Default="/Applications/" Name="InstallFolder" />
+        <Variable x:TypeArguments="x:String" Default="none" Name="Username" />
+        <Variable x:TypeArguments="p:Password" Name="Password">
+          <Variable.Default>
+            <Literal x:TypeArguments="p:Password">
+              <p:Password PasswordValue="none" />
+            </Literal>
+          </Variable.Default>
+        </Variable>
+        <Variable x:TypeArguments="x:Double" Default="22" Name="Port" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

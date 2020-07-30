@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{5d3a442b-8e1c-400c-a637-4e934f89eac4}" Name="Brocade Copy to TFTP" Description="QnJvY2FkZSBDb3B5IHRvIFRGVFA=" Version="2.0.3.32" RemoteCategory="2" ExecutionType="Local" PS3ObjectCount="0">
+  <Object ID="{a0e22368-f2f3-4db4-97cc-3ce38bba0616}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;RouterIP&quot; Label=&quot;Router IP Address&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;RouterUserName&quot; Label=&quot;Router User Name&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;RouterPassword&quot; Label=&quot;Router Password&quot; ParameterType=&quot;password&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;RouterPort&quot; Label=&quot;Router Port Number&quot; ParameterType=&quot;number&quot; Value=&quot;22&quot; /&gt;&lt;Parameter ParameterName=&quot;TFTP&quot; Label=&quot;TFTP Server IP&quot; ParameterType=&quot;string&quot; Value=&quot;10.11.20.20&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>522,1466</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="ShouldExpandAll">False</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="522,1466" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:OpenSession Password_Item="{x:Null}" Password_ItemProp="{x:Null}" PortNumber_Item="{x:Null}" PortNumber_ItemProp="{x:Null}" SSHServer_Item="{x:Null}" SSHServer_ItemProp="{x:Null}" UserName_Item="{x:Null}" UserName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.6.0.31, Culture=neutral, PublicKeyToken=null" Cipher="[OpenSession_Cipher_10001]" ClientVersion="[OpenSession_ClientVersion_10004]" Connected="[OpenSession_Connected]" DisplayName="Open Session" ExpectPattern="[OpenSession_ExpectPattern_10000]" sap:VirtualizedContainerService.HintSize="486,196" Host="[OpenSession_Host_10005]" HostKey="[OpenSession_HostKey_10006]" HostNameArrow="[OpenSession_HostNameArrow]" IO="[OpenSession_IO_9999]" Mac="[OpenSession_Mac_10002]" Moniker="79b3fc48-4368-45a1-b172-a7c6ea182a07" Password="[RouterPassword]" Password_DisplayArg="Input Parameters.Router Password" Port="[OpenSession_Port_10007]" PortNumber="[RouterPort]" PortNumber_DisplayArg="Input Parameters.Router Port Number" Pwd="[OpenSession_Pwd_10008]" RemoveTerminalEmulationCharacters="[OpenSession_RemoveTerminalEmulationCharacters]" Result="[OpenSession_Result_10011]" RunAsCurrentLoggedOnUser="False" SSHOutput="[OpenSession_SSHOutput_10010]" SSHServer="[RouterIP]" SSHServer_DisplayArg="Input Parameters.Router IP Address" ScriptExecutionMethod="ExecuteDebug" ServerVersion="[OpenSession_ServerVersion_10003]" ShellConnected="[OpenSession_ShellConnected]" ShellOpened="[OpenSession_ShellOpened]" TypeName="OpenSession" UserName="[RouterUserName]" UserName_DisplayArg="Input Parameters.Router User Name" Username="[OpenSession_Username_10009]" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:OpenSession>
+        <p:RunScript AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Run Script" sap:VirtualizedContainerService.HintSize="486,522" Moniker="9291c9d9-439c-4cb7-9a3c-27b1b1e8de78" OutPut_64="[RunScript_OutPut_64]" Result="[RunScript_Result]" ResultString="[RunScript_ResultString]" Results_x64="[RunScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunScript" genArgEvent="80608cbe-25d5-4fd5-9e46-4ca9d355bb9f" m_bTextLinkChange="False" script="JHZhbHVldG9yZXBsYWNlPSAgICQlaWQlUmVwbGFjZWNoYXIlaWQlDQokdmFsdWV0b3JlcGxhY2UgPSAkdmFsdWV0b3JlcGxhY2UucmVwbGFjZSgiU1NIQCIsIiIpDQokdmFsdWV0b3JlcGxhY2UgPSAkdmFsdWV0b3JlcGxhY2UucmVwbGFjZSgiIyIsIiIpDQoNCiRkYXRldmFsID0gZ2V0LWRhdGUNCiRkYXRldmFsID0gJGRhdGV2YWwuVG9TdHJpbmcoInl5eXktTU0tZGQtaGgtbW0tc3MiKQ0KDQoNCiAkJWlkJXJlcGxhY2VkY2hhciVpZCUgPSAkdmFsdWV0b3JlcGxhY2UgKyAiLSIgKyAkZGF0ZXZhbA0K">
+          <p:RunScript.InArgs>
+            <p:InArg ItemProp="{x:Null}" x:Key="Replacechar" ArgType="string" DisplayArg="Open Session.Command Output" DisplayName="Replacechar" Name="Replacechar" isRequired="True">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[OpenSession_SSHOutput_10010]</InArgument>
+              </p:InArg.Arg>
+              <p:InArg.Item>
+                <InArgument x:TypeArguments="x:Object" />
+              </p:InArg.Item>
+            </p:InArg>
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <p:OutArg x:Key="replacedchar" ArgType="string" DisplayName="replacedhar" Name="replacedchar">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_replacedchar]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunScript.OutArgs>
+        </p:RunScript>
+        <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Format String" FormattedString="[FormatString_FormattedString]" sap:VirtualizedContainerService.HintSize="486,160" Input0="[TFTP]" Input0_DisplayArg="Input Parameters.TFTP Server IP" Input1="[RunScript_replacedchar]" Input1_DisplayArg="Run Script.replacedhar" Moniker="3dc02488-d924-422f-bac1-6604c05ecd79" Result="[FormatString_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" Text="copy running-config tftp {0} {1}.rtf" Text_DisplayArg="copy running-config tftp {0} {1}.rtf" TypeName="FormatString" m_bTextLinkChange="False" />
+        <p:SendCommandsandReceiveResponse SSHCommand_Item="{x:Null}" SSHCommand_ItemProp="{x:Null}" SSHOutputExpect="{x:Null}" SSHOutputExpect_DisplayArg="{x:Null}" SSHOutputExpect_Item="{x:Null}" SSHOutputExpect_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Send Commands and Receive Response" sap:VirtualizedContainerService.HintSize="486,124" Moniker="bc46eab8-507c-444b-9b0a-9c7129156262" Result="[SendCommandsandReceiveResponse_Result]" RunAsCurrentLoggedOnUser="False" SSHCommand="[FormatString_FormattedString]" SSHCommand_DisplayArg="Format String.FormattedString" SSHOutput="[SendCommandsandReceiveResponse_SSHOutput]" ScriptExecutionMethod="ExecuteDebug" TypeName="SendCommandsandReceiveResponse" m_bTextLinkChange="False" />
+        <p:CloseConnection AssemblyName="PolicyExecutionEngine, Version=1.6.0.31, Culture=neutral, PublicKeyToken=null" DisplayName="Close Connection" sap:VirtualizedContainerService.HintSize="486,81" Moniker="9d79a79d-508e-4760-a10f-467d1c8b9a43" Result="[CloseConnection_Result_10019]" RunAsCurrentLoggedOnUser="False" SSHOutput="[CloseConnection_SSHOutput_10018]" ScriptExecutionMethod="ExecuteDebug" TypeName="CloseConnection" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="OpenSession_IO_9999" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ExpectPattern_10000" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Cipher_10001" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Mac_10002" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ServerVersion_10003" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ClientVersion_10004" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Host_10005" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_HostKey_10006" />
+        <Variable x:TypeArguments="x:Double" Name="OpenSession_Port_10007" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Pwd_10008" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Username_10009" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_SSHOutput_10010" />
+        <Variable x:TypeArguments="x:Double" Name="OpenSession_Result_10011" />
+        <Variable x:TypeArguments="x:String" Name="CloseConnection_SSHOutput_10018" />
+        <Variable x:TypeArguments="x:Double" Name="CloseConnection_Result_10019" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_HostNameArrow" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ShellOpened" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_ShellConnected" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_RemoveTerminalEmulationCharacters" />
+        <Variable x:TypeArguments="x:String" Name="OpenSession_Connected" />
+        <Variable x:TypeArguments="x:Double" Name="SendCommandsandReceiveResponse_Result" />
+        <Variable x:TypeArguments="x:String" Name="SendCommandsandReceiveResponse_SSHOutput" />
+        <Variable x:TypeArguments="x:String" Default="10.11.100.4" Name="RouterIP" />
+        <Variable x:TypeArguments="x:String" Default="tom" Name="RouterUserName" />
+        <Variable x:TypeArguments="p:Password" Name="RouterPassword">
+          <Variable.Default>
+            <Literal x:TypeArguments="p:Password">
+              <Literal.Result>
+                <OutArgument x:TypeArguments="p:Password" />
+              </Literal.Result>
+              <p:Password PasswordValue="EY4DYQ5aYyjRxaLRzR3Piw==" />
+            </Literal>
+          </Variable.Default>
+        </Variable>
+        <Variable x:TypeArguments="x:Double" Default="22" Name="RouterPort" />
+        <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString" />
+        <Variable x:TypeArguments="x:Double" Name="FormatString_Result" />
+        <Variable x:TypeArguments="x:String" Default="10.11.20.20" Name="TFTP" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_OutPut_64" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_ResultString" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunScript_Results_x64" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Result" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_replacedchar" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

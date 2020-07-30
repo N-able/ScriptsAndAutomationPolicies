@@ -1,0 +1,93 @@
+![Repair-PME Logo](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/WikiFiles/Repair-PME/Repair-PME_Logo_Small.png)
+***
+
+### What is Repair-PME?
+
+Repair-PME is a script provided to the community that repairs Solarwinds MSP Patch Management Engine (PME) used by Solarwinds N-Central. If for any reason it becomes corrupt, fails an upgrade or installation process PME-Repair should be able to fix it in the most scenarios. 
+
+### Why was Repair-PME created?
+
+Repair-PME was created as I was getting frustrated with having to spend time trying resolve various issues where PME had broken and subsequently caused **Patch Status v2** to become **misconfigured** in N-Central. Obviously having this in the misconfigured state is very bad as you cannot determine what's going on with patching. Please note is only designed to fix issues where PME is broken and reinstall is required to resolve. There may be cases where you will need to engage support to assist further. An example of an error that can be fixed with this tool.
+
+![Patch_Status_v2_Misconfigured](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/WikiFiles/Repair-PME/Patch_Status_v2_Misconfigured.png)
+
+### What does Repair-PME do?
+
+Repair-PME does the following with logic, error handling and event logging to operate as user-friendly as possible. Any errors during execution of the script will throw to PowerShell and will also be reported to the event log (Event ID 100).
+
+* Checks to ensure script is run elevated (as an administrator) to ensure all necessary actions can be performed.
+* Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has started.
+* Gets operating system version, operating system architecture and PowerShell version.
+* Performs connectivity tests to destinations required for PME. Download of PMESetup will be obtained via HTTP instead of HTTPS if issues with HTTPS connectivity is detected.
+* Performs certificates test to HTTPS destination required for PME (sis.n-able.com). Test will be bypassed if issues with HTTPS connectivity is detected.
+* Checks if N-Central Agent is installed, reports status and compatibility with PME.
+* Checks if PME is already installed and reports status.
+* Checks if PME has an update pending and reports status. If an update is pending within the configured period (2 days) then script will be aborted. This can be changed, see settings below for further information.
+* Invokes Solarwinds Diagnostics Tool and silently saves the log capture to **C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs**. These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
+* Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **RPCServerServiceSetup** **and _iu14D2N or similar.**
+* Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
+* Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
+* Checks existing PME config and informs of possible misconfigurations (cache size, fallback to external sources).
+* Checks existing PME config and applies fix for NCPM-4407 (System.OutOfMemoryException). This can be changed, see settings below for further information. Please note this will only apply if PME has already been installed.
+* Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
+* Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'**.
+* Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has ended.
+
+### Settings
+
+Release 0.1.7.1 introduces two new user changeable settings which can be found at the beginning of the script in the settings section.
+
+* **$RepairAfterUpdateDays** - Change this variable to number of days (must be a number!) to begin repair after new version of PME is released. Default is 2. Repair-PME will abort if an update is pending within this period.
+
+* **$NCPM4407** - Change this variable to "No" if you don't want this script to apply fix for NCPM-4407 (System.OutOfMemoryException). Default is Yes.
+
+### Important
+
+Please ensure you rescan any custom PME monitoring you may have and run a patch detection after running this script to ensure Patch Status v2 is operating fully again.
+
+### System Requirements
+
+**Internet Connectivity:**
+
+An internet connection is required for this script to reach out to
+
+HTTP (Port 80)
+* _sis.n-able.com_
+* _download.windowsupdate.com_
+* _fg.ds.b1.download.windowsupdate.com_
+
+HTTPS (Port 443)
+* _sis.n-able.com_
+
+**Operating System:**
+* _Any OS that can install the Solarwinds MSP Patch Management Engine (PME) and is officially supported by Solarwinds (this can be found in the N-Central release notes)._
+
+**PowerShell:**
+* Required: _2.0+_
+
+**N-Central:**
+* Required: _12.2.0.274+_
+
+### Can I use Repair-PME in an Automation Policy (AMP) within N-Central?
+
+Yes, just add the code to a '**Run Powershell Script**' object in Automation Manager, save the AMP as 'Repair-PME' and upload to your N-Central server. It is the recommended method of using this script via N-Central.
+
+### Can I use Repair-PME from PowerShell interactively or via N-Central?
+
+Yes, if you wish to do so. Please be aware your execution policy is set to allow this to run though.
+
+### Can I use Repair-PME for self-healing within N-Central?
+
+Yes, but if this is executed during the wait period (2 days by default) of when an update has been released but has yet to be installed the script will abort with an error as it is recommended  this is done gracefully via the built-in update mechanism. I will be working with Prejay to ensure when this is used as self-healing in conjunction with his **[**Get-PMEServices**](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/N-Central%20PME%20Services/Get-PMEServices.ps1)** script it will only threshold after this user defined wait period. 
+
+### Where can I get the latest version of Repair-PME?
+**https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1**
+
+### Demonstration
+Below is a GIF of Repair-PME in action run from PowerShell.
+
+![Repair-PME Demo](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/WikiFiles/Repair-PME/Repair-PME-Demo.gif)
+
+### Feedback or Issues?
+
+Feedback is always appreciated, and I look to improve this script where I can. If you have any issues with it or would like to suggest improvements, please do raise an Issue in GitHub. Alternatively reach out to the maintainer (Ashley How) in the N-Able Slack Community (**n-able.slack.com**).

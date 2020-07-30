@@ -1,0 +1,75 @@
+<Policy ID="{865e0f2c-4033-4ba6-a567-8306ba28b54d}" Name="Set Default Printer" Description="U2V0IERlZmF1bHQgUHJpbnRlciBpZiBzcGVjaWZpZWQgcHJpbnRlciBpcyBhbHJlYWR5IE1hcHBlZCB0byBEZXZpY2U=" Version="1.5.0.13">
+  <Object ID="{1076980b-effa-46b3-a728-4ddc83f20678}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;PrinterName&quot; Label=&quot;Printer Name&quot; ParameterType=&quot;string&quot; Value=&quot;RICOH Aficio MP 2851 PCL 6&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/DesignerHost.Model">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>15bcc555-00a2-443a-b7c4-8f3da4c10099</d2p1:m_Item1>
+        <d2p1:m_Item2>3b4be2c6-7ae2-4e1e-83c8-9c0f25eff9ba</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.ForEachLoop, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>CollectionDisplayName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>3b4be2c6-7ae2-4e1e-83c8-9c0f25eff9ba</d2p1:m_Item1>
+        <d2p1:m_Item2>87bfb1bf-1269-4881-89b3-6b232d6ecf4d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>VariableString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>StartObject.PrinterName</d2p1:m_Item1>
+        <d2p1:m_Item2>87bfb1bf-1269-4881-89b3-6b232d6ecf4d</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.IfObject, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>ValueString</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>3b4be2c6-7ae2-4e1e-83c8-9c0f25eff9ba</d2p1:m_Item1>
+        <d2p1:m_Item2>40c2e1b4-61a7-4de2-bc20-45d3a5c9cbf5</d2p1:m_Item2>
+        <d2p1:m_Item3>PolicyExecutor.SetDefaultPrinter, PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null</d2p1:m_Item3>
+        <d2p1:m_Item4>PrinterName</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Activity mc:Ignorable="sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>534,869</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="494,829" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:ListSystemPrinters AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" AvailablePrinterList="[ListSystemPrinters_AvailablePrinterList_48]" DisplayName="List System Printers" sap:VirtualizedContainerService.HintSize="474,51" Moniker="15bcc555-00a2-443a-b7c4-8f3da4c10099" Result="[ListSystemPrinters_Result_49]" ScriptDirectory="goog" TypeName="ListSystemPrinters" m_bTextLinkChange="False" />
+        <p:ForEachLoop ItemProperty="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" CollectionDisplayName="AvailablePrinterList" CollectionName="[ListSystemPrinters_AvailablePrinterList_48]" DisplayName="ForEach" sap:VirtualizedContainerService.HintSize="474,581" ItemValue="[ForEachLoop_ItemValue_53]" LinkedTypeName="ListSystemPrinters" Moniker="3b4be2c6-7ae2-4e1e-83c8-9c0f25eff9ba" ObjectName="List System Printers" Result="[ForEachLoop_Result_54]" ScriptDirectory="goog" TypeName="ForEachLoop" m_bTextLinkChange="False">
+          <p:ForEachLoop.Each>
+            <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="460,463">
+              <p:ForEachSequence.Activities>
+                <p:IfObject ValueDate="{x:Null}" ValueDate_DisplayArg="{x:Null}" ValueDate_Item="{x:Null}" ValueDate_ItemProp="{x:Null}" ValueNum="{x:Null}" ValueNum_DisplayArg="{x:Null}" ValueNum_Item="{x:Null}" ValueNum_ItemProp="{x:Null}" ValueString_Item="{x:Null}" ValueString_ItemProp="{x:Null}" VariableDate="{x:Null}" VariableDate_DisplayArg="{x:Null}" VariableDate_Item="{x:Null}" VariableDate_ItemProp="{x:Null}" VariableNum="{x:Null}" VariableNum_DisplayArg="{x:Null}" VariableNum_Item="{x:Null}" VariableNum_ItemProp="{x:Null}" VariableString="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" Condition="contains" DisplayName="If" sap:VirtualizedContainerService.HintSize="440,341" Moniker="87bfb1bf-1269-4881-89b3-6b232d6ecf4d" Result="[IfObject_Result_55]" ScriptDirectory="goog" Type="string" TypeName="IfObject" ValueString="[PrinterName]" ValueString_DisplayArg="StartObject.PrinterName" VariableString_DisplayArg="ForEach.ListSystemPrinters.AvailableFeatures.Name" VariableString_Item="[ForEachLoop_ItemValue_53]" VariableString_ItemProp="Name" m_bTextLinkChange="False">
+                  <p:IfObject.IfOption>
+                    <ActivityAction>
+                      <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,181" Name="SequenceActivity">
+                        <p:SequenceActivity.Activities>
+                          <p:SetDefaultPrinter PrinterName="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.5.0.13, Culture=neutral, PublicKeyToken=null" DisplayName="Set Default Printer" sap:VirtualizedContainerService.HintSize="396,59" Moniker="40c2e1b4-61a7-4de2-bc20-45d3a5c9cbf5" PrinterName_DisplayArg="ForEach.ListSystemPrinters.AvailableFeatures.Name" PrinterName_Item="[ForEachLoop_ItemValue_53]" PrinterName_ItemProp="Name" Result="[SetDefaultPrinter_Result_56]" ScriptDirectory="goog" TypeName="SetDefaultPrinter" m_bTextLinkChange="False" />
+                        </p:SequenceActivity.Activities>
+                        <p:SequenceActivity.Variables>
+                          <Variable x:TypeArguments="x:Double" Name="SetDefaultPrinter_Result_56" />
+                        </p:SequenceActivity.Variables>
+                      </p:SequenceActivity>
+                    </ActivityAction>
+                  </p:IfObject.IfOption>
+                </p:IfObject>
+              </p:ForEachSequence.Activities>
+              <p:ForEachSequence.Variables>
+                <Variable x:TypeArguments="x:Double" Name="IfObject_Result_55" />
+              </p:ForEachSequence.Variables>
+            </p:ForEachSequence>
+          </p:ForEachLoop.Each>
+        </p:ForEachLoop>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="ListSystemPrinters_AvailablePrinterList_48" />
+        <Variable x:TypeArguments="x:Double" Name="ListSystemPrinters_Result_49" />
+        <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue_53" />
+        <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result_54" />
+        <Variable x:TypeArguments="x:String" Default="RICOH Aficio MP 2851 PCL 6" Name="PrinterName" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
