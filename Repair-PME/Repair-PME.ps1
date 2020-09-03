@@ -1,7 +1,7 @@
 <#
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.8.2 (30/07/2020)
+    Version:         0.1.8.3 (03/09/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -123,12 +123,19 @@
                                - Replaced double full file paths with variables
                                - Turned NCPM-4407 explanation in Set-PMEConfig into a comment-block rather than a single line.
                              - Renamed functions 'Get-Certificate' and 'Test-Certificate' to 'Get-SWCertificate' and 
-                               'Test-SWCertificate' to avoid warnings with cmdlets with the same name in PS 5.1.
+                               'Test-SWCertificate' to avoid warnings with cmdlets with the same name in PS 5.1.#
                              - Updated 'Get-NCAgentVersion' and 'Confirm-PMEInstalled' functions to account for edge case 
-                               situation where install date may not be present causing the script to halt with an exception.  
+                               situation where install date may not be present causing the script to halt with an exception.
+                     0.1.8.3 - New function 'Confirm-PMEServices' to check for edge cases where PME installer doesn't 
+                               successfully install services but reports a successful exit code. Thanks to Prejay Shah
+                               for reporting and code used from his Get-PMEService script for the new function.
+                             - Updated functions 'Get-PMEConfig' and 'Set-PMEConfig' with a try/catch to allow the script
+                               to continue if the xml files cannot be read i.e they are corrupt. The script will warn and
+                               the reinstall should replace the files anyway. Thanks to Webster Massingham for reporting
+                               and suggestion.
    *******************************************************************************************************************************
 #>
-$Version = '0.1.8.2 (28/07/2020)'
+$Version = '0.1.8.3 (03/09/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -164,8 +171,7 @@ Function Confirm-Elevation {
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
                 [Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Throw "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again."
-    } 
-    Else {
+    } Else {
         Write-Host "OK: Script is running as administrator" -ForegroundColor Green
     }
 }
@@ -814,34 +820,39 @@ Function Get-PMESetup {
 
 Function Read-PMEConfig {
     # Check PME Config and inform of possible misconfigurations
-    $CacheServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
+    Try {    
+        $CacheServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
 
-    If (Test-Path "$CacheServiceConfigFile") {
-        $xml = New-Object XML
-        $xml.Load($CacheServiceConfigFile)
-        $CacheServiceConfig = $xml.Configuration
+        If (Test-Path "$CacheServiceConfigFile") {
+            $xml = New-Object XML
+            $xml.Load($CacheServiceConfigFile)
+            $CacheServiceConfig = $xml.Configuration
 
-        If ($null -ne $CacheServiceConfig) {
-            If ($CacheServiceConfig.CanBypassProxyCacheService -eq "False") {
-                Write-Warning "Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!"
-            } ElseIf ($CacheServiceConfig.CanBypassProxyCacheService -eq "True") {
-                Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Cyan
+            If ($null -ne $CacheServiceConfig) {
+                If ($CacheServiceConfig.CanBypassProxyCacheService -eq "False") {
+                    Write-Warning "Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!"
+                } ElseIf ($CacheServiceConfig.CanBypassProxyCacheService -eq "True") {
+                    Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Cyan
+                } Else {
+                    Write-Warning "Unable to determine if patch profile allows PME to fallback to external sources"
+                }
+
+                If ($CacheServiceConfig.CacheSizeInMB -eq 10240) {
+                    Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Cyan
+                } Else {
+                    $CacheSize = $CacheServiceConfig.CacheSizeInMB
+                    Write-Warning "Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!"
+                }
             } Else {
-                Write-Warning "Unable to determine if patch profile allows PME to fallback to external sources"
-            }
-
-            If ($CacheServiceConfig.CacheSizeInMB -eq 10240) {
-                Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Cyan
-            } Else {
-                $CacheSize = $CacheServiceConfig.CacheSizeInMB
-                Write-Warning "Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!"
+                Write-Warning "Cache Service config file is empty, skipping Cache Service settings checks"
             }
         } Else {
-            Write-Warning "Cache Service config file is empty, skipping Cache Service settings checks"
+            Write-Warning "Cache Service config file does not exist, skipping Cache Service settings checks"
         }
-    } Else {
-        Write-Warning "Cache Service config file does not exist, skipping Cache Service settings checks"
-    }
+    }    
+    Catch {
+        Write-Warning "Unable to read Cache Service config file as a valid xml file, default cache size can't be checked"
+    }    
 }
 
 Function Set-PMEConfig {
@@ -852,32 +863,38 @@ Function Set-PMEConfig {
         to ensure resources are made available to it. To trigger this feature, the value of "UnloadModuleAppDomainAfterEachRequest" must be changed from "true" to "false"
         in C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml
     #>
-    $RPCServerServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
+    Try {
+        $RPCServerServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\config\RpcServerConfiguration.xml"
 
-    If (Test-Path "$RPCServerServiceConfigFile") {
-        $RpcServerServiceConfig = New-Object XML
-        $RpcServerServiceConfig = [xml](Get-Content -Path $RPCServerServiceConfigFile)
+        If (Test-Path "$RPCServerServiceConfigFile") {
+            $RpcServerServiceConfig = New-Object XML
+            $RpcServerServiceConfig = [xml](Get-Content -Path $RPCServerServiceConfigFile)
 
-        If ($null -ne $RpcServerServiceConfig) {
-            If ($RpcServerServiceConfig.RpcServerConfiguration.UnloadModuleAppDomainAfterEachRequest -eq "false") {
-                Write-Host "INFO: RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException) is already applied" -ForegroundColor Cyan
-            }
-
-            If (($NCPM4407 -eq "Yes") -and ($RpcServerServiceConfig.RpcServerConfiguration.UnloadModuleAppDomainAfterEachRequest -eq "true")) {
-                Try {
-                    Write-Output "Changing RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException)"
-                    $RpcServerServiceConfig.RpcServerConfiguration.UnloadModuleAppDomainAfterEachRequest = "false"
-                    $RpcServerServiceConfig.Save($RPCServerServiceConfigFile)
-                } Catch {
-                    Write-EventLog @WriteEventLogErrorParams -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-                    Throw "Unable to change RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message)"
+            If ($null -ne $RpcServerServiceConfig) {
+                If ($RpcServerServiceConfig.RpcServerConfiguration.UnloadModuleAppDomainAfterEachRequest -eq "false") {
+                    Write-Host "INFO: RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException) is already applied" -ForegroundColor Cyan
                 }
+
+                If (($NCPM4407 -eq "Yes") -and ($RpcServerServiceConfig.RpcServerConfiguration.UnloadModuleAppDomainAfterEachRequest -eq "true")) {
+                    Try {
+                        Write-Output "Changing RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException)"
+                        $RpcServerServiceConfig.RpcServerConfiguration.UnloadModuleAppDomainAfterEachRequest = "false"
+                        $RpcServerServiceConfig.Save($RPCServerServiceConfigFile)
+                    } Catch {
+                        Write-EventLog @WriteEventLogErrorParams -Message "Unable to change RpcServerService configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+                        Throw "Unable to change RPC Server Service configuration to address NCPM-4407 (System.OutOfMemoryException). Error: $($_.Exception.Message)"
+                    }
+                }
+            } Else {
+                Write-Warning "RPC Server Service config file is empty, fix for NCPM-4407 can't be applied"
             }
         } Else {
-            Write-Warning "RPC Server Service config file is empty, fix for NCPM-4407 can't be applied"
+            Write-Warning "RPC Server Service config file does not exist, fix for NCPM-4407 can't be applied"
         }
-    } Else {
-        Write-Warning "RPC Server Service config file does not exist, fix for NCPM-4407 can't be applied"
+
+    }
+    Catch {
+        Write-Warning "Unable to read RPC Server Service config file as a valid xml file, fix for NCPM-4407 can't be applied"    
     }
 }
 
@@ -982,6 +999,27 @@ Function Install-PME {
     }
 }
 
+Function Confirm-PMEServices {
+    If ($Install.ExitCode -eq 0) {
+        Write-Host "Checking PME services post-installation..." -ForegroundColor Cyan
+        $SolarWindsMSPCacheStatus = (get-service "SolarWinds.MSP.CacheService" -ErrorAction SilentlyContinue).Status
+        $SolarWindsMSPPMEAgentStatus = (get-service "SolarWinds.MSP.PME.Agent.PmeService" -ErrorAction SilentlyContinue).Status
+        $SolarWindsMSPRpcServerStatus = (get-service "SolarWinds.MSP.RpcServerService" -ErrorAction SilentlyContinue).status
+
+        Write-Output "SolarWinds MSP Cache Service Status: $SolarWindsMSPCacheStatus"
+        Write-Output "SolarWinds MSP PME Agent Status: $SolarWindsMSPPMEAgentStatus"
+        Write-Output "SolarWinds MSP RPC Server Status: $SolarWindsMSPRpcServerStatus"
+    
+        If (($SolarWindsMSPPMEAgentStatus -eq 'Running') -and ($SolarWindsMSPCacheStatus -eq 'Running') -and ($SolarWindsMSPRpcServerStatus -eq 'Running')) {
+            Write-Host "OK: All PME services are installed and running following installation" -Foregroundcolor Green
+        }
+        Else {
+            Write-EventLog @WriteEventLogErrorParams -Message "One or more of the PME services are not installed or running, investigation required.`nScript: Repair-PME.ps1"
+            Throw "One or more of the PME services are not installed or running, investigation required"
+        }
+    }
+}    
+
 Function Set-End {
     Write-EventLog @WriteEventLogInformationParams -Message "Repair-PME has finished.`nScript: Repair-PME.ps1"
 }
@@ -1006,4 +1044,5 @@ Function Set-End {
 . Read-PMEConfig
 . Set-PMEConfig
 . Install-PME
+. Confirm-PMEServices
 . Set-End
