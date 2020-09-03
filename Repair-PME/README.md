@@ -31,6 +31,7 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Checks existing PME config and applies fix for NCPM-4407 (System.OutOfMemoryException). This can be changed, see settings below for further information. Please note this will only apply if PME has already been installed.
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
 * Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'**.
+* Checks and reports all PME services are installed and running post-installation.
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has ended.
 
 ### Settings
