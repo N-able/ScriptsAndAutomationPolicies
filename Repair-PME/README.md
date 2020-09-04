@@ -79,7 +79,7 @@ Yes, if you wish to do so. Please be aware your execution policy is set to allow
 
 ### Can I use Repair-PME for self-healing within N-Central?
 
-Yes, but if this is executed during the wait period (2 days by default) of when an update has been released but has yet to be installed the script will abort with an error as it is recommended this is done gracefully via the built-in update mechanism. It is recommended this is used as self-healing in conjunction with **[**Get-PMEServices**](https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/N-Central%20PME%20Services/Get-PMEServices.ps1)** monitoring.
+Yes, but if this is executed during the wait period (2 days by default) of when an update has been released but has yet to be installed the script will abort with an error as it is recommended this is done gracefully via the built-in update mechanism. It is recommended this is used as self-healing in conjunction with Prejay Shah's **[**'Patch Status - PME' AMP**](https://github.com/N-able/CustomMonitoring/tree/f007703830dab88eb7fd710a84c768d0ff119e70/N-Central%20PME%20Services)**.
 
 ### Where can I get the latest version of Repair-PME?
 **https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1**
