@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
-    Name: Get-PMEServices-AMP.ps1
-    Version: 0.1.6.6 (17th August 2020)
+    Name: Get-PMEServices.ps1
+    Version: 0.1.6.7 (04th September 2020)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -30,7 +30,7 @@
                                 + Various updates to functions and parts of the script to be closer in-line with Repair-PME script.
                                 + Updated Validate-PME function to account for pending update, this will report a status of 0. Renamed status messages to make it eaiser to theshold in an AMP service.
                                 + Fixed minor issues with date-time parsing, valid PS/OS detection, URL Querying 
-
+                        0.1.6.7 + Added Offine Scanning Detection
 
     Examples: 
     Diagnostics Input: False
@@ -52,7 +52,7 @@ Param (
 $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
-$Version = '0.1.6.6 (17th August 2020)'
+$Version = '0.1.6.7 (04th September 2020)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -310,16 +310,27 @@ Function Get-PMEProfile {
 if ($SolarWindsMSPPMEAgentStatus -ne $null) {
     if (test-path $pmeconfigxml) {
     $xml = [xml](Get-Content "$PMEConfigXML")
-    $pmeprofile = $xml.Configuration.Profile  
+    $pmeprofile = $xml.Configuration.Profile 
+    $pmeofflinescan = $xml.Configuration.OfflineScan   
     }
     else {
         $pmeprofile = 'N/A'
+        $pmeofflinescan = 'N/A'
     }
 }
 else {
-    $pmeprofile = 'Error - Agent is running but config File could not be found'
+    $pmeprofile = 'Error - Agent is running but config file could not be found'
 }
 Write-Host "PME Profile: " -nonewline; Write-Host "$pmeprofile`n" -foregroundcolor Green
+Write-Host "PME Offline Scanning: " -nonewline; Write-Host "$pmeofflinescan`n" -foregroundcolor Green
+    if ($pmeofflinescan -eq '1') {
+        $pmeofflinescanbool = $True
+        Write-Host "PME Offline Scanning is enabled" -ForegroundColor Yellow
+    }
+    else {
+        $pmeofflinescanbool = $False
+        Write-Host "PME Offline Scanning is not enabled" -ForegroundColor Yellow
+    }
 }
 
 Function Test-PMEConnectivity {
@@ -424,7 +435,7 @@ Write-Host "SolarWinds MSP RPC Server Version: $PMERpcServerVersion`n"
 
 Function Start-Services {
     if (($SolarWindsMSPPMEAgentStatus -eq 'Running') -and ($SolarWindsMSPCacheStatus -eq 'Running') -and ($SolarWindsMSPRpcServerStatus -eq 'Running')) {
-            Write-Host "All PME Services are in a Running State" -foregroundcolor Green
+            Write-Host "OK - All PME Services are in a Running State" -foregroundcolor Green
     }
     else {
         $RecheckStatus = $True
@@ -453,7 +464,7 @@ Function Start-Services {
 
 Function Set-AutomaticStartup {
     if (($SolarWinds.MSP.PME.Agent.PmeServiceStartup -eq 'Auto') -and ($SolarWinds.MSP.CacheServiceStartup -eq 'Auto') -and ($SolarWinds.MSP.RpcServerServiceStartup -eq 'Auto')) {
-            Write-Host "All PME Services are set to Automatic Startup" -foregroundcolor Green
+            Write-Host "OK - All PME Services are set to Automatic Startup" -foregroundcolor Green
     }
     else {
         $RecheckStatus = $True
@@ -512,12 +523,12 @@ if (($PMECacheVersion -eq '0.0') -or ($PMEAgentVersion -eq '0.0') -or ($PMERpcSe
 
 elseif (([version]$PMECacheVersion -ge $latestversion) -and ([version]$PMEAgentVersion -ge $latestversion) -and ([version]$PMERpcServerVersion -ge $latestversion)) {
     $OverallStatus = 0  
-    $StatusMessage = 'All PME Services are running the latest version'    
+    $StatusMessage = 'OK - All PME Services are running the latest version'    
     Write-Host "`n$StatusMessage" -foregroundcolor Green
 }
 elseif ($UpdatePending -eq "Yes") {
     $OverallStatus = 0  
-    $StatusMessage = 'OK: All PME Services are awaiting an update to the latest version'    
+    $StatusMessage = 'OK - All PME Services are awaiting an update to the latest version'    
     Write-Host "`n$StatusMessage" -foregroundcolor Green    
 }
 else {
@@ -645,3 +656,5 @@ Write-Host "Diagnostics Error: " -nonewline; Write-Host "$DiagnosticsErrorInt" -
 if ($OverallStatus -ne '0') {
     . Get-PMEAnalysis
 }
+
+
