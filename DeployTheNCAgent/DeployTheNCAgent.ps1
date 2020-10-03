@@ -60,7 +60,7 @@ Write-Host "Here is the registration token for CustomerID" $SpecifiedCustomerID"
 # Let's see if the Windows Agent installer has already been placed in the %TEMP% directory
 If (!(Test-Path -Path "C:\Temp\windowsAgentSetup.exe")) {
     Write-Host "The Agent installer was not found in C:\Temp. Attempting download from N-central."
-    $URI = "https://" + $serverHost + "/download/2020.1.0.202/winnt/N-central/WindowsAgentSetup.exe"
+    $URI = "https://" + $serverHost + "/download/current/winnt/N-central/WindowsAgentSetup.exe"
     Invoke-WebRequest -Uri $URI -OutFile 'C:\Temp\WindowsAgentSetup.exe'
 }
 Else {
