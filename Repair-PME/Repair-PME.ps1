@@ -1,7 +1,7 @@
 <#
    *******************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.8.3 (03/09/2020)
+    Version:         0.1.8.4 (14/10/2020)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -133,9 +133,12 @@
                                to continue if the xml files cannot be read i.e they are corrupt. The script will warn and
                                the reinstall should replace the files anyway. Thanks to Webster Massingham for reporting
                                and suggestion.
+                     0.1.8.4 - Fixed issue in 'Confirm-PMEUpdatePending' function where it was not correctly comparing 
+                               against older versions of PME causing the script to halt. [version] type casting now used.
+                               Thanks to Webster Massingham for reporting and suggestion.         
    *******************************************************************************************************************************
 #>
-$Version = '0.1.8.3 (03/09/2020)'
+$Version = '0.1.8.4 (14/10/2020)'
 
 # Settings
 # *******************************************************************************************************************************
@@ -604,8 +607,8 @@ Function Confirm-PMEUpdatePending {
         $DaysElapsed = (New-TimeSpan -Start $SelfHealingDate -End $Date).Days
         $DaysElapsedReversed = (New-TimeSpan -Start $PMEConfigurationDate -End $Date).Days
 
-        # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than $app.DisplayVersion
-        If (($Date -ge $SelfHealingDate) -and ($LatestVersion -ge $($app.DisplayVersion))) {
+        # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than or equal to $app.DisplayVersion
+        If (($Date -ge $SelfHealingDate) -and ([version]$LatestVersion -ge [version]$($app.DisplayVersion))) {
             Write-Output "($DaysElapsed) days has elapsed since a new version of PME has been released and is allowed to be installed, script will proceed"
         } Else {
             Write-EventLog @WriteEventLogWarningParams -Message "($DaysElapsedReversed) days has elapsed since a new version of PME has been released, PME will only install after ($RepairAfterUpdateDays) days, aborting.`nScript: Repair-PME.ps1"
