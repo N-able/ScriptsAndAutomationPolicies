@@ -31,6 +31,7 @@
                                 + Updated Validate-PME function to account for pending update, this will report a status of 0. Renamed status messages to make it eaiser to theshold in an AMP service.
                                 + Fixed minor issues with date-time parsing, valid PS/OS detection, URL Querying 
                         0.1.6.7 + Added Offine Scanning Detection
+                        0.1.6.8 + Updated Cache Size variable extraction from XML Config File (Thanks to Clayton Murphy for identifying this)
 
     Examples: 
     Diagnostics Input: False
@@ -162,7 +163,8 @@ Function Get-LatestPMEVersion {
             $PMECore = get-content "$env:programdata\SolarWinds MSP\PME\log\Core.log"
             $Latest = "Latest PME Version is"
             $LatestMatch = ($PMECore -match $latest)[-1]
-            $LatestVersion = $LatestMatch.Split(' ')[10].Trim()
+            #$LatestVersion = $LatestMatch.Split(' ')[10].Trim()
+            $LatestVersion = ($LatestMatch -Split(' '))[10]
         }
         Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
 }
@@ -605,7 +607,7 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
 
 Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
-    $CacheServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
+    [xml]$CacheServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
 
     If ($CacheServiceConfig -match '<CanBypassProxyCacheService>false</CanBypassProxyCacheService>') {
         Write-Host "WARNING: Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!" -ForegroundColor Yellow
@@ -617,9 +619,8 @@ Function Get-PMEConfigMisconfigurations {
         Write-Host "WARNING: Unable to determine if patch profile allows PME to fallback to external sources" -ForegroundColor Yellow   
     }
 
-    $CacheSize = ($CacheServiceConfig -match '<CacheSizeInMB>')[-1].Trim()
-    $CacheSize = $CacheSize.Trim('<CacheSizeInMB>,</CacheSizeInMB>')
-    If ($CacheServiceConfig -match '<CacheSizeInMB>10240</CacheSizeInMB>') {
+    $CacheSize = $CacheServiceConfig.Configuration.cachesizeinmb
+    If ($CacheSize -eq '10240') {
         Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Cyan
     }
     Else {
