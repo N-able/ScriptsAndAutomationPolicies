@@ -22,13 +22,13 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Performs certificates test to HTTPS destination required for PME (sis.n-able.com). Test will be bypassed if issues with HTTPS connectivity is detected.
 * Checks if N-Central Agent is installed, reports status and compatibility with PME.
 * Checks if PME is already installed and reports status.
+* Checks if PME has had a recent install. If a recent install (such as an auto-update) has occured within the configured period (2 days) then script will bypass the update pending check below to allow a force install. This can be changed, see settings below for further information.
 * Checks if PME has an update pending and reports status. If an update is pending within the configured period (2 days) then script will be aborted. This can be changed, see settings below for further information.
 * Invokes Solarwinds Diagnostics Tool and silently saves the log capture to **C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs**. These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
 * Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **RPCServerServiceSetup** **and _iu14D2N or similar.**
 * Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
 * Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
 * Checks existing PME config and informs of possible misconfigurations (cache size, fallback to external sources).
-* Checks existing PME config and applies fix for NCPM-4407 (System.OutOfMemoryException). This can be changed, see settings below for further information. Please note this will only apply if PME has already been installed.
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
 * Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'**.
 * Checks and reports all PME services are installed and running post-installation.
@@ -36,11 +36,11 @@ Repair-PME does the following with logic, error handling and event logging to op
 
 ### Settings
 
-Release 0.1.7.1 introduces two new user changeable settings which can be found at the beginning of the script in the settings section.
+As of release 0.1.9.0 there are two user changeable settings which can be found at the beginning of the script in the settings section.
 
 * **$RepairAfterUpdateDays** - Change this variable to number of days (must be a number!) to begin repair after new version of PME is released. Default is 2. Repair-PME will abort if an update is pending within this period.
 
-* **$NCPM4407** - Change this variable to "No" if you don't want this script to apply fix for NCPM-4407 (System.OutOfMemoryException). Default is Yes.
+* **$ForceRepairRecentInstallDays = "2"** - Change this variable to number of days (must be a number!) within a recent install to allow a force repair. This will bypass the update pending check. Default is 2. Ensure this is equal to $RepairAfterUpdateDays.
 
 ### Important
 
@@ -79,7 +79,7 @@ Yes, if you wish to do so. Please be aware your execution policy is set to allow
 
 ### Can I use Repair-PME for self-healing within N-Central?
 
-Yes, but if this is executed during the wait period (2 days by default) of when an update has been released but has yet to be installed the script will abort with an error as it is recommended this is done gracefully via the built-in update mechanism. It is recommended this is used as self-healing in conjunction with Prejay Shah's **[**'Patch Status - PME' AMP**](https://github.com/N-able/CustomMonitoring/tree/f007703830dab88eb7fd710a84c768d0ff119e70/N-Central%20PME%20Services)**.
+Yes, but if this is executed during the wait period (2 days by default) of when an update has been released but has yet to be installed the script will abort with an error as it is recommended this is done gracefully via the built-in update mechanism. The only exception to this is if an install has occured in the last 2 days. This is to account for situations where an auto-update does not complete succesfully. It is recommended this is used as self-healing in conjunction with Prejay Shah's **[**'Patch Status - PME' AMP**](https://github.com/N-able/CustomMonitoring/tree/f007703830dab88eb7fd710a84c768d0ff119e70/N-Central%20PME%20Services)**.
 
 ### Where can I get the latest version of Repair-PME?
 **https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1**
