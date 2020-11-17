@@ -40,7 +40,7 @@ As of release 0.1.9.0 there are two user changeable settings which can be found 
 
 * **$RepairAfterUpdateDays** - Change this variable to number of days (must be a number!) to begin repair after new version of PME is released. Default is 2. Repair-PME will abort if an update is pending within this period.
 
-* **$ForceRepairRecentInstallDays = "2"** - Change this variable to number of days (must be a number!) within a recent install to allow a force repair. This will bypass the update pending check. Default is 2. Ensure this is equal to $RepairAfterUpdateDays.
+* **$ForceRepairRecentInstallDays** - Change this variable to number of days (must be a number!) within a recent install to allow a force repair. This will bypass the update pending check. Default is 2. Ensure this is equal to $RepairAfterUpdateDays.
 
 ### Important
 
