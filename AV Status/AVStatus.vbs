@@ -1,11 +1,11 @@
   ' *************************************************************************************************************************************************
 ' Script: AVStatus.vbs
-' Version: 2.36.1
+' Version: 2.37
 ' Maintained by : Chris Reid @SolarWinds MSP
 ' Description: This script checks the status of the A/V software installed on 
 '              the machine, and writes data about the A/V software to the 
 '              AntiVirusProduct WMI Class in the root\SecurityCenter WMI namespace.
-' Date: October 17th, 2020
+' Date: Nov 6th, 2020
 ' Compatibility : It is tested on the current versions of Windows but it also should work on all desktop and server versions, from Windows XP to Windows Server 2019.
 ' Usage in N-Central : avstatus.vbs WRITE     OR     avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
 ' Usage in Windows Command Prompt : CSCRIPT avstatus.vbs WRITE     OR     CSCRIPT avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
@@ -59,7 +59,7 @@ Dim ProgramData, objFolder, objSubFolders, objSubFolder, oShell, oExec, sLine, s
 
 ' Specify values for some of the variables
 
-Version = "2.36"
+Version = "2.37"
 
 HKEY_LOCAL_MACHINE = &H80000002
 strComputer = "."
@@ -2368,7 +2368,7 @@ Sub ObtainKESServerData
         If CInt(Left(FormattedAVVersion,InStr(FormattedAVVersion,".")-1)) <= 10 Then
             FormattedPatternAge = DateValue(Mid(RawAVDate,7,4) & "/" & Mid(RawAVDate,4,2) & "/" & Left(RawAVDate,2) )
         Else
-            If (GetLocale() = 2057 OR GetLocale()=1031 OR GetLocale()=1043 OR GetLocale()=2067) Then  'If the device is in the UK, Germany, Netherlands, or Belgium then let's transpose the day and month, so that we get things right.  
+            If (GetLocale() = 2057 OR GetLocale()=1031 OR GetLocale()=1043 OR GetLocale()=2067) Then  'If the device is in the UK, Germany or the Netherlands, let's transpose the day and month, so that we get things right.  
                 FormattedPatternAge = DateValue(Mid(RawAVDate,1,2) & "/" & Mid(RawAVDate,4,2) & "/" & Mid(RawAVDate,7,4) )
             Else
                 FormattedPatternAge = DateValue(Mid(RawAVDate,4,2) & "/" & Mid(RawAVDate,1,2) & "/" & Right(RawAVDate,4) )
@@ -3756,14 +3756,17 @@ Sub ObtainSentinelOneData
 
     
     ' Now that we know where to go to find the SentinelCtl executable, let's run it and parse the output.
-    set oExec = WshShell.Exec(sNewestFolder & "\SentinelCtl.exe status")
-    sLine = oExec.StdOut.ReadLine
+    Set oExec = WshShell.Exec(sNewestFolder & "\SentinelCtl.exe status")
+    OnAccessScanningEnabled = FALSE
+    Do 'Because the status command outputs many lines of text, we need to use a Do/Loop command to grab all of it
+        sLine = oExec.StdOut.ReadLine()
+        If InStr(sLine, "SentinelMonitor is loaded") <> 0 Then
+            OnAccessScanningEnabled = TRUE
+            Exit Do
+        End If
+    Loop While Not oExec.Stdout.atEndOfStream  
                 
-    If InStr(sLine, "SentinelMonitor is loaded") <> 0 Then
-        OnAccessScanningEnabled = TRUE
-    Else
-        OnAccessScanningEnabled = FALSE
-    End If
+
     
     output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled 
     

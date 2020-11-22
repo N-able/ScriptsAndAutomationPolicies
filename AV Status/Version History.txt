@@ -1,5 +1,6 @@
 Version History
 
+2.37  - Addressed an issue where the script was erroneously reporting that SentinelOne "Virus Scanning Enabled" was disabled.
 2.36  - Added support for Bitdefender Endpoint Security Tools and Carbon Black Cloud. Fixed an issue where the script was truncating the first number of the SentinelOne version string.
 2.35  - Refined how the script detect S1, so that it can now distinguish between an S1 install that is managed through SolarWinds, vs an install that is not. Addressed an issue where the script wasn't properly detecting whether or not Panda Adaptive Defense was up-to-date.
 2.34  - Updated the script to properly handle date comparisons when devices are running Kaspersky Endpoint Security and are in Belgium. Tweaked the script to detect "SCEP Managed Defender" separately from Microsoft SCEP. The script now reports "SolarWinds EDR" when S1 is found, instead of calling it "SentinelOne". Addressed a bug where the script wasn't reporting on the version of SolarWinds EDR that was installed on the device. Added support for Trend Micro Apex One Security.
