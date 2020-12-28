@@ -51,6 +51,7 @@ Dim strTrendVerLen, InstalledAV1, serviceactive
 Dim strAvastRegPath32, strAvastInstallPath, strAvastRegPath64
 Dim strViprebusinessAgt, strViprebusiness64Agt , strVipreBusinessAgtLoc, strViprebusinessAgt1, strVIPREBusinessOnlineKeyPath
 Dim strMalwareBytesRegPath64, SCEPInstalled, FoundGUID, StatusCode, StatusText
+Dim strCylancestatuspath
 Dim sMonth, sDay, sYear, sHour, sMinutes, sSeconds, strTMMSARegPath, recentFile, NamespacetoCheck, strTMDSARegPath, fileSystem, folder, file, newestfile, ProgramFiles64, stravg2016defpath, stravg2016regpath, colServices, objService
 Dim strNormanregpath32, strNormanregpath64, strNormanrootpath, boolNormanversion9, strNormandefpath, strKasperskyStandAlonePath, LastUpdateDate, AVGBusSecDataFolder, arrIniFileLines, ProviderRealTimeScanningEnabled, UserRealTimeScanningDisabled
 Dim objFileToRead, objFileToWrite, node, UpToDateState, strFortiClientPath, FortiClientInstallPath, objApp, strKasperskyKESServerAVVersionPath, strSophosVirtualAVKeyPath, RawProtectionStatus, strPandaAdaptiveDefencePath64, strPandaAdaptiveDefencePath32
@@ -507,6 +508,7 @@ Sub DetectInstalledAV
     strFortiClientPath = "SOFTWARE\Fortinet\FortiClient\FA_FMON"
     strPandaAdaptiveDefencePath64 = "Software\wow6432node\Panda Security\Nano Av\Setup"
     strPandaAdaptiveDefencePath32 = "Software\Panda Security\Nano Av\Setup"
+    strCylancestatuspath = ProgramData & "\Cylance\Status"
 
     
 
@@ -895,10 +897,26 @@ Sub DetectInstalledAV
 	    Else
 		    OnAccessScanningEnabled = FALSE
 	   End If 
+
      
      output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled 
      ProductUpToDate = "TRUE"
-     FormattedAVVersion = "Unknown"  
+     FormattedAVVersion = "Unknown"
+     Set objFSO = CreateObject("Scripting.FileSystemObject") 
+     If objFSO.FolderExists(strCylancestatuspath) Then
+      If objFSO.FileExists(strCylancestatuspath & "\Status.json") Then
+       Set objFile = objFSO.OpenTextFile(strCylancestatuspath & "\Status.json", 1) 
+       Do Until objFile.AtEndOfStream 
+        strLine = objFile.ReadLine 
+        If InStr(strLine, "version") Then 
+          FormattedAVVersion= left(right(strLine,13),11)
+          MsgBox FormattedAVVersion
+        End If
+        Loop 
+    
+        objFile.Close
+      End If
+     End If  
      
     '--- Check for AVG Business Security ---                                    
     ElseIf objFSO.FileExists(ProgramData & "\AVG\Persistent Data\Antivirus\Logs\update.log") Then
