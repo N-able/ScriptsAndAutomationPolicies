@@ -910,7 +910,6 @@ Sub DetectInstalledAV
         strLine = objFile.ReadLine 
         If InStr(strLine, "version") Then 
           FormattedAVVersion= left(right(strLine,13),11)
-          MsgBox FormattedAVVersion
         End If
         Loop 
     
