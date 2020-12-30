@@ -1244,7 +1244,7 @@ Sub DetectInstalledAV
        Set json = New VbsJson
        str = objFSO.OpenTextFile(strCylancestatuspath & "\Status.json").ReadAll
        Set o = json.Decode(str)
-       FormattedAVVersion= o("ProductInfo")("version")
+       FormattedAVVersion = o("ProductInfo")("version")
       End If
      End If 
      
