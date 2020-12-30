@@ -1247,6 +1247,7 @@ Sub DetectInstalledAV
        FormattedAVVersion = o("ProductInfo")("version")
       End If
      End If 
+     output.writeline "- The installed version of Cylance PROTECT is: " & FormattedAVVersion
      
     '--- Check for AVG Business Security ---                                    
     ElseIf objFSO.FileExists(ProgramData & "\AVG\Persistent Data\Antivirus\Logs\update.log") Then
