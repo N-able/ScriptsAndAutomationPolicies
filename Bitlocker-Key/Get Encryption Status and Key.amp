@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="9f03b448-d761-4d52-8b18-85d56c3ff96d" Name="Get Encryption Status and Key" Description="QSBzbWFsbCBzY3JpcHQgdGhhdCB3aWxsIGdldCB0aGUgZW5jcnVwdGlvbiBzdGF0dXMgb24gdGhlIGRldmljZSBhbmQgdGhlbiBzdG9yZSBpdCBpbiBhIGN1c3RvbSBkZXZpY2UgcHJvcGVydHk=" Version="2.10.0.19" RemoteCategory="0" ExecutionType="Local" MinimumPSVersionRequired="0.0.0">
+  <Object ID="{35dd6937-9385-451f-8953-05d4e678bcf8}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;OutputParameters&gt;&lt;Parameter ParameterName=&quot;encryption&quot; Label=&quot;Encryption Status&quot; ParameterType=&quot;string&quot; Value=&quot;Run PowerShell Script.Encryption Status&quot; /&gt;&lt;/OutputParameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>1069c2a6-1b49-4900-9fb6-f51ef4ca1add.encryption</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>encryption</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Diagnostics OriginalVersion="2.16.1.10" />
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>490,571</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy Builder" sap:VirtualizedContainerService.HintSize="490,571" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RunPowerShellScript AssemblyName="PolicyExecutionEngine, Version=2.16.1.10, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="454,348" Moniker="1069c2a6-1b49-4900-9fb6-f51ef4ca1add" OutPut_64="[RunPowerShellScript_OutPut_64]" Result="[RunPowerShellScript_Result]" ResultString="[RunPowerShellScript_ResultString]" Results_x64="[RunPowerShellScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" genArgEvent="ac59cf1a-faa7-446e-bf2e-5d68c4111dd2" m_bTextLinkChange="False" script="RwBlAHQALQBXAG0AaQBPAGIAagBlAGMAdAAgAC0ATgBhAG0AZQBzAHAAYQBjAGUAIAAiAHIAbwBvAHQAXABDAEkATQBWADIAXABTAGUAYwB1AHIAaQB0AHkAXABNAGkAYwByAG8AcwBvAGYAdABWAG8AbAB1AG0AZQBFAG4AYwByAHkAcAB0AGkAbwBuACIAIAAtAEMAbABhAHMAcwAgAFcAaQBuADMAMgBfAEUAbgBjAHIAeQBwAHQAYQBiAGwAZQBWAG8AbAB1AG0AZQAgAHwADQAKAEYAbwByAEUAYQBjAGgALQBPAGIAagBlAGMAdAAgAHsADQAKACAAIAAkAEkARAAgAD0AIAAkAF8ALgBEAHIAaQB2AGUATABlAHQAdABlAHIAIAA7AA0ACgAgACAAUwB3AGkAdABjAGgAIAAoACQAXwAuAEcAZQB0AFAAcgBvAHQAZQBjAHQAaQBvAG4AUwB0AGEAdAB1AHMAKAApAC4AUAByAG8AdABlAGMAdABpAG8AbgBTAHQAYQB0AHUAcwApACAAewANAAoAIAAgACAAIAAwACAAewAkAFMAdABhAHQAZQAgAD0AIAAiAFAAUgBPAFQARQBDAFQASQBPAE4AIABPAEYARgAiAH0ADQAKACAAIAAgACAAMQAgAHsAJABTAHQAYQB0AGUAIAA9ACAAIgBQAFIATwBUAEUAQwBUAEkATwBOACAATwBOACIAfQANAAoAIAAgACAAIAAyACAAewAkAFMAdABhAHQAZQAgAD0AIAAiAFAAUgBPAFQARQBDAFQASQBPAE4AIABVAE4ASwBOAE8AVwBOACIAfQANAAoAIAAgAH0ADQAKACAAIAAkAFIAZQBjAG8AdgBlAHIAeQBLAGUAeQAgAD0AIAAoAGcAZQB0AC0AYgBpAHQAbABvAGMAawBlAHIAdgBvAGwAdQBtAGUAIAAtAE0AbwB1AG4AdABQAG8AaQBuAHQAIAAkAF8ALgBEAHIAaQB2AGUAbABlAHQAdABlAHIAKQAuAEsAZQB5AFAAcgBvAHQAZQBjAHQAbwByAC4AUgBlAGMAbwB2AGUAcgB5AFAAYQBzAHMAdwBvAHIAZAANAAoAIAAgAEkAZgAgACgAJABJAEQAIAAtAGUAcQAgACIAQwA6ACIAKQANAAoAIAAgAHsADQAKACAAIAAgACAAaQBmACgAJABSAGUAYwBvAHYAZQByAHkASwBlAHkAIAAtAG4AZQAgACQAbgB1AGwAbAApAHsADQAKACAAIAAgACAAIAAgACAAIAAkAEMASwBlAHkAIAA9ACAAIgAkAEkARAAgAC0AIAAkAFMAdABhAHQAZQAgAC0AIAAkAFIAZQBjAG8AdgBlAHIAeQBLAGUAeQAiAA0ACgAgACAAIAAgAH0AZQBsAHMAZQB7AA0ACgAgACAAIAAgACAAIAAgACAAJABDAEsAZQB5ACAAPQAgACIAJABJAEQAIAAtACAAJABTAHQAYQB0AGUAIgANAAoAIAAgACAAIAB9AA0ACgAgACAAfQANAAoAIAAgAEkAZgAgACgAJABJAEQAIAAtAGUAcQAgACIARAA6ACIAKQB7AA0ACgAgACAAIAAgAGkAZgAoACQAUgBlAGMAbwB2AGUAcgB5AEsAZQB5ACAALQBuAGUAIAAkAG4AdQBsAGwAKQB7AA0ACgAgACAAIAAgACAAIAAgACAAJABEAEsAZQB5ACAAPQAgACIARAAgAC0AIAAkAFMAdABhAHQAZQAgAC0AIAAkAFIAZQBjAG8AdgBlAHIAeQBLAGUAeQAiAA0ACgAgACAAIAAgAH0ADQAKACAAIAAgACAAZQBsAHMAZQB7AA0ACgAgACAAIAAgACAAIAAgACAAJABEAEsAZQB5ACAAPQAgACIARAAgAC0AIAAkAFMAdABhAHQAZQAiAA0ACgAgACAAIAAgAH0ADQAKACAAIAAgAH0ADQAKAH0ADQAKACMAbwB1AHQAcAB1AHQADQAKAGkAZgAoACQARABrAGUAeQAuAEwAZQBuAGcAdABoACAAPgAgADAAKQB7AA0ACgAgACAAIAAgACQAZQBuAGMAcgB5AHAAdABpAG8AbgAgAD0AIAAkAEMASwBlAHkAIAArACAAIgB8ACIAIAArACAAJABEAGsAZQB5AA0ACgB9AGUAbABzAGUAewANAAoAIAAgACAAIAAkAGUAbgBjAHIAeQBwAHQAaQBvAG4AIAA9ACAAJABDAEsAZQB5AA0ACgB9AA==">
+          <p:RunPowerShellScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <p:OutArg x:Key="encryption" ArgType="string" DisplayName="Encryption Status" Name="encryption">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunPowerShellScript_encryption]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunPowerShellScript.OutArgs>
+        </p:RunPowerShellScript>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_encryption" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
