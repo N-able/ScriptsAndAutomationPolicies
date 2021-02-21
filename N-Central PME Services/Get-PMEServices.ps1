@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.6.7 (04th September 2020)
+    Version: 0.1.6.11 (21st February 2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -32,7 +32,9 @@
                                 + Fixed minor issues with date-time parsing, valid PS/OS detection, URL Querying 
                         0.1.6.7 + Added Offine Scanning Detection
                         0.1.6.8 + Updated Cache Size variable extraction from XML Config File (Thanks to Clayton Murphy for identifying this)
-
+                        0.1.6.9 + Upated Cache Fallback detection from XML file as I found that some devices semeed to have corrupted XML config files.
+                        0.1.6.10 + Updated Profile Options to Default/Insiders as it seems that SW have retired the alpha moniker.
+                        0.1.6.11 + Improved Logging for when PME installation cannot be found.
     Examples: 
     Diagnostics Input: False
     Runs Normally and only engages diagnostcs for connectibity testing if PME is not up to date or missing a service.
@@ -53,7 +55,7 @@ Param (
 $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
-$Version = '0.1.6.7 (04th September 2020)'
+$Version = '0.1.6.11 (21st February 2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -149,14 +151,14 @@ Function Get-PMEConfigurationDetails {
 
 Function Get-LatestPMEVersion {
  
-    if (!($pmeprofile -eq 'alpha')) {
+    if (!($pmeprofile -eq 'insiders')) {
         . Get-PMESetupDetails
         . Get-PMEConfigurationDetails
         . Confirm-PMEInstalled
         . Confirm-PMEUpdatePending 
     }
     else {
-            Write-Host "PME Alpha Stream Detected" -ForegroundColor Yellow
+            Write-Host "PME Insiders Stream Detected" -ForegroundColor Yellow
             #$PMEWrapper = get-content "${Env:ProgramFiles(x86)}\N-able Technologies\Windows Agent\log\PMEWrapper.log"
             #$Latest = "Pme.GetLatestVersion result = LatestVersion"
             #$LatestVersion = $LatestMatch.Split(' ')[9].TrimEnd(',')
@@ -545,11 +547,18 @@ Write-Host "Status: $OverallStatus"
 Function Get-PMEAnalysis {
 if (test-path "$NCentralLog\PME_Install_*.log") {
     $pmeinstalllog = ((get-childitem "$NCentralLog\PME_Install_*.log" | where-object {$_.name -like "*[0-9].log"})[-1]).VersionInfo.FileName
-    $pmeinstalllogcontent = get-content $pmeinstalllog
-    [datetime]$pmeinstalllogdate = ($($pmeinstalllogcontent.SubString(0,10)[0] | out-string))
-    $dateexecute = get-date
-    $installtimedifference = ($dateexecute - $pmeinstalllogdate).Days
-    $PMEInstallTimeData = "The last PME install was carried out during a detection $installtimedifference Days ago."
+    [datetime]$pmeinstalllogdate = (Get-Content -Path $pmeinstalllog | Select-Object -First 1).substring(0,10)
+
+    #$pmeinstalllogcontent = get-content $pmeinstalllog
+
+    if ($pmeinstalllogdate -ne $null) {
+        $dateexecute = get-date
+        $installtimedifference = ($dateexecute - $pmeinstalllogdate).Days
+        $PMEInstallTimeData = "The last PME install was carried out during a detection $installtimedifference Days ago."
+    }
+    else {
+        $PMEInstallTimeData = "Error: The last PME install date was not found in the PME install log."
+    }
 
     $PMEQueryLogContent = get-content "C:\ProgramData\SolarWinds MSP\PME\log\QueryManager.log"
     $PMEScanDateFound = $PMEQueryLogContent -match '===============================>>>>> Start scan <<<<<========================================'
@@ -594,12 +603,12 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
         get-content $pmeinstalllog -last $relevantlines
         }
         else {
-            $pmeinstalllog = 'There was no successful upgrades detected'
+            $pmeinstalllog = 'Error: There was no successful upgrades detected'
             Write-Host $pmeinstalllog -foregroundcolor Red        
         }
     }
     else {
-        $pmeinstalllog = 'There was no successful upgrades detected'
+        $pmeinstalllog = 'Error: There was no successful upgrades detected'
         Write-Host $pmeinstalllog -foregroundcolor Red    
     }
 
@@ -609,10 +618,10 @@ Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
     [xml]$CacheServiceConfig = Get-Content -Path "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
 
-    If ($CacheServiceConfig -match '<CanBypassProxyCacheService>false</CanBypassProxyCacheService>') {
+    If ($CacheServiceConfig.Configuration.CanBypassProxyCacheService -eq "False") {
         Write-Host "WARNING: Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!" -ForegroundColor Yellow
     }
-    ElseIf ($CacheServiceConfig -match '<CanBypassProxyCacheService>true</CanBypassProxyCacheService>') {
+    ElseIf ($CacheServiceConfig.Configuration.CanBypassProxyCacheService -eq "True") {
         Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Cyan
     }
     Else {
@@ -657,5 +666,3 @@ Write-Host "Diagnostics Error: " -nonewline; Write-Host "$DiagnosticsErrorInt" -
 if ($OverallStatus -ne '0') {
     . Get-PMEAnalysis
 }
-
-
