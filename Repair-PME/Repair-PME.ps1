@@ -1,7 +1,7 @@
 <#
    *********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.1.9.0 (13/11/2020)
+    Version:         0.2.0.0 (03/03/2021)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -145,10 +145,21 @@
                              - Updated 'Restore-Date' function to account for situations where install dates are in YYYYMd format.
                                Thanks to David Brooks for reporting this issue.
                              - Minor output adjustments for readability.
-                             - Depreciated 'Set-PMEConfig' function and removed $NCPM4407 variable as fix no longer required.           
+                             - Depreciated 'Set-PMEConfig' function and removed $NCPM4407 variable as fix no longer required.
+                     0.2.0.0 - Updated 'Get-PMESetupDetails' function to fix critical issue where the PME release date was incorrect.
+                               It will now obtain this by getting the LastModified time of the PMESetup_details.xml instead.
+                             - Removed 'Get-PMEConfigurationDetails' function, code merged into 'Get-PMESetupDetails' function.
+                             - Updated 'Confirm-PMEUpdatePending' function to support changes in 'Get-PMESetupDetails' function.
+                             - New function 'Get-RepairPMEUpdate' to perform an update check of the Repair-PME script. By default
+                               this is turned on and is controlled via the $UpdateCheck variable in the settings section. If you
+                               are using self healing/scripting from within N-Central, notifications should be setup to notify on
+                               'Failure' and 'Send task output file in to email recipients' to alert if it is out of date. 
+                               Connectivity to https://raw.githubusercontent.com is required for this feature.
+                             - Renamed 'Get-PMEConfig' function to 'Get-PMEConfigMisconfigurations'.         
    *********************************************************************************************************************************
 #>
-$Version = '0.1.9.0 (17/11/2020)'
+$Version = '0.2.0.0'
+$VersionDate = '(03/03/2021)'
 
 # Settings
 # ********************************************************************************************************************************
@@ -159,9 +170,12 @@ $RepairAfterUpdateDays = "2"
 # Change this variable to number of days (must be a number!) within a recent install to allow a force repair. 
 # This will bypass the update pending check. Default is 2. Ensure this is equal to $RepairAfterUpdateDays.
 $ForceRepairRecentInstallDays = "2"
+
+# Change this variable to turn off/on update check of the Repair-PME script. Default is Yes. To turn this off set it to No.
+$UpdateCheck = "Yes"
 # ********************************************************************************************************************************
 
-Write-Host "Repair-PME $Version`n" -ForegroundColor Yellow
+Write-Host "Repair-PME $Version $VersionDate`n" -ForegroundColor Yellow
 
 $WriteEventLogInformationParams = @{
     LogName   = "Application"
@@ -256,6 +270,34 @@ Function Set-CryptoProtocol {
     $tls12 = [Enum]::ToObject([Net.SecurityProtocolType], 3072)
     [Net.ServicePointManager]::SecurityProtocol = $tls12
 }
+
+Function Get-RepairPMEUpdate {
+    If ($UpdateCheck -eq "Yes") {
+        Write-Host "Checking if update is available for Repair-PME script..." -ForegroundColor Cyan    
+        $RepairPMEVersionURI = "http://raw.githubusercontent.com/N-able/ScriptsAndAutomationPolicies/master/Repair-PME/LatestVersion.xml"
+        Try { 
+            $Request = $null; $LatestPMEVersion = $null           
+            [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$RepairPMEVersionURI") -split '<\?xml.*\?>')
+            $LatestPMEVersion  = $request.LatestVersion.Version
+            Write-Output "Current Repair-PME Version: $Version `nLatest Repair-PME Version: $LatestPMEVersion"
+            If ([version]$Version -ge [version]$LatestPMEVersion) {
+                Write-Host "OK: Repair-PME is up to date" -ForegroundColor Green
+            }
+            ElseIf ([version]$Version -lt [version]$LatestPMEVersion) {
+                Write-EventLog @WriteEventLogWarningParams -Message "WARNING: Repair-PME is not up to date! please download the latest version from https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1`nScript: Repair-PME.ps1"
+                Write-Error "Repair-PME is not up to date! please download the latest version from https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1"
+            }
+            Else {
+                Write-EventLog @WriteEventLogWarningParams -Message "ERROR: Unable to detect if Repair-PME is up to date!`nScript: Repair-PME.ps1"
+                Write-Error "Unable to detect if Repair-PME is up to date!"
+            }
+        }
+        Catch [System.Net.WebException] {
+            Write-EventLog @WriteEventLogWarningParams -Message "ERROR: Unable to fetch version file to check if Repair-PME is up to date, possibly due to limited or no connectivity to https://raw.githubusercontent.com`nScript: Repair-PME.ps1"
+            Write-Error "Unable to fetch version file to check if Repair-PME is up to date, possibly due to limited or no connectivity to https://raw.githubusercontent.com"
+        }
+    }
+} 
 
 Function Test-Connectivity {
     # Performs connectivity tests to destinations required for PME
@@ -529,7 +571,7 @@ Function Confirm-PMEInstalled {
                         }
                         $IsPMEAgentInstalled = "Yes"
                         Write-Host "PME Agent Already Installed: Yes" -ForegroundColor Green
-                        Write-Output "Installed PME Agent Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME Agent Version: $PMEAgentAppDisplayVersion"
                         Write-Output "Installed PME Agent Date: $InstallDateFormatted"
                     }
                 }
@@ -562,7 +604,7 @@ Function Confirm-PMEInstalled {
                         }
                         $IsPMEAgentInstalled = "Yes"
                         Write-Host "PME Agent Already Installed: Yes" -ForegroundColor Green
-                        Write-Output "Installed PME Agent Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME Agent Version: $PMEAgentAppDisplayVersion"
                         Write-Output "Installed PME Agent Date: $InstallDateFormatted"
                     }
                 }
@@ -587,6 +629,7 @@ Function Confirm-PMEInstalled {
             If ($null -ne $installed) {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "Solarwinds MSP RPC Server") {
+                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -595,7 +638,7 @@ Function Confirm-PMEInstalled {
                         }
                         $IsPMERPCServerServiceInstalled = "Yes"
                         Write-Host "PME RPC Server Service Already Installed: Yes" -ForegroundColor Green
-                        Write-Output "Installed PME RPC Server Service Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME RPC Server Service Version: $PMERPCServerAppDisplayVersion"
                         Write-Output "Installed PME RPC Server Service Date: $InstallDateFormatted"
                     }
                 }
@@ -619,6 +662,7 @@ Function Confirm-PMEInstalled {
             If ($null -ne $installed) {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "SolarWinds MSP RPC Server") {
+                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -627,7 +671,7 @@ Function Confirm-PMEInstalled {
                         }
                         $IsPMERPCServerServiceInstalled = "Yes"
                         Write-Host "PME RPC Server Service Already Installed: Yes" -ForegroundColor Green
-                        Write-Output "Installed PME RPC Server Service Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME RPC Server Service Version: $PMERPCServerAppDisplayVersion"
                         Write-Output "Installed PME RPC Server Service Date: $InstallDateFormatted"
                     }
                 }
@@ -652,6 +696,7 @@ Function Confirm-PMEInstalled {
             If ($null -ne $installed) {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "SolarWinds MSP Cache Service") {
+                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion) 
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -660,7 +705,7 @@ Function Confirm-PMEInstalled {
                         }
                         $IsPMECacheServiceInstalled = "Yes"
                         Write-Host "PME Cache Service Already Installed: Yes" -ForegroundColor Green
-                        Write-Output "Installed PME Cache Service Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME Cache Service Version: $PMECacheServiceAppDisplayVersion"
                         Write-Output "Installed PME Cache Service Date: $InstallDateFormatted"
                     }
                 }
@@ -684,6 +729,7 @@ Function Confirm-PMEInstalled {
             If ($null -ne $installed) {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "SolarWinds MSP Cache Service") {
+                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion)
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -692,7 +738,7 @@ Function Confirm-PMEInstalled {
                         }
                         $IsPMECacheServiceInstalled = "Yes"
                         Write-Host "PME Cache Service Already Installed: Yes" -ForegroundColor Green
-                        Write-Output "Installed PME Cache Service Version: $($app.DisplayVersion)"
+                        Write-Output "Installed PME Cache Service Version: $PMECacheServiceAppDisplayVersion"
                         Write-Output "Installed PME Cache Service Date: $InstallDateFormatted"
                     }
                 }
@@ -711,11 +757,13 @@ Function Get-PMESetupDetails {
     } Else {
         $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
     }
+
     Try {
         $request = $null
         [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
         $PMEDetails = $request.ComponentDetails
         $LatestVersion = $request.ComponentDetails.Version
+        
     } Catch [System.Net.WebException] {
         Write-EventLog @WriteEventLogErrorParams -Message "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
         Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
@@ -723,35 +771,32 @@ Function Get-PMESetupDetails {
         Write-EventLog @WriteEventLogErrorParams -Message "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
         Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
     } Catch {
-        Write-EventLog @WriteEventLogErrorParams -Message "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error occurred attempting to obtain PMESetup details, aborting. Error: $($_.Exception.Message)"
+        Write-EventLog @WriteEventLogErrorParams -Message "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+        Throw "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
     }
-}
 
-Function Get-PMEConfigurationDetails {
-    # Declare static URI of PmeConfiguration_details.xml
-    $Fallback
-    If ($Fallback -eq "Yes") {
-        $PMEConfigurationDetailsURI = "http://sis.n-able.com/ComponentData/RMM/all/PmeConfiguration_details.xml"
-    } Else {
-        $PMEConfigurationDetailsURI = "https://sis.n-able.com/ComponentData/RMM/all/PmeConfiguration_details.xml"
-    }
     Try {
-        $request = $null
-        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMEConfigurationDetailsURI") -split '<\?xml.*\?>')[-1]
-        $PMEConfigurationDetails = $request.ComponentDetails
-        $PMEConfigurationDate = $PMEConfigurationDetails.Version
-        $PMEConfigurationDate = $PMEConfigurationDate.Substring(0, $PMEConfigurationDate.Length - 3)
-        Write-Host "Checking Latest PME version..." -ForegroundColor Cyan
-        Write-Output "Latest PME Version: $LatestVersion"
-        Write-Output "Latest PME Release Date: $PMEConfigurationDate"
+        $webRequest = $null; $webResponse = $null
+        $webRequest = [System.Net.WebRequest]::Create($PMESetup_detailsURI)
+        $webRequest.Method = "HEAD"
+        $WebRequest.AllowAutoRedirect = $true
+        $WebRequest.KeepAlive = $false
+        $WebRequest.Timeout = 10000
+        $webResponse = $webRequest.GetResponse()
+        $remoteLastModified = ($webResponse.LastModified) -as [DateTime]
+        $PMEReleaseDate = $remoteLastModified | Get-Date -Format "yyyy.MM.dd"
+        $webResponse.Close()
     } Catch [System.Net.WebException] {
-        Write-Output "Error fetching PMESetup_Details.xml check your source URL!"
-        Throw
-    } Catch [System.Management.Automation.MetadataException] {
-        Write-Output "Error casting to XML; could not parse PMESetup_details.xml"
-        Throw
+        Write-EventLog @WriteEventLogErrorParams -Message "Error fetching header for PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+        Throw "Error fetching header for PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
+    } Catch {
+        Write-EventLog @WriteEventLogErrorParams -Message "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+        Throw "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message)"
     }
+
+    Write-Host "Checking Latest PME version..." -ForegroundColor Cyan
+    Write-Output "Latest PME Version: $LatestVersion"
+    Write-Output "Latest PME Release Date: $PMEReleaseDate"    
 }
 
 Function Confirm-PMERecentInstall {
@@ -780,13 +825,12 @@ Function Confirm-PMEUpdatePending {
     # Check if PME is awaiting update for new release but has not updated yet (normally within 48 hours)
     If (($IsPMEAgentInstalled -eq "Yes") -and ($BypassUpdatePendingCheck -eq "No")) {
         $Date = Get-Date -Format 'yyyy.MM.dd'
-        Write-Output "Current Date: $Date"
-        $ConvertPMEConfigurationDate = Get-Date "$PMEConfigurationDate"
-        $SelfHealingDate = $ConvertPMEConfigurationDate.AddDays($RepairAfterUpdateDays).ToString('yyyy.MM.dd')
+        $ConvertPMEReleaseDate = Get-Date "$PMEReleaseDate"
+        $SelfHealingDate = $ConvertPMEReleaseDate.AddDays($RepairAfterUpdateDays).ToString('yyyy.MM.dd')
         Write-Host "Checking if PME update pending..." -ForegroundColor Cyan
-        Write-Host "INFO: Repair-PME will proceed ($RepairAfterUpdateDays) days after a new version of PME has been released" -ForegroundColor Yellow -BackgroundColor Black
+        Write-Host "INFO: Script will proceed ($RepairAfterUpdateDays) days after a new version of PME has been released" -ForegroundColor Yellow -BackgroundColor Black
         $DaysElapsed = (New-TimeSpan -Start $SelfHealingDate -End $Date).Days
-        $DaysElapsedReversed = (New-TimeSpan -Start $PMEConfigurationDate -End $Date).Days
+        $DaysElapsedReversed = (New-TimeSpan -Start $ConvertPMEReleaseDate -End $Date).Days
 
         # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than or equal to $app.DisplayVersion
         If (($Date -ge $SelfHealingDate) -and ([version]$LatestVersion -ge [version]$PMEAgentAppDisplayVersion)) {
@@ -1006,7 +1050,7 @@ Function Get-PMESetup {
     }
 }
 
-Function Read-PMEConfig {
+Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
     Write-Host "Checking PME Configuration..." -ForegroundColor Cyan
     Try {    
@@ -1181,19 +1225,19 @@ Function Set-End {
 . Get-OSArch
 . Get-PSVersion
 . Set-CryptoProtocol
+. Get-RepairPMEUpdate
 . Test-Connectivity
 . Test-SWCertificate
 . Get-NCAgentVersion
 . Confirm-PMEInstalled
 . Get-PMESetupDetails
-. Get-PMEConfigurationDetails
 . Confirm-PMERecentInstall
 . Confirm-PMEUpdatePending
 . Invoke-SolarwindsDiagnostics
 . Stop-PMESetup
 . Stop-PMEServices
 . Clear-PME
-. Read-PMEConfig
+. Get-PMEConfigMisconfigurations
 #. Set-PMEConfig
 . Install-PME
 . Confirm-PMEServices
