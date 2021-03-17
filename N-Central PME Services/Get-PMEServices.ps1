@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.1.7.1 (10/03/2021)
+    Version: 0.2.0.0 (17/03/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -45,7 +45,8 @@
                                 + [Ashley How] Fixed some minor spacing issues in output. Updated script title formatting so it is more prominent. 
                                 + [Ashley How] Changed date formating to dd/MM/yyyy for $Version variable and release notes.
                                 + [Ashley How] Updated Get-PMEProfile function for more consistent formatting. Offline scanning enablement will no longer report if PME is not installed.         
-                        0.1.7.1 + UPdated PME Insider version detection string, Have changed 64bit OS detection method          
+                        0.1.7.1 + Updated PME Insider version detection string, Have changed 64bit OS detection method       
+                        0.2.0.0 + Updated for Unexpected PME 2.0  release  
                         Examples: 
     Diagnostics Input: False
     Runs Normally and only engages diagnostcs for connectibity testing if PME is not up to date or missing a service.
@@ -67,7 +68,7 @@ $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
 #ddMMyy
-$Version = '0.1.7.1 (10/03/2021)'
+$Version = '0.2.0.0 (17/03/2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -76,6 +77,9 @@ $pmeprofile = $null
 $diagnosticserrorint = $null
 $pmeinstalllogcontent = $null
 $EventLogCompanyName ="Doherty Associates"
+$PMEExpectationSetting = $False
+$PME20LatestVersionPlaceholder = "2.0.0.4045" # Agent Version is 2.0.0.4064 but this means I don't have to manually set multiple versions
+$PME20ReleaseDatePlaceholder = "2021.03.17"
 
 Write-Host "`nGet-PMEServices $Version`n" -ForegroundColor Cyan
 
@@ -91,9 +95,9 @@ Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
     if (($osname -match "XP") -or ($osname -match "Vista")  -or ($osname -match "10 Home") -or ($osname -match "2003") -or (($osname -match "2008") -and ($osname -notmatch "2008 R2")) ) {
         
         $Continue = $False
-        $SolarWindsMSPCacheStatus = "N/A - OS does not support N-Central PME"
-        $SolarWindsMSPPMEAgentStatus = "N/A - OS does not support N-Central PME"
-        $SolarWindsMSPRpcServerStatus = "N/A - OS does not support N-Central PME"
+        $PMECacheStatus = "N/A - OS does not support N-Central PME"
+        $PMEAgentStatus = "N/A - OS does not support N-Central PME"
+        $PMERpcServerStatus = "N/A - OS does not support N-Central PME"
         $PMECacheVersion = '0.0'
         $PMEAgentVersion = '0.0'
         $PMERpcServerVersion = '0.0'
@@ -130,62 +134,128 @@ Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
         }  
 }  
 
+Function Set-PMEExpectations {
+    if (test-path $env:programdata\MspPlatform\PME\log) {
+        Write-Host "Warning: Unnanounced PME 2.0 Detected.`nArtificially Setting Version and Release Date Expectation" -ForegroundColor Yellow
+        $PMEExpectationSetting = $True
 
+        Write-Host "PME Latest Version: $PME20LatestVersionPlaceholder" -ForegroundColor Yellow
+        $PMEProgramDataFolder = "$env:programdata\MspPlatform\PME"
+        $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\MspPlatform"
+        $PMEAgentExe = "PME\PME.Agent.exe"  
+        $PMECacheExe = "FileCacheServiceAgent\FileCacheServiceAgent.exe"
+        $PMERPCExe = "RequestHandlerAgent\RequestHandlerAgent.exe"
+        $PMEAgentServiceName = "PME.Agent.PmeService"
+        $PMECacheServiceName = "SolarWinds.MSP.CacheService"
+        $PMERPCServiceName = "SolarWinds.MSP.RpcServerService"
+
+        $PMEAgentAppName =  "Patch Management Service Controller"
+        $PMECacheAppName = "File Cache Service Agent"
+        $PMERPCAppName = "Request Handler Agent"
+
+                 
+    }
+    else {
+        $PMEProgramDataFolder = "$env:programdata\SolarWinds MSP\PME"
+        $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\SolarWindsMSP"
+        $PMEAgentExe = "PME\SolarWinds.MSP.PME.Agent.exe"
+        $PMECacheExe = "CacheService\SolarWinds.MSP.CacheService.exe"
+        $PMERPCExe = "RpcServer\SolarWinds.MSP.RpcServerService.exe"
+        
+        $PMEAgentServiceName = "SolarWinds.MSP.PME.Agent.PmeService"
+        $PMECacheServiceName = "SolarWinds.MSP.CacheService"
+        $PMERPCServiceName = "SolarWinds.MSP.RpcServerService"
+
+        $PMEAgentAppName = "SolarWinds MSP Patch Management Engine"
+        $PMECacheAppName = "SolarWinds MSP Cache Service"
+        $PMERPCAppName = "Solarwinds MSP RPC Server"
+    }
+
+        #$OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+        $64bitOS = [System.Environment]::Is64BitOperatingSystem
+        if ($64bitOS -eq $true) {
+            $OSArch = "64-bit"
+            $UninstallRegLocation = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+        }
+        else {
+            $OSArch = "32-Bit"
+            $UninstallRegLocation = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+        }
+    
+        If ($OSArch -like '*64*') {
+            $SolarWindsMSPCacheLocation = "$PMEProgramFilesFolder\$PMECacheExe"
+            $SolarWindsMSPPMEAgentLocation = "$PMEProgramFilesFolder\$PMEAgentExe"
+            $SolarWindsMSPRpcServerLocation = "$PMEProgramFilesFolder\$PMERPCExe"
+            $NCentralLog = "c:\Program Files (x86)\N-able Technologies\Windows Agent\log"
+        }
+        else {
+            $SolarWindsMSPCacheLocation = "$PMEProgramFilesFolder\$PMECacheExe"
+            $SolarWindsMSPPMEAgentLocation = "$PMEProgramFilesFolder\$PMEAgentExe"
+            $SolarWindsMSPRpcServerLocation = "$PMEProgramFilesFolder\$PMERPCExe"
+            $NCentralLog = "c:\Program Files\N-able Technologies\Windows Agent\log"
+        }
+}
 
 Function Get-PMEServicesStatus {
-$SolarWindsMSPCacheStatus = (get-service "SolarWinds.MSP.CacheService" -ErrorAction SilentlyContinue).Status
-$SolarWindsMSPPMEAgentStatus = (get-service "SolarWinds.MSP.PME.Agent.PmeService" -ErrorAction SilentlyContinue).Status
-$SolarWindsMSPRpcServerStatus = (get-service "SolarWinds.MSP.RpcServerService" -ErrorAction SilentlyContinue).status
+$PMEAgentStatus = (get-service $PMEAgentServiceName -ErrorAction SilentlyContinue).Status
+$PMECacheStatus = (get-service $PMECacheServiceName -ErrorAction SilentlyContinue).Status
+$PMERpcServerStatus = (get-service $PMERPCServiceName -ErrorAction SilentlyContinue).status
 }
 
 Function Get-PMESetupDetails {
+    if ($PMEExpectationSetting -eq $true) {
+        $LatestVersion = $PME20LatestVersionPlaceholder
+        $PMEReleaseDate = $PME20ReleaseDatePlaceholder
+    }
+    else {
     # Declare static URI of PMESetup_details.xml
-    If ($Fallback -eq "Yes") {
-        $PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
-    } Else {
-        $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
-    }
+        If ($Fallback -eq "Yes") {
+            $PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
+        } Else {
+            $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
+        }
 
-    Try {
-        $request = $null
-        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
-        $PMEDetails = $request.ComponentDetails
-        $LatestVersion = $request.ComponentDetails.Version
-    } Catch [System.Net.WebException] {
-        $overallstatus = '2'
-        $diagnosticserrorint = '2'
-        Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
-    } Catch [System.Management.Automation.MetadataException] {
-        $overallstatus = '2'
-        $diagnosticserrorint = '2'
-        Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
-    } Catch {
-        $overallstatus = '2'
-        $diagnosticserrorint = '2'
-        Throw "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
-    }
+        Try {
+            $request = $null
+            [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
+            $PMEDetails = $request.ComponentDetails
+            $LatestVersion = $request.ComponentDetails.Version
+        } Catch [System.Net.WebException] {
+            $overallstatus = '2'
+            $diagnosticserrorint = '2'
+            Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
+        } Catch [System.Management.Automation.MetadataException] {
+            $overallstatus = '2'
+            $diagnosticserrorint = '2'
+            Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
+        } Catch {
+            $overallstatus = '2'
+            $diagnosticserrorint = '2'
+            Throw "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
+        }
 
-    Try {
-        $webRequest = $null; $webResponse = $null
-        $webRequest = [System.Net.WebRequest]::Create($PMESetup_detailsURI)
-        $webRequest.Method = "HEAD"
-        $WebRequest.AllowAutoRedirect = $true
-        $WebRequest.KeepAlive = $false
-        $WebRequest.Timeout = 10000
-        $webResponse = $webRequest.GetResponse()
-        $remoteLastModified = ($webResponse.LastModified) -as [DateTime]
-        $PMEReleaseDate = $remoteLastModified | Get-Date -Format "yyyy.MM.dd"
-        $webResponse.Close()
-    } Catch [System.Net.WebException] {
-        $overallstatus = '2'
-        $diagnosticserrorint = '2'
-        Throw "Error fetching header for PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
-    } Catch {
-        $overallstatus = '2'
-        $diagnosticserrorint = '2'
-        Throw "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message)"
+        Try {
+            $webRequest = $null; $webResponse = $null
+            $webRequest = [System.Net.WebRequest]::Create($PMESetup_detailsURI)
+            $webRequest.Method = "HEAD"
+            $WebRequest.AllowAutoRedirect = $true
+            $WebRequest.KeepAlive = $false
+            $WebRequest.Timeout = 10000
+            $webResponse = $webRequest.GetResponse()
+            $remoteLastModified = ($webResponse.LastModified) -as [DateTime]
+            $PMEReleaseDate = $remoteLastModified | Get-Date -Format "yyyy.MM.dd"
+            $webResponse.Close()
+        } Catch [System.Net.WebException] {
+            $overallstatus = '2'
+            $diagnosticserrorint = '2'
+            Throw "Error fetching header for PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
+        } Catch {
+            $overallstatus = '2'
+            $diagnosticserrorint = '2'
+            Throw "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message)"
+        }
     }
-    
+  
     Write-Output "Latest PME Version: $LatestVersion"
     Write-Output "Latest PME Release Date: $PMEReleaseDate"    
 }
@@ -203,7 +273,7 @@ Function Get-LatestPMEVersion {
             #$PMEWrapper = get-content "${Env:ProgramFiles(x86)}\N-able Technologies\Windows Agent\log\PMEWrapper.log"
             #$Latest = "Pme.GetLatestVersion result = LatestVersion"
             #$LatestVersion = $LatestMatch.Split(' ')[9].TrimEnd(',')
-            $PMECore = get-content "$env:programdata\SolarWinds MSP\PME\log\Core.log"
+            $PMECore = get-content "$PMEProgramDataFolder\log\Core.log"
             $Latest = "Latest PMESetup Version is"
             $LatestMatch = ($PMECore -match $latest)[-1]
             #$LatestVersion = $LatestMatch.Split(' ')[10].Trim()
@@ -221,208 +291,108 @@ Function Restore-Date {
 }
     
 Function Confirm-PMEInstalled {
-    # Check if PME Agent is currently installed
-    If ($OSArch -like '*64*') {
-        # Write-Host "Checking if PME Agent is already installed..." -ForegroundColor Cyan
-        $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
-        $SOFTWARE = "SolarWinds MSP Patch Management Engine"
-        ForEach ($path in $PATHS) {
-            $installed = Get-ChildItem -Path $path |
-            ForEach-Object { Get-ItemProperty $_.PSPath } |
-            Where-Object { $_.DisplayName -match $SOFTWARE } |
-            Select-Object -Property DisplayName, DisplayVersion, InstallDate
 
-            If ($null -ne $installed) {
-                ForEach ($app in $installed) {
-                    If ($($app.DisplayName) -eq "SolarWinds MSP Patch Management Engine") {
-                        $PMEAgentAppDisplayVersion = $($app.DisplayVersion)
-                        $InstallDate = $($app.InstallDate)
-                        If ($null -ne $InstallDate -and $InstallDate -ne "") {
-                            . Restore-Date
-                            $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
-                            $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
-                        }
-                        $IsPMEAgentInstalled = "Yes"
-                        Write-Host "PME Agent Already Installed: Yes" -ForegroundColor Green
-                        # Write-Output "Installed PME Agent Version: $PMEAgentAppDisplayVersion"
-                        # Write-Output "Installed PME Agent Date: $InstallDateFormatted"
+# Check if PME Agent is currently installed
+    # Write-Host "Checking if PME Agent is already installed..." -ForegroundColor Cyan
+    $PATHS = @($UninstallRegLocation)
+    $SOFTWARE = $PMEAgentAppName
+    ForEach ($path in $PATHS) {
+        $installed = Get-ChildItem -Path $path |
+        ForEach-Object { Get-ItemProperty $_.PSPath } |
+        Where-Object { $_.DisplayName -match $SOFTWARE } |
+        Select-Object -Property DisplayName, DisplayVersion, InstallDate
+
+        If ($null -ne $installed) {
+            ForEach ($app in $installed) {
+                If ($($app.DisplayName) -eq $PMEAgentAppName) {
+                    $PMEAgentAppDisplayVersion = $($app.DisplayVersion)
+                    $InstallDate = $($app.InstallDate)
+                    If ($null -ne $InstallDate -and $InstallDate -ne "") {
+                        . Restore-Date
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
                     }
+                    $IsPMEAgentInstalled = "Yes"
+                    Write-Host "PME Agent Already Installed: Yes" -ForegroundColor Green
+                    # Write-Output "Installed PME Agent Version: $PMEAgentAppDisplayVersion"
+                    # Write-Output "Installed PME Agent Date: $InstallDateFormatted"
                 }
-            } Else {
-                $IsPMEAgentInstalled = "No"
-                Write-Host "PME Agent Already Installed: No" -ForegroundColor Yellow
             }
+        } Else {
+            $IsPMEAgentInstalled = "No"
+            Write-Host "PME Agent Already Installed: No" -ForegroundColor Yellow
         }
     }
 
-    If ($OSArch -like '*32*') {
-        # Write-Host "Checking if PME Agent is already installed..." -ForegroundColor Cyan
-        $PATHS = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
-        $SOFTWARE = "SolarWinds MSP Patch Management Engine"
-        ForEach ($path in $PATHS) {
-            $installed = Get-ChildItem -Path $path |
-            ForEach-Object { Get-ItemProperty $_.PSPath } |
-            Where-Object { $_.DisplayName -match $SOFTWARE } |
-            Select-Object -Property DisplayName, DisplayVersion, InstallDate
 
-            If ($null -ne $installed) {
-                ForEach ($app in $installed) {  
-                    If ($($app.DisplayName) -eq "SolarWinds MSP Patch Management Engine") {
-                        $PMEAgentAppDisplayVersion = $($app.DisplayVersion) 
-                        $InstallDate = $($app.InstallDate)
-                        If ($null -ne $InstallDate -and $InstallDate -ne "") {
-                            . Restore-Date
-                            $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
-                            $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
-                        }
-                        $IsPMEAgentInstalled = "Yes"
-                        Write-Host "PME Agent Already Installed: Yes" -ForegroundColor Green
-                        # Write-Output "Installed PME Agent Version: $PMEAgentAppDisplayVersion"
-                        # Write-Output "Installed PME Agent Date: $InstallDateFormatted"
+# Check if PME RPC Service is currently installed
+
+    # Write-Host "Checking if PME RPC Server Service is already installed..." -ForegroundColor Cyan
+    $PATHS = @($UninstallRegLocation)
+    $SOFTWARE = $PMERPCAppName
+    ForEach ($path in $PATHS) {
+        $installed = Get-ChildItem -Path $path |
+        ForEach-Object { Get-ItemProperty $_.PSPath } |
+        Where-Object { $_.DisplayName -match $SOFTWARE } |
+        Select-Object -Property DisplayName, DisplayVersion, InstallDate
+
+        If ($null -ne $installed) {
+            ForEach ($app in $installed) {
+                If ($($app.DisplayName) -eq $PMERPCAppName) {
+                    $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
+                    $InstallDate = $($app.InstallDate)
+                    If ($null -ne $InstallDate -and $InstallDate -ne "") {
+                        . Restore-Date
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
                     }
+                    $IsPMERPCServerServiceInstalled = "Yes"
+                    Write-Host "PME RPC Server Service Already Installed: Yes" -ForegroundColor Green
+                    # Write-Output "Installed PME RPC Server Service Version: $PMERPCServerAppDisplayVersion"
+                    # Write-Output "Installed PME RPC Server Service Date: $InstallDateFormatted"
                 }
-            } Else {
-                $IsPMEAgentInstalled = "No"
-                Write-Host "PME Agent Already Installed: No" -ForegroundColor Yellow
             }
+        } Else {
+            $IsPMERPCServerServiceInstalled = "No"
+            Write-Host "PME RPC Server Service Already Installed: No" -ForegroundColor Yellow
+        }
+    }
+    
+
+# Check if PME Cache Service is currently installed
+    # Write-Host "Checking if PME RPC Server Service is already installed..." -ForegroundColor Cyan
+    $PATHS = @($UninstallRegLocation)
+    $SOFTWARE = $PMECacheAppName
+    ForEach ($path in $PATHS) {
+        $installed = Get-ChildItem -Path $path |
+        ForEach-Object { Get-ItemProperty $_.PSPath } |
+        Where-Object { $_.DisplayName -match $SOFTWARE } |
+        Select-Object -Property DisplayName, DisplayVersion, InstallDate
+
+        If ($null -ne $installed) {
+            ForEach ($app in $installed) {
+                If ($($app.DisplayName) -eq $PMECacheAppName) {
+                    $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion) 
+                    $InstallDate = $($app.InstallDate)
+                    If ($null -ne $InstallDate -and $InstallDate -ne "") {
+                        . Restore-Date
+                        $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
+                        $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
+                    }
+                    $IsPMECacheServiceInstalled = "Yes"
+                    Write-Host "PME Cache Service Already Installed: Yes" -ForegroundColor Green
+                    # Write-Output "Installed PME Cache Service Version: $PMECacheServiceAppDisplayVersion"
+                    # Write-Output "Installed PME Cache Service Date: $InstallDateFormatted"
+                }
+            }
+        } Else {
+            $IsPMECacheServiceInstalled = "No"
+            Write-Host "PME Cache Service Already Installed: No" -ForegroundColor Yellow
         }
     }
 
-    # Check if PME RPC Service is currently installed
-    If ($OSArch -like '*64*') {
-        # Write-Host "Checking if PME RPC Server Service is already installed..." -ForegroundColor Cyan
-        $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
-        $SOFTWARE = "SolarWinds MSP RPC Server"
-        ForEach ($path in $PATHS) {
-            $installed = Get-ChildItem -Path $path |
-            ForEach-Object { Get-ItemProperty $_.PSPath } |
-            Where-Object { $_.DisplayName -match $SOFTWARE } |
-            Select-Object -Property DisplayName, DisplayVersion, InstallDate
-
-            If ($null -ne $installed) {
-                ForEach ($app in $installed) {
-                    If ($($app.DisplayName) -eq "Solarwinds MSP RPC Server") {
-                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
-                        $InstallDate = $($app.InstallDate)
-                        If ($null -ne $InstallDate -and $InstallDate -ne "") {
-                            . Restore-Date
-                            $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
-                            $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
-                        }
-                        $IsPMERPCServerServiceInstalled = "Yes"
-                        Write-Host "PME RPC Server Service Already Installed: Yes" -ForegroundColor Green
-                        # Write-Output "Installed PME RPC Server Service Version: $PMERPCServerAppDisplayVersion"
-                        # Write-Output "Installed PME RPC Server Service Date: $InstallDateFormatted"
-                    }
-                }
-            } Else {
-                $IsPMERPCServerServiceInstalled = "No"
-                Write-Host "PME RPC Server Service Already Installed: No" -ForegroundColor Yellow
-            }
-        }
-    }
-
-    If ($OSArch -like '*32*') {
-        # Write-Host "Checking if PME is already installed..." -ForegroundColor Cyan
-        $PATHS = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
-        $SOFTWARE = "SolarWinds MSP RPC Server"
-        ForEach ($path in $PATHS) {
-            $installed = Get-ChildItem -Path $path |
-            ForEach-Object { Get-ItemProperty $_.PSPath } |
-            Where-Object { $_.DisplayName -match $SOFTWARE } |
-            Select-Object -Property DisplayName, DisplayVersion, InstallDate
-
-            If ($null -ne $installed) {
-                ForEach ($app in $installed) {
-                    If ($($app.DisplayName) -eq "SolarWinds MSP RPC Server") {
-                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
-                        $InstallDate = $($app.InstallDate)
-                        If ($null -ne $InstallDate -and $InstallDate -ne "") {
-                            . Restore-Date
-                            $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
-                            $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
-                        }
-                        $IsPMERPCServerServiceInstalled = "Yes"
-                        Write-Host "PME RPC Server Service Already Installed: Yes" -ForegroundColor Green
-                        # Write-Output "Installed PME RPC Server Service Version: $PMERPCServerAppDisplayVersion"
-                        # Write-Output "Installed PME RPC Server Service Date: $InstallDateFormatted"
-                    }
-                }
-            } Else {
-                $IsPMERPCServerServiceInstalled = "No"
-                Write-Host "PME RPC Server Service Already Installed: No" -ForegroundColor Yellow
-            }
-        }
-    }
-
-    # Check if PME Cache Service is currently installed
-    If ($OSArch -like '*64*') {
-        # Write-Host "Checking if PME RPC Server Service is already installed..." -ForegroundColor Cyan
-        $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
-        $SOFTWARE = "SolarWinds MSP Cache Service"
-        ForEach ($path in $PATHS) {
-            $installed = Get-ChildItem -Path $path |
-            ForEach-Object { Get-ItemProperty $_.PSPath } |
-            Where-Object { $_.DisplayName -match $SOFTWARE } |
-            Select-Object -Property DisplayName, DisplayVersion, InstallDate
-
-            If ($null -ne $installed) {
-                ForEach ($app in $installed) {
-                    If ($($app.DisplayName) -eq "SolarWinds MSP Cache Service") {
-                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion) 
-                        $InstallDate = $($app.InstallDate)
-                        If ($null -ne $InstallDate -and $InstallDate -ne "") {
-                            . Restore-Date
-                            $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
-                            $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
-                        }
-                        $IsPMECacheServiceInstalled = "Yes"
-                        Write-Host "PME Cache Service Already Installed: Yes" -ForegroundColor Green
-                        # Write-Output "Installed PME Cache Service Version: $PMECacheServiceAppDisplayVersion"
-                        # Write-Output "Installed PME Cache Service Date: $InstallDateFormatted"
-                    }
-                }
-            } Else {
-                $IsPMECacheServiceInstalled = "No"
-                Write-Host "PME Cache Service Already Installed: No" -ForegroundColor Yellow
-            }
-        }
-    }
-
-    If ($OSArch -like '*32*') {
-        # Write-Host "Checking if PME RPC Server Service is already installed..." -ForegroundColor Cyan
-        $PATHS = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
-        $SOFTWARE = "SolarWinds MSP Cache Service"
-        ForEach ($path in $PATHS) {
-            $installed = Get-ChildItem -Path $path |
-            ForEach-Object { Get-ItemProperty $_.PSPath } |
-            Where-Object { $_.DisplayName -match $SOFTWARE } |
-            Select-Object -Property DisplayName, DisplayVersion, InstallDate
-
-            If ($null -ne $installed) {
-                ForEach ($app in $installed) {
-                    If ($($app.DisplayName) -eq "SolarWinds MSP Cache Service") {
-                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion) 
-                        $InstallDate = $($app.InstallDate)
-                        If ($null -ne $InstallDate -and $InstallDate -ne "") {
-                            . Restore-Date
-                            $ConvertDateTime = [DateTime]::ParseExact($InstallDate, "yyyyMMdd", $null)
-                            $InstallDateFormatted = $ConvertDateTime | Get-Date -Format "yyyy.MM.dd"
-                        }
-                        $IsPMECacheServiceInstalled = "Yes"
-                        Write-Host "PME Cache Service Already Installed: Yes" -ForegroundColor Green
-                        # Write-Output "Installed PME Cache Service Version: $PMECacheServiceAppDisplayVersion"
-                        # Write-Output "Installed PME Cache Service Date: $InstallDateFormatted"
-                    }
-                }
-            } Else {
-                $IsPMECacheServiceInstalled = "No"
-                Write-Host "PME Cache Service Already Installed: No" -ForegroundColor Yellow
-            }
-        }
-    }            
 }
-
+         
 
 Function Confirm-PMEUpdatePending {
     # Check if PME is awaiting update for new release but has not updated yet (normally within 48 hours)
@@ -445,55 +415,34 @@ Function Confirm-PMEUpdatePending {
     }
 }
 Function Get-PMEServiceVersions {
-    #$OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
-    $64bitOS = [System.Environment]::Is64BitOperatingSystem
-    if ($64bitOS -eq $true) {
-        $OSArch = "64-bit"
-    }
-    else {
-        $OSArch = "32-Bit"
-    }
 
-    If ($OSArch -like '*64*') {
-        $SolarWindsMSPCacheLocation = 'C:\Program Files (x86)\SolarWinds MSP\CacheService\SolarWinds.MSP.CacheService.exe'
-        $SolarWindsMSPPMEAgentLocation = 'C:\Program Files (x86)\SolarWinds MSP\PME\SolarWinds.MSP.PME.Agent.exe'
-        $SolarWindsMSPRpcServerLocation = 'C:\Program Files (x86)\SolarWinds MSP\RpcServer\SolarWinds.MSP.RpcServerService.exe'
-        $NCentralLog = "c:\Program Files (x86)\N-able Technologies\Windows Agent\log"
-    }
-    else {
-        $SolarWindsMSPCacheLocation = 'C:\Program Files\SolarWinds MSP\CacheService\SolarWinds.MSP.CacheService.exe'
-        $SolarWindsMSPPMEAgentLocation = 'C:\Program Files\SolarWinds MSP\PME\SolarWinds.MSP.PME.Agent.exe'
-        $SolarWindsMSPRpcServerLocation = 'C:\Program Files\SolarWinds MSP\RpcServer\SolarWinds.MSP.RpcServerService.exe'
-        $NCentralLog = "c:\Program Files\N-able Technologies\Windows Agent\log"
-    }
-
-    $PMECacheVersion = (get-item $SolarWindsMSPCacheLocation -ErrorAction SilentlyContinue).VersionInfo.ProductVersion
     $PMEAgentVersion = (get-item $SolarWindsMSPPMEAgentLocation -ErrorAction SilentlyContinue).VersionInfo.ProductVersion
+    $PMECacheVersion = (get-item $SolarWindsMSPCacheLocation -ErrorAction SilentlyContinue).VersionInfo.ProductVersion
     $PMERpcServerVersion = (get-item $SolarWindsMSPRpcServerLocation -ErrorAction SilentlyContinue).VersionInfo.ProductVersion
 
-    if ($SolarWindsMSPCacheStatus -eq $null) {
-        Write-Host "PME Cache service is missing" -ForegroundColor Red
-        $SolarWindsMSPCacheStatus = 'Service is Missing'
-        $PMECacheVersion = '0.0'
-    }
-
-    if ($SolarWindsMSPPMEAgentStatus -eq $null) { 
+    if ($PMEAgentStatus -eq $null) { 
         Write-Host "PME Agent service is missing" -ForegroundColor Red
-        $SolarWindsMSPPMEAgentStatus = 'Service is Missing'
+        $PMEAgentStatus = 'Service is Missing'
         $PMEAgentVersion = '0.0'
     }
 
-    if ($SolarWindsMSPRpcServerStatus -eq $null) {
+    if ($PMECacheStatus -eq $null) {
+        Write-Host "PME Cache service is missing" -ForegroundColor Red
+        $PMECacheStatus = 'Service is Missing'
+        $PMECacheVersion = '0.0'
+    }
+
+    if ($PMERpcServerStatus -eq $null) {
         Write-Host "PME RPC Server service is missing" -ForegroundColor Red
-        $SolarWindsMSPRpcServerStatus = 'Service is Missing'
+        $PMERpcServerStatus = 'Service is Missing'
         $PMERpcServerVersion = '0.0'
     }
 
 }
 
 Function Get-PMEProfile {
-    $PMEconfigXML = "C:\ProgramData\SolarWinds MSP\PME\config\PmeConfig.xml"
-if ($SolarWindsMSPPMEAgentStatus -ne $null) {
+    $PMEconfigXML = "$PMEProgramDataFolder\PME\config\PmeConfig.xml"
+if ($PMEAgentStatus -ne $null) {
     if (test-path $pmeconfigxml) {
     $xml = [xml](Get-Content "$PMEConfigXML")
     $pmeprofile = $xml.Configuration.Profile 
@@ -610,9 +559,9 @@ Function Test-PMEConnectivity {
 }
 
 Function Write-Status {
-Write-Host "`nSolarWinds MSP Cache Service Status: $SolarWindsMSPCacheStatus"
-Write-Host "SolarWinds MSP PME Agent Status: $SolarWindsMSPPMEAgentStatus"
-Write-Host "SolarWinds MSP RPC Server Status: $SolarWindsMSPRpcServerStatus`n"
+Write-Host "`nSolarWinds MSP Cache Service Status: $PMECacheStatus"
+Write-Host "SolarWinds MSP PME Agent Status: $PMEAgentStatus"
+Write-Host "SolarWinds MSP RPC Server Status: $PMERpcServerStatus`n"
 }
 
 Function Write-Version {
@@ -622,26 +571,26 @@ Write-Host "SolarWinds MSP RPC Server Version: $PMERpcServerVersion`n"
 }
 
 Function Start-Services {
-    if (($SolarWindsMSPPMEAgentStatus -eq 'Running') -and ($SolarWindsMSPCacheStatus -eq 'Running') -and ($SolarWindsMSPRpcServerStatus -eq 'Running')) {
+    if (($PMEAgentStatus -eq 'Running') -and ($PMECacheStatus -eq 'Running') -and ($PMERpcServerStatus -eq 'Running')) {
             Write-Host "OK - All PME Services are in a Running State" -foregroundcolor Green
     }
     else {
         $RecheckStatus = $True
-        if ($SolarWindsMSPPMEAgentStatus -ne 'Running') {
+        if ($PMEAgentStatus -ne 'Running') {
             Write-Host "Starting SolarWinds MSP PME Agent" -ForegroundColor Yellow
             New-EventLog -LogName Application -Source $EventLogCompanyName -erroraction silentlycontinue
             Write-EventLog -LogName Application -Source $EventLogCompanyName -EntryType Information -EventID 100 -Message "Starting SolarWinds MSP PME Agent...`nSource: Get-PMEServices.ps1"
             start-service -Name "SolarWinds.MSP.PME.Agent.PmeService" 
         }
 
-        if ($SolarWindsMSPRpcServerStatus -ne 'Running') {
+        if ($PMERpcServerStatus -ne 'Running') {
             Write-Host "Starting SolarWinds MSP RPC Server" -ForegroundColor Yellow
             New-EventLog -LogName Application -Source $EventLogCompanyName -erroraction silentlycontinue
             Write-EventLog -LogName Application -Source $EventLogCompanyName -EntryType Information -EventID 100 -Message "Starting SolarWinds MSP RPC Server Service...`nSource: Get-PMEServices.ps1"
             start-service -Name "SolarWinds MSP RPC Server" 
         }
 
-        if ($SolarWindsMSPCacheStatus -ne 'Running') {
+        if ($PMECacheStatus -ne 'Running') {
             Write-Host "Starting SolarWinds MSP Cache Service Service" -ForegroundColor Yellow
             New-EventLog -LogName Application -Source $EventLogCompanyName -erroraction silentlycontinue
             Write-EventLog -LogName Application -Source $EventLogCompanyName -EntryType Information -EventID 100 -Message "Starting SolarWinds MSP Cache Service...`nSource: Get-PMEServices.ps1"
@@ -681,21 +630,21 @@ Function Set-AutomaticStartup {
 
 Function Validate-PME {
 
-If ([version]$PMECacheVersion -ge $latestversion) {
+If ([version]$PMECacheVersion -ge [version]$latestversion) {
     Write-Host "PME Cache Version: " -nonewline; Write-Host "Up To Date ($PMECacheVersion)" -ForegroundColor Green
 }
 else {
     Write-Host "PME Cache Version: " -nonewline; Write-Host "Not Up To Date ($PMECacheVersion)" -ForegroundColor Red
 }
 
-If ([version]$PMEAgentVersion -ge $latestversion) {
+If ([version]$PMEAgentVersion -ge [version]$latestversion) {
     Write-Host "PME Agent Version: " -nonewline; Write-Host "Up To Date ($PMEAgentVersion)" -ForegroundColor Green
 }
 else {
     Write-Host "PME Agent Version: " -nonewline; Write-Host "Not Up To Date ($PMEAgentVersion)" -ForegroundColor Red
 }
 
-If ([version]$PMERpcServerVersion -ge $latestversion) {
+If ([version]$PMERpcServerVersion -ge [version]$latestversion) {
     Write-Host "PME RPC Server Version: " -nonewline; Write-Host "Up To Date ($PMERpcServerVersion)" -ForegroundColor Green
 }
 else {
@@ -744,7 +693,7 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
         $PMEInstallTimeData = "Error: The last PME install date was not found in the PME install log."
     }
 
-    $PMEQueryLogContent = get-content "C:\ProgramData\SolarWinds MSP\PME\log\QueryManager.log"
+    $PMEQueryLogContent = get-content "$PMEProgramDataFolder\log\QueryManager.log"
     $PMEScanDateFound = $PMEQueryLogContent -contains '===============================>>>>> Start scan <<<<<========================================'
     if (($PMEQueryLogContent -eq $null) -or ($PMESCanDateFound -eq $false)) {
         Write-Host "No PME Scan data was found" -ForegroundColor Red
@@ -777,7 +726,7 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
         $relevantlines = $TotalLinesInFile - $startinglinenumber
         $UpgradeError = get-content $pmeinstalllog -last $relevantlines
         Write-Host "`nInstaller EXE: " -ForegroundColor Green -nonewline; Write-Host "$PMEInstallerExefromLog"
-        if ($pmeInstallerExefromLog -ne "C:\ProgramData\SolarWinds MSP\PME\Archives\PMESetup_$LatestVersion.exe") {
+        if ($pmeInstallerExefromLog -ne "$PMEProgramDataFolder\PME\Archives\PMESetup_$LatestVersion.exe") {
             Write-Host "Incorrect Setup EXE is being used" -foregroundcolor Red
         }
         else {
@@ -801,7 +750,7 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
 Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
      Try {    
-        $CacheServiceConfigFile = "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\config\CacheService.xml"
+        $CacheServiceConfigFile = "$PMEProgramDataFolder\SolarWinds.MSP.CacheService\config\CacheService.xml"
 
         If (Test-Path "$CacheServiceConfigFile") {
             $xml = New-Object XML
@@ -832,7 +781,7 @@ Function Get-PMEConfigMisconfigurations {
 }
 #endregion
 
-
+. Set-PMEExpectations
 . Test-PMERequirement
 if ($continue -eq $true) {
     . Get-PMEServicesStatus
@@ -864,3 +813,7 @@ if ($continue -eq $true) {
         . Get-PMEAnalysis
     }
 }
+
+$SolarWindsMSPPMEAgentStatus = $PMEAgentStatus
+$SolarWindsMSPCacheStatus = $PMECacheStatus
+$SolarWindsMSPRpcServerStatus = $PMERPCServerStatus
