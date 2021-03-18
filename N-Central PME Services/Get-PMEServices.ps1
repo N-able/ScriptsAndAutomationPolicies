@@ -47,7 +47,7 @@
                                 + [Ashley How] Updated Get-PMEProfile function for more consistent formatting. Offline scanning enablement will no longer report if PME is not installed.         
                         0.1.7.1 + Updated PME Insider version detection string, Have changed 64bit OS detection method       
                         0.2.0.0 + Updated for Unexpected PME 2.0 release; Cleaned up registry application detection method
-                        0.2.0.1 + Slight Twekas for PMe 2.0
+                        0.2.0.1 + Slight Twekas for PMe 1.3.1 Compatibility
     
     Examples: 
     Diagnostics Input: False
