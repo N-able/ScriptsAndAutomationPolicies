@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.0.1 (18/03/2021)
+    Version: 0.2.0.2 (18/03/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -70,7 +70,7 @@ $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.0.1 (18/03/2021)'
+$Version = '0.2.0.2 (18/03/2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -661,7 +661,7 @@ if (($PMECacheVersion -eq '0.0') -or ($PMEAgentVersion -eq '0.0') -or ($PMERpcSe
     Write-Host "`n$StatusMessage" -ForegroundColor Red
 }
 
-elseif (([version]$PMECacheVersion -ge $latestversion) -and ([version]$PMEAgentVersion -ge $latestversion) -and ([version]$PMERpcServerVersion -ge $latestversion)) {
+elseif (([version]$PMECacheVersion -ge [version]$latestversion) -and ([version]$PMEAgentVersion -ge [version]$latestversion) -and ([version]$PMERpcServerVersion -ge [version]$latestversion)) {
     $OverallStatus = 0  
     $StatusMessage = 'OK - All PME Services are running the latest version'    
     Write-Host "`n$StatusMessage" -foregroundcolor Green
