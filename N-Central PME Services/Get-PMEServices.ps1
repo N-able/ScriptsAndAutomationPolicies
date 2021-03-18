@@ -48,6 +48,7 @@
                         0.1.7.1 + Updated PME Insider version detection string, Have changed 64bit OS detection method       
                         0.2.0.0 + Updated for Unexpected PME 2.0 release; Cleaned up registry application detection method
                         0.2.0.1 + Slight Twekas for PMe 1.3.1 Compatibility
+                        0.2.0.2 + Tweak Expectation for Insider Profile as versions no longer match up
     
     Examples: 
     Diagnostics Input: False
@@ -264,7 +265,11 @@ Function Get-PMESetupDetails {
 }
 
 Function Get-LatestPMEVersion {
- 
+    if ($PMEExpectationSetting -eq $true) {
+        $LatestVersion = $PME20LatestVersionPlaceholder
+        $PMEReleaseDate = $PME20ReleaseDatePlaceholder
+    }
+    else { 
     if (!($pmeprofile -eq 'insiders')) {
         . Get-PMESetupDetails
 
@@ -282,7 +287,8 @@ Function Get-LatestPMEVersion {
             #$LatestVersion = $LatestMatch.Split(' ')[10].Trim()
             $LatestVersion = ($LatestMatch -Split(' '))[10]
         }
-        Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
+    }
+    Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
 }
 
 Function Restore-Date {
@@ -444,7 +450,7 @@ Function Get-PMEServiceVersions {
 }
 
 Function Get-PMEProfile {
-    $PMEconfigXML = "$PMEProgramDataFolder\PME\config\PmeConfig.xml"
+    $PMEconfigXML = "$PMEProgramDataFolder\config\PmeConfig.xml"
 if ($PMEAgentStatus -ne $null) {
     if (test-path $pmeconfigxml) {
     $xml = [xml](Get-Content "$PMEConfigXML")
