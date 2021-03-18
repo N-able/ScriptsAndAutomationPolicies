@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.0.0 (17/03/2021)
+    Version: 0.2.0.1 (18/03/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -46,8 +46,10 @@
                                 + [Ashley How] Changed date formating to dd/MM/yyyy for $Version variable and release notes.
                                 + [Ashley How] Updated Get-PMEProfile function for more consistent formatting. Offline scanning enablement will no longer report if PME is not installed.         
                         0.1.7.1 + Updated PME Insider version detection string, Have changed 64bit OS detection method       
-                        0.2.0.0 + Updated for Unexpected PME 2.0  release  
-                        Examples: 
+                        0.2.0.0 + Updated for Unexpected PME 2.0 release; Cleaned up registry application detection method
+                        0.2.0.1 + Slight Twekas for PMe 2.0
+    
+    Examples: 
     Diagnostics Input: False
     Runs Normally and only engages diagnostcs for connectibity testing if PME is not up to date or missing a service.
     
@@ -68,7 +70,7 @@ $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.0.0 (17/03/2021)'
+$Version = '0.2.0.1 (18/03/2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -140,6 +142,7 @@ Function Set-PMEExpectations {
         $PMEExpectationSetting = $True
 
         Write-Host "PME Latest Version: $PME20LatestVersionPlaceholder" -ForegroundColor Yellow
+        Write-Host "PME Release Date: $PME20ReleaseDatePlaceholder" -ForegroundColor Yellow
         $PMEProgramDataFolder = "$env:programdata\MspPlatform\PME"
         $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\MspPlatform"
         $PMEAgentExe = "PME\PME.Agent.exe"  
@@ -157,7 +160,7 @@ Function Set-PMEExpectations {
     }
     else {
         $PMEProgramDataFolder = "$env:programdata\SolarWinds MSP\PME"
-        $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\SolarWindsMSP"
+        $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\SolarWinds MSP"
         $PMEAgentExe = "PME\SolarWinds.MSP.PME.Agent.exe"
         $PMECacheExe = "CacheService\SolarWinds.MSP.CacheService.exe"
         $PMERPCExe = "RpcServer\SolarWinds.MSP.RpcServerService.exe"
