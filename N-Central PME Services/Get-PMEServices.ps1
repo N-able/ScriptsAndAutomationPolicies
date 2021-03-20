@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.2.0 (20/03/2021)
+    Version: 0.2.2.1 (20/03/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -47,12 +47,13 @@
                                 + [Ashley How] Updated Get-PMEProfile function for more consistent formatting. Offline scanning enablement will no longer report if PME is not installed.         
                         0.1.7.1 + Updated PME Insider version detection string, Have changed 64bit OS detection method       
                         0.2.0.0 + Updated for Unexpected PME 2.0 release; Cleaned up registry application detection method
-                        0.2.0.1 + Slight Twekas for PMe 1.3.1 Compatibility
+                        0.2.0.1 + Slight Tweaks for PMe 1.3.1 Compatibility
                         0.2.0.2 + Tweak Expectation for Insider Profile as versions no longer match up
                         0.2.0.3 + Tweak Cache XML Config parsing for PMe 2.0
                         0.2.1.0 + Modified Status Message Output to include timestamps
                         0.2.1.1 + Updated Placeholder for PME 2.0.1 
-                        0.2.2.0 + Using Community XML as data source for PME INformation whiel we wait to see if anything can be done with official SW sources
+                        0.2.2.0 + Using Community XML as data source for PME Information instead of placeholder while we wait to see if anything can be done with official SW sources
+                        0.2.2.1 + Cleanup Formatting and Typo's
 
     Examples: 
     Diagnostics Input: False
@@ -75,7 +76,7 @@ $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.2.0 (20/03/2021)'
+$Version = '0.2.2.1 (20/03/2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -246,7 +247,7 @@ Function Get-PMESetupDetails {
             $LatestRPCServerVersion = $request.ComponentDetails.RequestHandlerAgentVersion
 
             if ($? -eq $true) {
-                Write-Host "Success reading form Community XML!" -ForegroundColor Green
+                Write-Host "Success reading from Community XML!" -ForegroundColor Green
             }
         } Catch [System.Net.WebException] {
             $overallstatus = '2'
@@ -286,11 +287,12 @@ Function Get-PMESetupDetails {
         #>
     #}
   
-    Write-Output "Latest PME Version: $LatestVersion"
-    Write-Output "Latest PME Agent Version: $LatestPMEAgentVersion"
-    Write-Output "Latest PME Cache Version: $LatestCacheServiceVersion"
-    Write-Output "Latest PME RPC Server Version: $LatestRPCServerVersion"
-    Write-Output "Latest PME Release Date: $PMEReleaseDate"    
+    Write-Host "Latest PME Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
+    Write-Host "Latest PME Release Date: " -nonewline; Write-Host "$PMEReleaseDate" -ForegroundColor Green
+    Write-Host "Latest PME Agent Version: " -nonewline; Write-Host "$latestPMEAgentversion" -ForegroundColor Green
+    Write-Host "Latest Cache Service Version: " -nonewline; Write-Host "$LatestCacheServiceVersion" -ForegroundColor Green
+    Write-Host "Latest RPC Server Version: " -nonewline; Write-Host "$latestrpcserverversion" -ForegroundColor Green
+    Write-Host ""
 }
 
 Function Get-LatestPMEVersion {
@@ -323,10 +325,6 @@ Function Get-LatestPMEVersion {
 
     . Confirm-PMEInstalled
     . Confirm-PMEUpdatePending 
-    Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
-    Write-Host "Latest PME Agent Version: " -nonewline; Write-Host "$latestPMEAgentversion" -ForegroundColor Green
-    Write-Host "Latest Cache Service Version: " -nonewline; Write-Host "$LatestCacheServiceVersion" -ForegroundColor Green
-    Write-Host "Latest RPC Server Version: " -nonewline; Write-Host "$latestrpcserverversion" -ForegroundColor Green
 }
 
 Function Restore-Date {
@@ -443,6 +441,7 @@ Function Confirm-PMEInstalled {
 
 Function Confirm-PMEUpdatePending {
     # Check if PME is awaiting update for new release but has not updated yet (normally within 48 hours)
+    write-host ""
     If ($IsPMEAgentInstalled -eq "Yes") {
         $Date = Get-Date -Format 'yyyy.MM.dd' 
         $ConvertPMEReleaseDate = Get-Date "$PMEReleaseDate"
@@ -515,6 +514,7 @@ Write-Host "PME Offline Scanning: " -nonewline; Write-Host "$pmeofflinescan" -fo
         $pmeofflinescanbool = $False
         Write-Host "INFO: PME Offline Scanning is not enabled" -ForegroundColor Yellow -BackgroundColor Black
     }
+    write-host ""
 }
 
 
@@ -606,13 +606,15 @@ Function Test-PMEConnectivity {
 }
 
 Function Write-Status {
-Write-Host "`nSolarWinds MSP Cache Service Status: $PMECacheStatus"
+Write-Host ""
+Write-Host "SolarWinds MSP Cache Service Status: $PMECacheStatus"
 Write-Host "SolarWinds MSP PME Agent Status: $PMEAgentStatus"
 Write-Host "SolarWinds MSP RPC Server Status: $PMERpcServerStatus`n"
 }
 
 Function Write-Version {
-Write-Host "`nSolarWinds MSP Cache Service Version: $PMECacheVersion"
+Write-Host ""
+Write-Host "SolarWinds MSP Cache Service Version: $PMECacheVersion"
 Write-Host "SolarWinds MSP PME Agent Version: $PMEAgentVersion"
 Write-Host "SolarWinds MSP RPC Server Version: $PMERpcServerVersion`n"
 }
