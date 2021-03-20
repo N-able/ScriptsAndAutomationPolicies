@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.0.2 (18/03/2021)
+    Version: 0.2.2.0 (20/03/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -49,7 +49,11 @@
                         0.2.0.0 + Updated for Unexpected PME 2.0 release; Cleaned up registry application detection method
                         0.2.0.1 + Slight Twekas for PMe 1.3.1 Compatibility
                         0.2.0.2 + Tweak Expectation for Insider Profile as versions no longer match up
-    
+                        0.2.0.3 + Tweak Cache XML Config parsing for PMe 2.0
+                        0.2.1.0 + Modified Status Message Output to include timestamps
+                        0.2.1.1 + Updated Placeholder for PME 2.0.1 
+                        0.2.2.0 + Using Community XML as data source for PME INformation whiel we wait to see if anything can be done with official SW sources
+
     Examples: 
     Diagnostics Input: False
     Runs Normally and only engages diagnostcs for connectibity testing if PME is not up to date or missing a service.
@@ -71,7 +75,7 @@ $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.0.2 (18/03/2021)'
+$Version = '0.2.2.0 (20/03/2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -81,8 +85,11 @@ $diagnosticserrorint = $null
 $pmeinstalllogcontent = $null
 $EventLogCompanyName ="Doherty Associates"
 $PMEExpectationSetting = $False
-$PME20LatestVersionPlaceholder = "2.0.0.4045" # Agent Version is 2.0.0.4064 but this means I don't have to manually set multiple versions
-$PME20ReleaseDatePlaceholder = "2021.03.17"
+#$PME20LatestVersionPlaceholder = "2.0.1.4055" # Agent Version is 2.0.0.4064 but this means I don't have to manually set multiple versions
+#$PME20ReleaseDatePlaceholder = "2021.03.18"
+
+$CommunityPMESetup_detailsURIHTTP = "http://raw.githubusercontent.com/N-able/CustomMonitoring/master/N-Central%20PME%20Services/Community_PMESetup_details.xml"
+$CommunityPMESetup_detailsURIHTTPS = "https://raw.githubusercontent.com/N-able/CustomMonitoring/master/N-Central%20PME%20Services/Community_PMESetup_details.xml"
 
 Write-Host "`nGet-PMEServices $Version`n" -ForegroundColor Cyan
 
@@ -93,7 +100,7 @@ if ($Diagnostics -eq 'True'){
 #region Functions
 
 Function Test-PMERequirement {
-    $OSName = (Get-WmiObject Win32_OperatingSystem).Caption
+$OSName = (Get-WmiObject Win32_OperatingSystem).Caption
 Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
     if (($osname -match "XP") -or ($osname -match "Vista")  -or ($osname -match "10 Home") -or ($osname -match "2003") -or (($osname -match "2008") -and ($osname -notmatch "2008 R2")) ) {
         
@@ -139,11 +146,11 @@ Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
 
 Function Set-PMEExpectations {
     if (test-path $env:programdata\MspPlatform\PME\log) {
-        Write-Host "Warning: Unnanounced PME 2.0 Detected.`nArtificially Setting Version and Release Date Expectation" -ForegroundColor Yellow
-        $PMEExpectationSetting = $True
+        Write-Host "Warning: Unnanounced PME 2.0 Detected.`nArtificially Setting Version and Release Date Expectation via Community XML" -ForegroundColor Yellow
+        #$PMEExpectationSetting = $True
 
-        Write-Host "PME Latest Version: $PME20LatestVersionPlaceholder" -ForegroundColor Yellow
-        Write-Host "PME Release Date: $PME20ReleaseDatePlaceholder" -ForegroundColor Yellow
+        #Write-Host "PME Latest Version: $PME20LatestVersionPlaceholder" -ForegroundColor Yellow
+        #Write-Host "PME Release Date: $PME20ReleaseDatePlaceholder" -ForegroundColor Yellow
         $PMEProgramDataFolder = "$env:programdata\MspPlatform\PME"
         $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\MspPlatform"
         $PMEAgentExe = "PME\PME.Agent.exe"  
@@ -156,6 +163,8 @@ Function Set-PMEExpectations {
         $PMEAgentAppName =  "Patch Management Service Controller"
         $PMECacheAppName = "File Cache Service Agent"
         $PMERPCAppName = "Request Handler Agent"
+
+        $CacheServiceConfigFile = "$env:programdata\MspPlatform\Filecacheserviceagent\config\FileCacheServiceAgent.xml"
 
                  
     }
@@ -173,6 +182,8 @@ Function Set-PMEExpectations {
         $PMEAgentAppName = "SolarWinds MSP Patch Management Engine"
         $PMECacheAppName = "SolarWinds MSP Cache Service"
         $PMERPCAppName = "Solarwinds MSP RPC Server"
+
+        $CacheServiceConfigFile = "$env:programdata\SolarWinds MSP\PME\SolarWinds.MSP.CacheService\config\CacheService.xml"
     }
 
         #$OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
@@ -207,23 +218,36 @@ $PMERpcServerStatus = (get-service $PMERPCServiceName -ErrorAction SilentlyConti
 }
 
 Function Get-PMESetupDetails {
+    <#
     if ($PMEExpectationSetting -eq $true) {
         $LatestVersion = $PME20LatestVersionPlaceholder
         $PMEReleaseDate = $PME20ReleaseDatePlaceholder
     }
     else {
+    #>
     # Declare static URI of PMESetup_details.xml
         If ($Fallback -eq "Yes") {
-            $PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
+            $PMESetup_detailsURI = $CommunityPMESetup_detailsURIHTTP
+            #$PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
         } Else {
-            $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
+            $PMESetup_detailsURI = $CommunityPMESetup_detailsURIHTTPS
+            #$PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
         }
 
         Try {
+            $PMEDetails = $null
             $request = $null
             [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
             $PMEDetails = $request.ComponentDetails
             $LatestVersion = $request.ComponentDetails.Version
+            $PMEReleaseDate = $request.ComponentDetails.ReleaseDate
+            $LatestPMEAgentVersion = $request.ComponentDetails.PatchManagementServiceControllerVersion
+            $LatestCacheServiceVersion = $request.ComponentDetails.FileCacheServiceAgentVersion
+            $LatestRPCServerVersion = $request.ComponentDetails.RequestHandlerAgentVersion
+
+            if ($? -eq $true) {
+                Write-Host "Success reading form Community XML!" -ForegroundColor Green
+            }
         } Catch [System.Net.WebException] {
             $overallstatus = '2'
             $diagnosticserrorint = '2'
@@ -238,6 +262,7 @@ Function Get-PMESetupDetails {
             Throw "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
         }
 
+        <#
         Try {
             $webRequest = $null; $webResponse = $null
             $webRequest = [System.Net.WebRequest]::Create($PMESetup_detailsURI)
@@ -258,13 +283,18 @@ Function Get-PMESetupDetails {
             $diagnosticserrorint = '2'
             Throw "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message)"
         }
-    }
+        #>
+    #}
   
     Write-Output "Latest PME Version: $LatestVersion"
+    Write-Output "Latest PME Agent Version: $LatestPMEAgentVersion"
+    Write-Output "Latest PME Cache Version: $LatestCacheServiceVersion"
+    Write-Output "Latest PME RPC Server Version: $LatestRPCServerVersion"
     Write-Output "Latest PME Release Date: $PMEReleaseDate"    
 }
 
 Function Get-LatestPMEVersion {
+    <#
     if ($PMEExpectationSetting -eq $true) {
         $LatestVersion = $PME20LatestVersionPlaceholder
         $PMEReleaseDate = $PME20ReleaseDatePlaceholder
@@ -288,7 +318,15 @@ Function Get-LatestPMEVersion {
             $LatestVersion = ($LatestMatch -Split(' '))[10]
         }
     }
+    #>
+    . Get-PMESetupDetails
+
+    . Confirm-PMEInstalled
+    . Confirm-PMEUpdatePending 
     Write-Host "Latest Version: " -nonewline; Write-Host "$latestversion" -ForegroundColor Green
+    Write-Host "Latest PME Agent Version: " -nonewline; Write-Host "$latestPMEAgentversion" -ForegroundColor Green
+    Write-Host "Latest Cache Service Version: " -nonewline; Write-Host "$LatestCacheServiceVersion" -ForegroundColor Green
+    Write-Host "Latest RPC Server Version: " -nonewline; Write-Host "$latestrpcserverversion" -ForegroundColor Green
 }
 
 Function Restore-Date {
@@ -581,7 +619,7 @@ Write-Host "SolarWinds MSP RPC Server Version: $PMERpcServerVersion`n"
 
 Function Start-Services {
     if (($PMEAgentStatus -eq 'Running') -and ($PMECacheStatus -eq 'Running') -and ($PMERpcServerStatus -eq 'Running')) {
-            Write-Host "OK - All PME Services are in a Running State" -foregroundcolor Green
+            Write-Host "$(Get-Date) - OK - All PME Services are in a Running State" -foregroundcolor Green
     }
     else {
         $RecheckStatus = $True
@@ -610,7 +648,7 @@ Function Start-Services {
 
 Function Set-AutomaticStartup {
     if (($SolarWinds.MSP.PME.Agent.PmeServiceStartup -eq 'Auto') -and ($SolarWinds.MSP.CacheServiceStartup -eq 'Auto') -and ($SolarWinds.MSP.RpcServerServiceStartup -eq 'Auto')) {
-            Write-Host "OK - All PME Services are set to Automatic Startup" -foregroundcolor Green
+            Write-Host "$(Get-Date) - OK - All PME Services are set to Automatic Startup" -foregroundcolor Green
     }
     else {
         $RecheckStatus = $True
@@ -639,21 +677,21 @@ Function Set-AutomaticStartup {
 
 Function Validate-PME {
 
-If ([version]$PMECacheVersion -ge [version]$latestversion) {
-    Write-Host "PME Cache Version: " -nonewline; Write-Host "Up To Date ($PMECacheVersion)" -ForegroundColor Green
-}
-else {
-    Write-Host "PME Cache Version: " -nonewline; Write-Host "Not Up To Date ($PMECacheVersion)" -ForegroundColor Red
-}
-
-If ([version]$PMEAgentVersion -ge [version]$latestversion) {
+If ([version]$PMEAgentVersion -ge [version]$latestpmeagentversion) {
     Write-Host "PME Agent Version: " -nonewline; Write-Host "Up To Date ($PMEAgentVersion)" -ForegroundColor Green
 }
 else {
     Write-Host "PME Agent Version: " -nonewline; Write-Host "Not Up To Date ($PMEAgentVersion)" -ForegroundColor Red
 }
 
-If ([version]$PMERpcServerVersion -ge [version]$latestversion) {
+If ([version]$PMECacheVersion -ge [version]$LatestCacheServiceVersion) {
+    Write-Host "PME Cache Version: " -nonewline; Write-Host "Up To Date ($PMECacheVersion)" -ForegroundColor Green
+}
+else {
+    Write-Host "PME Cache Version: " -nonewline; Write-Host "Not Up To Date ($PMECacheVersion)" -ForegroundColor Red
+}
+
+If ([version]$PMERpcServerVersion -ge [version]$latestrpcserverversion) {
     Write-Host "PME RPC Server Version: " -nonewline; Write-Host "Up To Date ($PMERpcServerVersion)" -ForegroundColor Green
 }
 else {
@@ -663,23 +701,23 @@ else {
 
 if (($PMECacheVersion -eq '0.0') -or ($PMEAgentVersion -eq '0.0') -or ($PMERpcServerVersion -eq '0.0')) {
     $OverallStatus = 1
-    $StatusMessage = 'PME is missing one or more application installs'
+    $StatusMessage = '$(Get-Date) - WARNING: PME is missing one or more application installs'
     Write-Host "`n$StatusMessage" -ForegroundColor Red
 }
 
-elseif (([version]$PMECacheVersion -ge [version]$latestversion) -and ([version]$PMEAgentVersion -ge [version]$latestversion) -and ([version]$PMERpcServerVersion -ge [version]$latestversion)) {
+elseif (([version]$PMECacheVersion -ge [version]$latestcacheserviceversion) -and ([version]$PMEAgentVersion -ge [version]$latestpmeagentversion) -and ([version]$PMERpcServerVersion -ge [version]$latestrpcserverversion)) {
     $OverallStatus = 0  
-    $StatusMessage = 'OK - All PME Services are running the latest version'    
+    $StatusMessage = "$(Get-Date) - OK: All PME Services are running the latest version"  
     Write-Host "`n$StatusMessage" -foregroundcolor Green
 }
 elseif ($UpdatePending -eq "Yes") {
     $OverallStatus = 0  
-    $StatusMessage = 'OK - All PME Services are awaiting an update to the latest version'    
+    $StatusMessage = "$(Get-Date) - OK: All PME Services are awaiting an update to the latest version"    
     Write-Host "`n$StatusMessage" -foregroundcolor Green    
 }
 else {
     $OverallStatus = 2
-    $StatusMessage = 'One or more PME Services are not running the latest version'
+    $StatusMessage = "$(Get-Date) - WARNING: One or more PME Services are not running the latest version"
     Write-Host "`n$StatusMessage`n" -foregroundcolor Yellow
     
 }
@@ -759,7 +797,6 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
 Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
      Try {    
-        $CacheServiceConfigFile = "$PMEProgramDataFolder\SolarWinds.MSP.CacheService\config\CacheService.xml"
 
         If (Test-Path "$CacheServiceConfigFile") {
             $xml = New-Object XML
@@ -768,26 +805,36 @@ Function Get-PMEConfigMisconfigurations {
 
             If ($null -ne $CacheServiceConfig) {
                 If ($CacheServiceConfig.CanBypassProxyCacheService -eq "False") {
-                    Write-Warning "Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!"
+                    $CacheConfigMessage = "$(Get-Date) - WARNING: Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!"
+                    Write-Warning "$CacheConfigMessage"
                 } ElseIf ($CacheServiceConfig.CanBypassProxyCacheService -eq "True") {
-                    Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Yellow -BackgroundColor Black
+                    $CacheConfigMessage = "$(Get-Date) - INFO: Patch profile allows PME to fallback to external sources"
+                    Write-Host "$CacheConfigMessage" -ForegroundColor Yellow -BackgroundColor Black
                 } Else {
-                    Write-Warning "Unable to determine if patch profile allows PME to fallback to external sources"
+                    $CacheConfigMessage = "$(Get-Date) - WARNING: Unable to determine if patch profile allows PME to fallback to external sources"
+                    Write-Warning "$CacheConfigMessage"
                 }
 
+
                 If ($CacheServiceConfig.CacheSizeInMB -eq 10240) {
-                    Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Yellow -BackgroundColor Black
+                    $CacheConfigSizeMessage = "$(Get-Date) - INFO: Cache Service is set to default cache size of 10240 MB"
+                    Write-Host "$CacheConfigSizeMessage" -ForegroundColor Yellow -BackgroundColor Black
                 } Else {
                     $CacheSize = $CacheServiceConfig.CacheSizeInMB
-                    Write-Warning "Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!"
+                    $CacheConfigSizeMessage = "$(Get-Date) - WARNING: Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!"
+                    Write-Warning "$CacheConfigSizeMessage"
                 }
-            }
+            }   
         }
     }    
     Catch {
-        Write-Warning "Unable to read Cache Service config file as a valid xml file, default cache size can't be checked"
-    }    
+        $CacheConfigMessage = "$(Get-Date) - WARNING: Unable to read Cache Service config file as a valid xml file, default cache size can't be checked"
+        Write-Warning "$CacheConfigMessage"
+    }   
+
+$StatusMessage = $StatusMessage + "`n" + $CacheConfigMessage + "`n" + $CacheConfigSizeMessage
 }
+
 #endregion
 
 . Set-PMEExpectations
