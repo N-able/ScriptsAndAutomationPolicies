@@ -25,13 +25,13 @@ Repair-PME does the following with logic, error handling and event logging to op
 * Checks if PME is already installed and reports status.
 * Checks if PME has had a recent install. If a recent install (such as an auto-update) has occured within the configured period (2 days) then script will bypass the update pending check below to allow a force install. This can be changed, see settings below for further information.
 * Checks if PME has an update pending and reports status. If an update is pending within the configured period (2 days) then script will be aborted. This can be changed, see settings below for further information.
-* Invokes Solarwinds Diagnostics Tool and silently saves the log capture to **C:\ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs**. These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
-* Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **RPCServerServiceSetup** **and _iu14D2N or similar.**
-* Stops the PME services called **SolarWinds.MSP.PME.Agent.PmeService,** **SolarWinds.MSP.RpcServerService** **and SolarWinds.MSP.CacheService.** If operation times out they will be forcefully terminated. 
-* Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService** and **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache**.
-* Checks existing PME config and informs of possible misconfigurations (cache size, fallback to external sources).
+* Invokes PME Diagnostics Tool and silently saves the log capture to to **'C:\ProgramData\SolarWinds MSP\Diagnostic Logs\'** (PME version 1.x) or **'C:\ProgramData\MspPlatform\Diagnostic Logs\'** (PME version 2.x and above). These logs can be given to Solarwinds support for further troubleshooting hopefully resolving any bugs to make future PME releases more robust.
+* Terminates any currently running instances of **PMESetup,** **CacheServiceSetup,** **FileCacheServiceAgentSetup,** **RPCServerServiceSetup,** **RequestHandlerAgentSetup**, **_iu14D2N,** and **unins000**.
+* Stops the PME services. **SolarWinds.MSP.PME.Agent.PmeService, PME.Agent.PmeService, SolarWinds.MSP.RpcServerService and SolarWinds.MSP.CacheService**. If operation times out they will be forcefully terminated. 
+* Cleanup cached files from **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService,** **C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache,** **C:\ProgramData\MspPlatform\FileCacheServiceAgent** and **C:\ProgramData\MspPlatform\FileCacheServiceAgent\cache** if applicable.
+* Checks existing PME config and informs of possible misconfigurations (cache size and fallback to external sources).
 * Obtains, checks (SHA-256 Hash) and downloads (if required) the latest available version of PME from sis.n-able.com if not verified locally.
-* Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'**.
+* Silently installs PME (PME Agent, Cache Service and RPC Server Service) and saves the install logs to **'C:\ProgramData\SolarWinds MSP\Repair-PME\'** (PME version 1.x) or **'C:\ProgramData\MspPlatform\Repair-PME\'** (PME version 2.x and above).
 * Checks and reports all PME services are installed and running post-installation.
 * Writes an application event log from source 'Repair-PME' with event ID 100 reporting script has ended.
 
