@@ -1,7 +1,7 @@
 <#    
     ************************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.2.5 (01/04/2021)
+    Version: 0.2.2.6 (29/04/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -57,7 +57,8 @@
                         0.2.2.2 + Update for compatibility with version expectation when using legacy PME
                         0.2.2.3 + Update OS Compatibility Output, Status/Version Output
                         0.2.2.4 + Changed Legacy PME Detection Method
-                        0.2.2.5 + Converted from Throw to Write-Host for AMP compatibility, Hardset Legacy PME Release Date for devices that cannot access the website
+                        0.2.2.5 + Converted from Throw to Write-Host for AMP compatibility, Hardcoded Legacy PME Release Date for devices that cannot access the website
+                        0.2.2.6 + Updating 32-bit OS compatibility with Legacy and 2.x PME
 
     Examples: 
     Diagnostics Input: False
@@ -80,7 +81,7 @@ $PendingUpdateDays = "2"
 # *******************************************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.2.5 (01/04/2021)'
+$Version = '0.2.2.6 (29/04/2021)'
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -147,9 +148,12 @@ Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
             # exist in .NET 4.0, even though they are addressable if .NET 4.5+ is
             # installed (.NET 4.5 is an in-place upgrade).
             [System.Net.ServicePointManager]::SecurityProtocol = 3072 -bor 768 -bor 192 -bor 48
+
+            #Hardcoding usage of TLS 1.2
+            #[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
         } 
         catch {
-            Write-Host 'Unable to set PowerShell to use TLS 1.2 and TLS 1.1 due to old .NET Framework installed. If you see underlying connection closed or trust errors, you may need to upgrade to .NET Framework 4.5+ and PowerShell v3+.'
+            Write-Host 'Unable to set PowerShell to use TLS 1.2 and TLS 1.1 due to old .NET Framework installed. If you see underlying connection closed or trust errors, you may need to upgrade to .NET Framework 4.5+ and PowerShell v3+.' -ForegroundColor Red
         }
 
         [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
@@ -158,6 +162,21 @@ Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
 }  
 
 Function Set-PMEExpectations {
+
+#$OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+$64bitOS = [System.Environment]::Is64BitOperatingSystem
+if ($64bitOS -eq $true) {
+    Write-Host "64-Bit OS Detected" -ForegroundColor Cyan
+    $OSArch = "64-bit"
+    $UninstallRegLocation = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+}
+else {
+    Write-Host "32-Bit OS Detected" -ForegroundColor Cyan
+    $OSArch = "32-Bit"
+    $UninstallRegLocation = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+}
+
+
     if (test-path $env:programdata\MspPlatform\PME\log) {
         $MSPPlatformCoreLogSize = (get-item "$env:programdata\MspPlatform\PME\log\core.log").length
         }
@@ -169,8 +188,14 @@ Function Set-PMEExpectations {
 
         #Write-Host "PME Latest Version: $PME20LatestVersionPlaceholder" -ForegroundColor Yellow
         #Write-Host "PME Release Date: $PME20ReleaseDatePlaceholder" -ForegroundColor Yellow
+
         $PMEProgramDataFolder = "$env:programdata\MspPlatform\PME"
+        If ($64bitOS -eq $true) {
         $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\MspPlatform"
+        }
+        else {
+            $PMEProgramFilesFolder = "$Env:ProgramFiles\MspPlatform"
+        }
         $PMEAgentExe = "PME\PME.Agent.exe"  
         $PMECacheExe = "FileCacheServiceAgent\FileCacheServiceAgent.exe"
         $PMERPCExe = "RequestHandlerAgent\RequestHandlerAgent.exe"
@@ -189,7 +214,12 @@ Function Set-PMEExpectations {
     else {
         $legacyPME = $true
         $PMEProgramDataFolder = "$env:programdata\SolarWinds MSP\PME"
+        If ($64bitOS -eq $true) {
         $PMEProgramFilesFolder = "${Env:ProgramFiles(x86)}\SolarWinds MSP"
+        }
+        else {
+            $PMEProgramFilesFolder = "$Env:ProgramFiles\SolarWinds MSP"            
+        }
         $PMEAgentExe = "PME\SolarWinds.MSP.PME.Agent.exe"
         $PMECacheExe = "CacheService\SolarWinds.MSP.CacheService.exe"
         $PMERPCExe = "RpcServer\SolarWinds.MSP.RpcServerService.exe"
@@ -206,18 +236,9 @@ Function Set-PMEExpectations {
         $PMESetup_detailsURI = $LegacyPMESetup_detailsURIHTTPS
     }
 
-        #$OSArch = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
-        $64bitOS = [System.Environment]::Is64BitOperatingSystem
-        if ($64bitOS -eq $true) {
-            $OSArch = "64-bit"
-            $UninstallRegLocation = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
-        }
-        else {
-            $OSArch = "32-Bit"
-            $UninstallRegLocation = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
-        }
+
     
-        If ($OSArch -like '*64*') {
+        If ($64bitOS -eq $true) {
             $SolarWindsMSPCacheLocation = "$PMEProgramFilesFolder\$PMECacheExe"
             $SolarWindsMSPPMEAgentLocation = "$PMEProgramFilesFolder\$PMEAgentExe"
             $SolarWindsMSPRpcServerLocation = "$PMEProgramFilesFolder\$PMERPCExe"
