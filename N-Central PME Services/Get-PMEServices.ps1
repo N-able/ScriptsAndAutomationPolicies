@@ -1,7 +1,7 @@
 <#    
-    ************************************************************************************************************
+    *******************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.2.6 (29/04/2021)
+    Version: 0.2.2.7 (17/05/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get/Reset PME Service Details
@@ -59,6 +59,7 @@
                         0.2.2.4 + Changed Legacy PME Detection Method
                         0.2.2.5 + Converted from Throw to Write-Host for AMP compatibility, Hardcoded Legacy PME Release Date for devices that cannot access the website
                         0.2.2.6 + Updating 32-bit OS compatibility with Legacy and 2.x PME
+                        0.2.2.7 + Updated for PME 2.1 Testing and minor information output improvements. Pending Update Fix courtesy of Ashley
 
     Examples: 
     Diagnostics Input: False
@@ -66,7 +67,7 @@
     
     Diagnostics Input: True
     Force Diagnostics Mode to be enabled on the run regardless of PME Status
-    ************************************************************************************************************
+    *******************************************************************************************************
 #>
 
 Param (
@@ -75,13 +76,17 @@ Param (
     )
 
 # Settings
-# *******************************************************************************************************************************
+# *****************************************************************************************************
 # Change this variable to number of days (must be a number!) to consider a new version of PME as pending an update. Default is 2.
 $PendingUpdateDays = "2"
-# *******************************************************************************************************************************
+# *****************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.2.6 (29/04/2021)'
+$Version = '0.2.2.7 (17/05/2021)'
+$EventLogCompanyName ="Doherty Associates"
+$winbuild = $null
+$osvalue = $null
+$osbuildversion = $null
 $RecheckStartup = $Null
 $RecheckStatus = $Null
 $request = $null
@@ -89,20 +94,22 @@ $Latestversion = $Null
 $pmeprofile = $null
 $diagnosticserrorint = $null
 $pmeinstalllogcontent = $null
-$EventLogCompanyName ="Doherty Associates"
 $PMEExpectationSetting = $False
-$legacyPME = $null
-$legacyPMEReleaseDate = "2021.01.27"
 
-#$PME20LatestVersionPlaceholder = "2.0.1.4055" # Agent Version is 2.0.0.4064 but this means I don't have to manually set multiple versions
-#$PME20ReleaseDatePlaceholder = "2021.03.18"
+$legacyPMEReleaseDate = "2021.01.27"
+$legacyPME = $null
+
+# $NAblePMESetup_detailsURIHTTPS = 'https://api.us-west-2.prd.patch.system-monitor.com/api/v1/pme/version/default'
+# N-Able URL doens't include individual component versions or release data so we use own own URL instead
 
 $CommunityPMESetup_detailsURIHTTP = "http://raw.githubusercontent.com/N-able/CustomMonitoring/master/N-Central%20PME%20Services/Community_PMESetup_details.xml"
 $CommunityPMESetup_detailsURIHTTPS = "https://raw.githubusercontent.com/N-able/CustomMonitoring/master/N-Central%20PME%20Services/Community_PMESetup_details.xml"
 $LegacyPMESetup_detailsURIHTTPS = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
 $LegacyPMESetup_detailsURIHTTP = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
 
-Write-Host "`nGet-PMEServices $Version`n" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Get-PMEServices $Version" -ForegroundColor Cyan
+Write-Host ""
 
 if ($Diagnostics -eq 'True'){
     Write-Host "Diagnostics Mode Enabled" -foregroundcolor Yellow
@@ -111,28 +118,34 @@ if ($Diagnostics -eq 'True'){
 #region Functions
 
 Function Test-PMERequirement {
+$winbuild = (Get-WmiObject -class Win32_OperatingSystem).Version
+# [string]$WinBuild=[System.Environment]::OSVersion.Version
+$UBR = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name UBR).UBR
+$OSBuildVersion = $winbuild + "." + $UBR 
+write-Host "Windows Build Version: " -nonewline; Write-Host "$osbuildversion" -ForegroundColor Green
+
 $OSName = (Get-WmiObject Win32_OperatingSystem).Caption
 Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
     if (($osname -match "XP") -or ($osname -match "Vista")  -or ($osname -match "10 Home") -or ($osname -match "2003") -or (($osname -match "2008") -and ($osname -notmatch "2008 R2")) ) {
         
         $Continue = $False
-        $PMECacheStatus = "N/A - OS does not support N-Central PME"
-        $PMEAgentStatus = "N/A - OS does not support N-Central PME"
-        $PMERpcServerStatus = "N/A - OS does not support N-Central PME"
+        $PMECacheStatus = "N/A - N-Central PME does not support OS"
+        $PMEAgentStatus = "N/A - N-Central PME does not support OS"
+        $PMERpcServerStatus = "N/A - N-Central PME does not support OS"
         $PMECacheVersion = '0.0'
         $PMEAgentVersion = '0.0'
         $PMERpcServerVersion = '0.0'
         pmeprofile = 'Default'
         $diagnosticserrorint = '2'
         $OverallStatus = '2'
-        $StatusMessage = "$(Get-Date) - Error: The OS running on this device ($OSName) is not supported by N-Central PME."
+        $StatusMessage = "$(Get-Date) - Error: The OS running on this device ($OSName $osbuildversion) is not supported by N-Central PME."
         $installernotes = $StatusMessage
 
         Write-Host "$StatusMessage" -ForegroundColor Red
 
     }
     else {
-        $statusmessage = "$(Get-Date) - Information: The OS running on this device ($OSName) is supported by N-Central PME"
+        $statusmessage = "$(Get-Date) - Information: The OS running on this device ($OSName $osbuildversion) is supported by N-Central PME"
         $installernotes = $statusmessage
         Write-Host "$statusmessage" -ForegroundColor Green
         Write-Host ""
@@ -183,7 +196,8 @@ else {
         
         if ($MSPPlatformCoreLogSize -gt '0') {
         $legacyPME = $false
-        Write-Host "Warning: Unnanounced PME 2.0 Detected.`nArtificially Setting Version and Release Date Expectation via Community XML" -ForegroundColor Yellow
+        # N-Able have pre-announced PME via https://status.n-able.com/release-notes/ although there is no direct category for it
+        Write-Host "Warning: PME 2.x Detected - Artificially setting version and release date expectation via Community XML" -ForegroundColor Yellow
         #$PMEExpectationSetting = $True
 
         #Write-Host "PME Latest Version: $PME20LatestVersionPlaceholder" -ForegroundColor Yellow
@@ -294,7 +308,7 @@ Function Get-PMESetupDetails {
                 if ($? -eq $true) {
                     Write-Host "Success reading from Community XML!" -ForegroundColor Green
                 }
-                Write-Host "Setting PME Component Version Expectation to individual PME Component Versions" -ForegroundColor Cyan
+                Write-Host "Setting PME Component Version Expectation to individual PME Component Versions:" -ForegroundColor Cyan
                 $LatestPMEAgentVersion = $request.ComponentDetails.PatchManagementServiceControllerVersion
                 $LatestCacheServiceVersion = $request.ComponentDetails.FileCacheServiceAgentVersion
                 $LatestRPCServerVersion = $request.ComponentDetails.RequestHandlerAgentVersion
@@ -509,7 +523,7 @@ Function Confirm-PMEUpdatePending {
             $diagnosticsinfo = $diagnosticsinfo + "`n$message"
             $ConvertPMEReleaseDate = [datetime]$legacyPMEReleaseDate
         }
-        $SelfHealingDate = $ConvertPMEReleaseDate.AddDays($RepairAfterUpdateDays).ToString('yyyy.MM.dd')
+        $SelfHealingDate = $ConvertPMEReleaseDate.AddDays($PendingUpdateDays).ToString('yyyy.MM.dd')
         Write-Host "INFO: Script considers a PME update to be pending for ($PendingUpdateDays) days after a new version of PME has been released" -ForegroundColor Yellow -BackgroundColor Black
         $DaysElapsed = (New-TimeSpan -Start $SelfHealingDate -End $Date).Days
         $DaysElapsedReversed = (New-TimeSpan -Start $ConvertPMEReleaseDate -End $Date).Days
@@ -581,7 +595,6 @@ Write-Host "PME Offline Scanning: " -nonewline; Write-Host "$pmeofflinescan" -fo
     }
     write-host ""
 }
-
 
 Function Test-PMEConnectivity {
     $DiagnosticsError = $null
@@ -680,8 +693,6 @@ Write-Host "SolarWinds MSP RPC Server Status: $PMERpcServerStatus ($PMERpcServer
 Write-Host ""
 }
 
-
-
 Function Start-Services {
     if (($PMEAgentStatus -eq 'Running') -and ($PMECacheStatus -eq 'Running') -and ($PMERpcServerStatus -eq 'Running')) {
             Write-Host "$(Get-Date) - OK - All PME Services are in a Running State" -foregroundcolor Green
@@ -767,23 +778,28 @@ else {
 if (($PMECacheVersion -eq '0.0') -or ($PMEAgentVersion -eq '0.0') -or ($PMERpcServerVersion -eq '0.0')) {
     $OverallStatus = 1
     $StatusMessage = "$(Get-Date) - WARNING: PME is missing one or more application installs"
-    Write-Host "`n$StatusMessage" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "$StatusMessage" -ForegroundColor Red
 }
 
 elseif (([version]$PMECacheVersion -ge [version]$latestcacheserviceversion) -and ([version]$PMEAgentVersion -ge [version]$latestpmeagentversion) -and ([version]$PMERpcServerVersion -ge [version]$latestrpcserverversion)) {
     $OverallStatus = 0  
     $StatusMessage = "$(Get-Date) - OK: All PME Services are running the latest version`n" + $StatusMessage  
-    Write-Host "`n$StatusMessage" -foregroundcolor Green
+    Write-Host ""
+    Write-Host "$StatusMessage" -foregroundcolor Green
 }
 elseif ($UpdatePending -eq "Yes") {
     $OverallStatus = 0  
-    $StatusMessage = "$(Get-Date) - OK: All PME Services are awaiting an update to the latest version`n" + $StatusMessage   
-    Write-Host "`n$StatusMessage" -foregroundcolor Green    
+    $StatusMessage = "$(Get-Date) - OK: All PME Services are awaiting an update to the latest version`n" + $StatusMessage
+    Write-Host ""   
+    Write-Host "$StatusMessage" -foregroundcolor Green    
 }
 else {
     $OverallStatus = 2
-    $StatusMessage = "$(Get-Date) - WARNING: One or more PME Services are not running the latest version`n" + $StatusMessage 
-    Write-Host "`n$StatusMessage`n" -foregroundcolor Yellow
+    $StatusMessage = "$(Get-Date) - WARNING: One or more PME Services are not running the latest version`n" + $StatusMessage
+    Write-Host "" 
+    Write-Host "$StatusMessage" -foregroundcolor Yellow
+    Write-Host ""
 }
 if ($OverallStatus -eq "0") {
     Write-Host "PME Status: " -nonewline; Write-Host "$OverallStatus" -ForegroundColor Green
@@ -842,14 +858,16 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
     if ($startinglinenumber -ne '-2'){ 
         $relevantlines = $TotalLinesInFile - $startinglinenumber
         $UpgradeError = get-content $pmeinstalllog -last $relevantlines
-        Write-Host "`nInstaller EXE: " -ForegroundColor Green -nonewline; Write-Host "$PMEInstallerExefromLog"
+        Write-Host ""
+        Write-Host "Installer EXE: " -ForegroundColor Green -nonewline; Write-Host "$PMEInstallerExefromLog"
         if ($pmeInstallerExefromLog -ne "$PMEProgramDataFolder\PME\Archives\PMESetup_$LatestVersion.exe") {
             Write-Host "Incorrect Setup EXE is being used" -foregroundcolor Red
         }
         else {
             Write-Host "Correct Setup EXE is being used" -foregroundcolor Green
         }
-        Write-Host "`nLast Upgrade Results: " -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Last Upgrade Results: " -ForegroundColor Green
         get-content $pmeinstalllog -last $relevantlines
         }
         else {
@@ -867,7 +885,7 @@ if (test-path "$NCentralLog\PME_Install_*.log") {
 Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
     Write-Host "PME Config Details:" -ForegroundColor Cyan
-     Try {    
+     Try {
 
         If (Test-Path "$CacheServiceConfigFile") {
             $xml = New-Object XML
