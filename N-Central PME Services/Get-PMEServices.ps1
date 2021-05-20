@@ -1,27 +1,40 @@
 <#    
     *******************************************************************************************************
     Name: Get-PMEServices.ps1
-    Version: 0.2.2.7 (17/05/2021)
+    Version: 0.2.2.8 (20/05/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
-    Purpose:    Get/Reset PME Service Details
-    Pre-Reqs:    PowerShell 2.0 (PowerShell 4.0+ for Connectivity Tests)
+    Purpose:    Get N-Central Patch Management Engine (PME) Status Details
+    Use in combination with Ashley How's Repair-PME to diagnose/fix/upgrade PME when automatic updates won't work.
+
+    Pre-Reqs:   PowerShell 2.0 (PowerShell 4.0+ for Connectivity Tests)
+
+    Optional:   Repair-PME: https://github.com/N-able/ScriptsAndAutomationPolicies/tree/master/Repair-PME
+                Repair-PME can be used in a standalone or self-healing capacity to perform diagnostics 
+                on PME or upgrade PME outside of the autoamtic update function.
+
     Version History:    0.1.0.0 - Initial Release.
                                 + Improved Detection for PME Services being missing on a device
                                 + Improved Detection of Latest PME Version
-                                + Improved Detection and error handling for latest Public PME Version when PME 1.1 is installed or PME is not installed on a device
+                                + Improved Detection and error handling for latest Public PME Version when 
+                                PME 1.1 is installed or PME is not installed on a device
                                 + Improved Compatibility of PME Version Check
                                 + Updated to include better PME 1.2.x Latest Versioncheck
                                 + Updated for better PS 2.0 Compatibility
-                        0.1.5.0 + Added PME Profile Detection, and Diagnostics information courtesy of Ashley How's Repair-PME
-                        0.1.5.0a + N-Central AMP Variant using AMP Input Parameter to control Forcing of Diagnostics Mode (Disabled by Default)	
-                        0.1.5.1 + Improved TLS Support, Updated Error Message for PME connectivity Test not working on Windows 7
+                        0.1.5.0 + Added PME Profile Detection, and Diagnostics information courtesy of 
+                        Ashley How's Repair-PME
+                        0.1.5.0a + N-Central AMP Variant using AMP Input Parameter to control Forcing of 
+                        Diagnostics Mode (Disabled by Default)	
+                        0.1.5.1 + Improved TLS Support, Updated Error Message for PME connectivity Test not 
+                        working on Windows 7
                         0.1.5.2 + PME 1.2.4 has been made GA for the default stream so have had to alter detection methods
                         0.1.5.3 + Improved Compatibility with Server 2008 R2
-                        0.1.5.4 + Updated 'Test-PMEConnectivity' function to fix a message typo. Thanks for Clint Conner for finding. 
+                        0.1.5.4 + Updated 'Test-PMEConnectivity' function to fix a message typo. 
+                        Thanks for Clint Conner for finding. 
                         0.1.6.0 + Have Added in PME Installer Log Analysis for use when PME is not up to date
                         0.1.6.1 + Have added date analysis of log file/detection/installation proceedings
-                        0.1.6.2 + Fixed Detection Logic for when there has been no PME Scan on a device, and missing components
+                        0.1.6.2 + Fixed Detection Logic for when there has been no PME Scan on a device, 
+                        and missing components
                         0.1.6.3 + Added Reading in of PME Config for Cache settings
                         0.1.6.4 + Added in better x86/x64 compatability because apparently there are still 32-bit OS devices out there.
                         0.1.6.5 + Fixed Typo
@@ -59,7 +72,9 @@
                         0.2.2.4 + Changed Legacy PME Detection Method
                         0.2.2.5 + Converted from Throw to Write-Host for AMP compatibility, Hardcoded Legacy PME Release Date for devices that cannot access the website
                         0.2.2.6 + Updating 32-bit OS compatibility with Legacy and 2.x PME
-                        0.2.2.7 + Updated for PME 2.1 Testing and minor information output improvements. Pending Update Fix courtesy of Ashley
+                        0.2.2.7 + Updated for PME 2.1 Testing and minor information output improvements. 
+                        Pending Update Fix courtesy of Ashley How
+                        0.2.2.8 + Updated Parameter comment to help those who try to throw this script directly into AM's "Run Powershell Script" object
 
     Examples: 
     Diagnostics Input: False
@@ -68,7 +83,9 @@
     Diagnostics Input: True
     Force Diagnostics Mode to be enabled on the run regardless of PME Status
     *******************************************************************************************************
-#>
+#> 
+# N-Able Automation Manager does not support the use of PS parameters within the "Run Powershell Script" object
+# Comment out the paramter below if you're trying to run this PS script within AM.
 
 Param (
         [Parameter(Mandatory=$false,Position=1)]
