@@ -99,7 +99,7 @@ $PendingUpdateDays = "2"
 # *****************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.2.7 (17/05/2021)'
+$Version = '0.2.2.8 (20/05/2021)'
 $EventLogCompanyName ="Doherty Associates"
 $winbuild = $null
 $osvalue = $null
