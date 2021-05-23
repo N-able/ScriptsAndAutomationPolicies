@@ -1,7 +1,7 @@
 <#
-   *********************************************************************************************************************************
+   **********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.2.1.0 (14/04/2021)
+    Version:         0.2.1.1 (23/05/2021)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -171,14 +171,20 @@
                              - Updated and optimized code for 'Get-NCAgentVersion' function.
                              - Renamed 'Get-SWCertificate' and 'Test-SWCertificate' functions to 'Get-NableCertificate' and
                               'Test-NableCertificate'.
-                             - Tidy up code.                        
-   *********************************************************************************************************************************
+                             - Tidy up code.
+                     0.2.1.1 - New function 'Clear-RepairPME' to remove old Repair-PME logs to avoid excessive disk usage.
+                             - New function 'Invoke-Delay' to invoke a random delay to help prevent network congestion.
+                               This is controlled via the $PreventNetworkCongestion variable in the settings section. Off by default.
+                             - Updated 'Stop-PMEServices' function to report if service is not already running. 
+                             - Updated code to include retry logic for downloads rather than erroring out on the first attempt.
+                             - Optimized code to use [Void] instead of Out-Null to improve performance.                                                        
+   **********************************************************************************************************************************
 #>
-$Version = '0.2.1.0'
-$VersionDate = '(14/04/2021)'
+$Version = '0.2.1.1'
+$VersionDate = '(23/05/2021)'
 
 # Settings
-# ********************************************************************************************************************************
+# **********************************************************************************************************************************
 # Change this variable to number of days (must be a number!) to allow repair after new version of PME is released. 
 # This is used for the update pending check. Default is 2.
 $RepairAfterUpdateDays = "2"
@@ -189,7 +195,11 @@ $ForceRepairRecentInstallDays = "2"
 
 # Change this variable to turn off/on update check of the Repair-PME script. Default is Yes. To turn this off set it to No.
 $UpdateCheck = "Yes"
-# ********************************************************************************************************************************
+
+# Change this variable to turn off/on random delay of the Repair-PME script to help prevent network congestion if running this
+# Script on large number of machines at the same time. Default is No. To turn this on set it to Yes.
+$PreventNetworkCongestion = "No"
+# **********************************************************************************************************************************
 
 Write-Host "Repair-PME $Version $VersionDate" -ForegroundColor Yellow
 Write-Host "-------------------------------" -ForegroundColor Yellow
@@ -222,6 +232,7 @@ Function Confirm-Elevation {
         Write-Host "OK: Script is running as administrator" -ForegroundColor Green
     }
 }
+
 Function Set-Start {
     New-EventLog -LogName Application -Source "Repair-PME" -ErrorAction SilentlyContinue
     Write-EventLog @WriteEventLogInformationParams -Message "Repair-PME has started, running version $Version.`nScript: Repair-PME.ps1"
@@ -344,30 +355,54 @@ Function Set-CryptoProtocol {
     [Net.ServicePointManager]::SecurityProtocol = $tls12
 }
 
+Function Invoke-Delay {
+    If ($PreventNetworkCongestion -eq "Yes") {
+        $Delay = Get-Random -Minimum 1 -Maximum 60
+        Write-Output "$(get-timestamp) Execution will be delayed for $Delay seconds to avoid network congestion..."
+        Start-Sleep -Seconds $Delay
+    }
+}
+
 Function Get-RepairPMEUpdate {
     If ($UpdateCheck -eq "Yes") {
         Write-Host "Checking if update is available for Repair-PME script..." -ForegroundColor Cyan    
         $RepairPMEVersionURI = "http://raw.githubusercontent.com/N-able/ScriptsAndAutomationPolicies/master/Repair-PME/LatestVersion.xml"
-        Try { 
-            $Request = $null; $LatestPMEVersion = $null           
-            [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$RepairPMEVersionURI") -split '<\?xml.*\?>')
-            $LatestPMEVersion  = $request.LatestVersion.Version
-            Write-Output "Current Repair-PME Version: $Version `nLatest Repair-PME Version: $LatestPMEVersion"
-            If ([version]$Version -ge [version]$LatestPMEVersion) {
-                Write-Host "OK: Repair-PME is up to date" -ForegroundColor Green
+        $EventLogMessage = $null
+        $CatchError = $null    
+        [int]$DownloadAttempts = 0
+        [int]$MaxDownloadAttempts = 10
+        Do {
+            Try {
+                $DownloadAttempts +=1
+                $Request = $null; $LatestPMEVersion = $null           
+                [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$RepairPMEVersionURI") -split '<\?xml.*\?>')
+                $LatestPMEVersion  = $request.LatestVersion.Version
+                Write-Output "Current Repair-PME Version: $Version `nLatest Repair-PME Version: $LatestPMEVersion"
+                Break
             }
-            ElseIf ([version]$Version -lt [version]$LatestPMEVersion) {
-                Write-EventLog @WriteEventLogWarningParams -Message "WARNING: Repair-PME is not up to date! please download the latest version from https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1`nScript: Repair-PME.ps1"
-                Write-Error "Repair-PME is not up to date! please download the latest version from https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1"
+            Catch {
+                $EventLogMessage = "ERROR: Unable to fetch version file to check if Repair-PME is up to date, possibly due to limited or no connectivity to https://raw.githubusercontent.com`nScript: Repair-PME.ps1"
+                $CatchError = "Unable to fetch version file to check if Repair-PME is up to date, possibly due to limited or no connectivity to https://raw.githubusercontent.com"
             }
-            Else {
-                Write-EventLog @WriteEventLogWarningParams -Message "ERROR: Unable to detect if Repair-PME is up to date!`nScript: Repair-PME.ps1"
-                Write-Error "Unable to detect if Repair-PME is up to date!"
-            }
+            Write-Output "Download failed on attempt $DownloadAttempts of $MaxDownloadAttempts, retrying in 3 seconds..."
+            Start-Sleep -Seconds 3
         }
-        Catch [System.Net.WebException] {
-            Write-EventLog @WriteEventLogWarningParams -Message "ERROR: Unable to fetch version file to check if Repair-PME is up to date, possibly due to limited or no connectivity to https://raw.githubusercontent.com`nScript: Repair-PME.ps1"
-            Write-Error "Unable to fetch version file to check if Repair-PME is up to date, possibly due to limited or no connectivity to https://raw.githubusercontent.com"
+        While ($DownloadAttempts -lt 10)
+        If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+            Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
+            Throw $CatchError
+        }
+        
+        If ([version]$Version -ge [version]$LatestPMEVersion) {
+            Write-Host "OK: Repair-PME is up to date" -ForegroundColor Green
+        }
+        ElseIf ([version]$Version -lt [version]$LatestPMEVersion) {
+            Write-EventLog @WriteEventLogWarningParams -Message "WARNING: Repair-PME is not up to date! please download the latest version from https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1`nScript: Repair-PME.ps1"
+            Write-Error "Repair-PME is not up to date! please download the latest version from https://github.com/N-able/ScriptsAndAutomationPolicies/blob/master/Repair-PME/Repair-PME.ps1"
+        }
+        Else {
+            Write-EventLog @WriteEventLogWarningParams -Message "ERROR: Unable to detect if Repair-PME is up to date!`nScript: Repair-PME.ps1"
+            Write-Error "Unable to detect if Repair-PME is up to date!"
         }
     }
 } 
@@ -498,7 +533,7 @@ Function Get-NableCertificate ($url) {
     $Subject = $WebRequest.ServicePoint.Certificate.Subject
 
     # Build chain
-    $chain.Build($Certificate) | Out-Null
+    [Void]($chain.Build($Certificate))
     # write-host $chain.ChainElements.Count #This returns "1" meaning none of the CA certs are included.
     # write-host $chain.ChainElements[0].Certificate.IssuerName.Name
     [Net.ServicePointManager]::ServerCertificateValidationCallback = $null
@@ -741,45 +776,68 @@ Function Get-PMESetupDetails {
         $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
     }
 
-    Try {
-        $request = $null
-        [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
-        $PMEDetails = $request.ComponentDetails
-        $LatestVersion = $request.ComponentDetails.Version
-        
-    } 
-    Catch [System.Net.WebException] {
-        Write-EventLog @WriteEventLogErrorParams -Message "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error fetching PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
-    } 
-    Catch [System.Management.Automation.MetadataException] {
-        Write-EventLog @WriteEventLogErrorParams -Message "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error casting to XML, could not parse PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
-    } 
-    Catch {
-        Write-EventLog @WriteEventLogErrorParams -Message "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error occurred attempting to obtain PMESetup_details.xml, aborting. Error: $($_.Exception.Message)"
+    $EventLogMessage = $null
+    $CatchError = $null    
+    [int]$DownloadAttempts = 0
+    [int]$MaxDownloadAttempts = 10
+    Do {
+        Try {
+            $DownloadAttempts +=1
+            $request = $null
+            [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
+            $PMEDetails = $request.ComponentDetails
+            $LatestVersion = $request.ComponentDetails.Version
+            Break            
+        }
+        Catch [System.Management.Automation.MetadataException] {
+            $EventLogMessage = "Error casting to XML, could not parse PMESetup_details.xml from $PMESetup_detailsURI, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+            $CatchError = "Error casting to XML, could not parse PMESetup_details.xml from $PMESetup_detailsURI, aborting. Error: $($_.Exception.Message)"
+            Break
+        }
+        Catch {
+            $EventLogMessage = "Error occurred attempting to obtain PMESetup_details.xml from $PMESetup_detailsURI, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+            $CatchError = "Error occurred attempting to obtain PMESetup_details.xml from $PMESetup_detailsURI, aborting. Error: $($_.Exception.Message)"
+        }
+        Write-Output "Download failed on attempt $DownloadAttempts of $MaxDownloadAttempts, retrying in 3 seconds..."
+        Start-Sleep -Seconds 3
+    }
+    While ($DownloadAttempts -lt 10)
+    If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+        Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
+        Throw $CatchError
     }
 
-    Try {
-        $webRequest = $null; $webResponse = $null
-        $webRequest = [System.Net.WebRequest]::Create($PMESetup_detailsURI)
-        $webRequest.Method = "HEAD"
-        $WebRequest.AllowAutoRedirect = $true
-        $WebRequest.KeepAlive = $false
-        $WebRequest.Timeout = 10000
-        $webResponse = $webRequest.GetResponse()
-        $remoteLastModified = ($webResponse.LastModified) -as [DateTime]
-        $PMEReleaseDate = $remoteLastModified | Get-Date -Format "yyyy.MM.dd"
-        $webResponse.Close()
-    } 
-    Catch [System.Net.WebException] {
-        Write-EventLog @WriteEventLogErrorParams -Message "Error fetching header for PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error fetching header for PMESetup_Details.xml, check the source URL $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
-    } 
-    Catch {
-        Write-EventLog @WriteEventLogErrorParams -Message "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-        Throw "Error fetching header for PMESetup_Details.xml, aborting. Error: $($_.Exception.Message)"
+    $EventLogMessage = $null
+    $CatchError = $null    
+    [int]$DownloadAttempts = 0
+    [int]$MaxDownloadAttempts = 10
+    Do {
+        Try {
+            $DownloadAttempts +=1
+            $webRequest = $null; $webResponse = $null
+            $webRequest = [System.Net.WebRequest]::Create($PMESetup_detailsURI)
+            $webRequest.Method = "HEAD"
+            $WebRequest.AllowAutoRedirect = $true
+            $WebRequest.KeepAlive = $false
+            $WebRequest.Timeout = 10000
+            $webResponse = $webRequest.GetResponse()
+            $remoteLastModified = ($webResponse.LastModified) -as [DateTime]
+            $PMEReleaseDate = $remoteLastModified | Get-Date -Format "yyyy.MM.dd"
+            $webResponse.Close()
+            Break
+        }
+        Catch {
+            $EventLogMessage = "Error fetching header for PMESetup_Details.xml from $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+            $CatchError = "Error fetching header for PMESetup_Details.xml from $($PMESetup_detailsURI), aborting. Error: $($_.Exception.Message)"
+        }
+        Write-Output "Download failed on attempt $DownloadAttempts of $MaxDownloadAttempts, retrying in 3 seconds..."
+        Start-Sleep -Seconds 3
+    }
+    While ($DownloadAttempts -lt 10)
+    
+    If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+        Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
+        Throw $CatchError
     }
 
     Write-Host "Checking Latest PME version..." -ForegroundColor Cyan
@@ -850,6 +908,24 @@ Function Confirm-PMEUpdatePending {
     }
 }
 
+Function Clear-RepairPME {
+    # Cleanup Repair-PME Log files older than 30 days
+    Write-Host "Repair-PME Log Cleanup..." -ForegroundColor Cyan
+    $RepairPMEPaths = "C:\ProgramData\SolarWinds MSP\Repair-PME", "C:\ProgramData\MspPlatform\Repair-PME"
+    ForEach ($RepairPMEPath in $RepairPMEPaths) {
+        If (Test-Path -Path "$RepairPMEPath") {
+            Try {
+                Write-Output "Performing cleanup of '$RepairPMEPath' folder"
+                [Void](Get-ChildItem -Path $RepairPMEPath -Recurse | Where-Object { $_.CreationTime -lt (Get-Date).AddDays(-30) -and ! $_.PSIsContainer } | Remove-Item -Recurse -Confirm:$false)
+            } 
+            Catch {
+                Write-EventLog @WriteEventLogErrorParams -Message "Unable to cleanup '$RepairPMEPath' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+                Throw "Unable to cleanup '$RepairPMEPath' aborting. Error: $($_.Exception.Message)"
+            }
+        } 
+    }    
+}
+
 Function Invoke-PMEDiagnostics {
     # Invokes official PME Diagnostics tool to capture logs for support
     If (Test-Path -Path "$ProgramFiles\MspPlatform\PME\Diagnostics") {          
@@ -877,7 +953,7 @@ Function Invoke-PMEDiagnostics {
         Else {
             Try {
                 Write-Output "Directory '$RepairPMEDiagnosticsLogsPath' does not exist, creating directory"
-                New-Item -ItemType Directory -Path "$RepairPMEDiagnosticsLogsPath" -Force | Out-Null
+                [Void](New-Item -ItemType Directory -Path "$RepairPMEDiagnosticsLogsPath" -Force)
             } 
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$RepairPMEDiagnosticsLogsPath' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -917,7 +993,7 @@ Function Stop-PMEServices {
     ForEach ($Service in $Services) {
         $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
         If (($ServiceStatus -eq "Running") -or ($ServiceStatus -eq "Stopping") -or ($ServiceStatus -eq "Suspended")) {
-            Write-Host "$Service is $ServiceStatus, attempting to stop..."
+            Write-Output "$Service is $ServiceStatus, attempting to stop..."
             Stop-Service -Name $Service -Force
             $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
             If ($ServiceStatus -eq "Stopped") {
@@ -932,19 +1008,22 @@ Function Stop-PMEServices {
                 sc.exe failure "$Service" actions= restart/0/restart/0//0 reset= 0 >null
             }
         }
+        Else {
+            Write-Host "OK: $Service is not running" -ForegroundColor Green            
+        }
 
     }
 }
 
 Function Clear-PME {
     # Cleanup PME Cache folders
-    Write-Host "Cleanup..." -ForegroundColor Cyan
+    Write-Host "PME Cache Cleanup..." -ForegroundColor Cyan
     $CacheFolderPaths = "$env:ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService", "$env:ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\cache", "$env:ProgramData\MspPlatform\FileCacheServiceAgent", "$env:ProgramData\MspPlatform\FileCacheServiceAgent\cache"
     ForEach ($CacheFolderPath in $CacheFolderPaths) {
         If (Test-Path -Path "$CacheFolderPath") {
             Try {
                 Write-Output "Performing cleanup of '$CacheFolderPath' folder"
-                Remove-Item -Path "$CacheFolderPath\*.*" -Force -Confirm:$false | Out-Null
+                [Void](Remove-Item -Path "$CacheFolderPath\*.*" -Force -Confirm:$false)
             } 
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to cleanup '$CacheFolderPath\*.*' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -959,22 +1038,52 @@ Function Get-PMESetup {
     If ($Fallback -eq "Yes") {
         $FallbackDownloadURL = ($PMEDetails.DownloadURL).Replace('https', 'http')
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
-        Try {
-            (New-Object System.Net.WebClient).DownloadFile("$($FallbackDownloadURL)", "$PMEArchives\PMESetup_$($PMEDetails.Version).exe")
-        } 
-        Catch {
-            Write-EventLog @WriteEventLogErrorParams -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-            Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+        $EventLogMessage = $null
+        $CatchError = $null    
+        [int]$DownloadAttempts = 0
+        [int]$MaxDownloadAttempts = 10
+        Do {
+            Try {
+                $DownloadAttempts +=1
+                (New-Object System.Net.WebClient).DownloadFile("$($FallbackDownloadURL)", "$PMEArchives\PMESetup_$($PMEDetails.Version).exe")
+                Break
+            }
+            Catch {
+                $EventLogMessage = "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+                $CatchError = "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+            }
+            Write-Output "Download failed on attempt $DownloadAttempts of $MaxDownloadAttempts, retrying in 3 seconds..."
+            Start-Sleep -Seconds 3
+        }
+        While ($DownloadAttempts -lt 10)
+        If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+            Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
+            Throw $CatchError
         }
     } 
     Else {
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
-        Try {
-            (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)", "$PMEArchives\PMESetup_$($PMEDetails.Version).exe")
-        } 
-        Catch {
-            Write-EventLog @WriteEventLogErrorParams -Message "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
-            Throw "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+        $EventLogMessage = $null
+        $CatchError = $null    
+        [int]$DownloadAttempts = 0
+        [int]$MaxDownloadAttempts = 10
+        Do {
+            Try {
+                $DownloadAttempts +=1
+                (New-Object System.Net.WebClient).DownloadFile("$($PMEDetails.DownloadURL)", "$PMEArchives\PMESetup_$($PMEDetails.Version).exe")
+                Break
+            }
+            Catch {
+                $EventLogMessage = "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+                $CatchError = "Unable to download $($PMEDetails.FileName) from sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+            }
+            Write-Output "Download failed on attempt $DownloadAttempts of $MaxDownloadAttempts, retrying in 3 seconds..."
+            Start-Sleep -Seconds 3
+        }
+        While ($DownloadAttempts -lt 10)
+        If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+            Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
+            Throw $CatchError
         }
     }
 }
@@ -1040,7 +1149,7 @@ Function Install-PME {
             Else {
                 Try {
                     Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
-                    New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force | Out-Null
+                    [Void](New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force)
                 } 
                 Catch {
                     Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -1083,7 +1192,7 @@ Function Install-PME {
                 Else {
                     Try {
                         Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
-                        New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force | Out-Null
+                        [Void](New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force)
                     } 
                     Catch {
                         Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -1125,7 +1234,7 @@ Function Install-PME {
         Else {
             Try {
                 Write-Output "Directory '$PMEArchives' does not exist, creating directory"
-                New-Item -ItemType Directory -Path "$PMEArchives" -Force | Out-Null
+                [Void](New-Item -ItemType Directory -Path "$PMEArchives" -Force)
             } 
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEArchives' required for download, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -1146,7 +1255,7 @@ Function Install-PME {
             Else {
                 Try {
                     Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
-                    New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force | Out-Null
+                    [Void](New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force)
                 } 
                 Catch {
                     Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -1212,6 +1321,7 @@ Function Set-End {
 . Get-PMELocations
 . Get-PSVersion
 . Set-CryptoProtocol
+. Invoke-Delay
 . Get-RepairPMEUpdate
 . Test-Connectivity
 . Test-NableCertificate
@@ -1220,6 +1330,7 @@ Function Set-End {
 . Get-PMESetupDetails
 . Confirm-PMERecentInstall
 . Confirm-PMEUpdatePending
+. Clear-RepairPME
 . Invoke-PMEDiagnostics
 . Stop-PMESetup
 . Stop-PMEServices
