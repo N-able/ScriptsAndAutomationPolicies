@@ -1,7 +1,7 @@
 <#
    **********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.2.1.1 (23/05/2021)
+    Version:         0.2.1.2 (24/05/2021)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -177,11 +177,12 @@
                                This is controlled via the $PreventNetworkCongestion variable in the settings section. Off by default.
                              - Updated 'Stop-PMEServices' function to report if service is not already running. 
                              - Updated code to include retry logic for downloads rather than erroring out on the first attempt.
-                             - Optimized code to use [Void] instead of Out-Null to improve performance.                                                        
+                             - Optimized code to use [Void] instead of Out-Null to improve performance.
+                     0.2.1.2 - Updated 'Stop-PMEServices' function to resolve issue where it was unable to forcefully stop services.                                                                                   
    **********************************************************************************************************************************
 #>
-$Version = '0.2.1.1'
-$VersionDate = '(23/05/2021)'
+$Version = '0.2.1.2'
+$VersionDate = '(24/05/2021)'
 
 # Settings
 # **********************************************************************************************************************************
@@ -1003,7 +1004,7 @@ Function Stop-PMEServices {
                 Write-Warning "$Service still running, temporarily disabling recovery and terminating"
                 # Set-Service -Name $Service -StartupType Disabled
                 sc.exe failure "$Service" reset= 0 actions= // >null
-                $ServicePID = (Get-WMIObject Win32_Service | Where-Object { $_.name -eq '$Service'}).processID
+                $ServicePID = (Get-WMIObject Win32_Service | Where-Object { $_.name -eq $Service}).processID
                 Stop-Process -Id $ServicePID -Force
                 sc.exe failure "$Service" actions= restart/0/restart/0//0 reset= 0 >null
             }
