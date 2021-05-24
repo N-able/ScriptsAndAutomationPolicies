@@ -1,7 +1,7 @@
 <#
    **********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.2.1.2 (24/05/2021)
+    Version:         0.2.1.3 (24/05/2021)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -178,10 +178,13 @@
                              - Updated 'Stop-PMEServices' function to report if service is not already running. 
                              - Updated code to include retry logic for downloads rather than erroring out on the first attempt.
                              - Optimized code to use [Void] instead of Out-Null to improve performance.
-                     0.2.1.2 - Updated 'Stop-PMEServices' function to resolve issue where it was unable to forcefully stop services.                                                                                   
+                     0.2.1.2 - Updated 'Stop-PMEServices' function to resolve issue where it was unable to forcefully stop services.
+                     0.2.1.3 - Updated 'Invoke-Delay' function to resolve issue where it was incorrectly calling an absent function.
+                             - Updated 'Get-NableCertificate' and 'Test-NableCertificate' functions to include downloads retry logic.
+                             - Updated to remove white space throughout script.
    **********************************************************************************************************************************
 #>
-$Version = '0.2.1.2'
+$Version = '0.2.1.3'
 $VersionDate = '(24/05/2021)'
 
 # Settings
@@ -223,12 +226,13 @@ $WriteEventLogWarningParams = @{
     EntryType = "Warning"
     EventID   = 100
 }
+
 Function Confirm-Elevation {
     # Confirms script is running as an administrator
     Write-Host "Checking for elevated permissions..." -ForegroundColor Cyan
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Throw "Insufficient permissions to run this script. Run PowerShell as an administrator and run this script again."
-    } 
+    }
     Else {
         Write-Host "OK: Script is running as administrator" -ForegroundColor Green
     }
@@ -249,7 +253,7 @@ function Get-LegacyHash {
         $ComputedHash = $csp.ComputeHash([System.IO.File]::ReadAllBytes($Path))
         $ComputedHash = [System.BitConverter]::ToString($ComputedHash).Replace("-", "").ToLower()
         Return $ComputedHash
-    } 
+    }
     Catch {
         Write-EventLog @WriteEventLogErrorParams -Message "Unable to performing hashing, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
         Throw "Unable to performing hashing, aborting. Error: $($_.Exception.Message)"
@@ -277,7 +281,7 @@ Function Get-OSArch {
     Else {
         Write-EventLog @WriteEventLogErrorParams -Message "Unable to detect processor architecture, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
         Throw "Unable to detect processor architecture, aborting. Error: $($_.Exception.Message)"
-    } 
+    }
 }
 
 Function Get-PMELocations {
@@ -285,41 +289,41 @@ Function Get-PMELocations {
     # > PME Version 2.0
     If (Test-Path -Path "$ProgramFiles\MspPlatform\PME\unins000.exe") {
         $PMEAgentUninstall = "$ProgramFiles\MspPlatform\PME\unins000.exe"
-        If (Test-Path -Path "$env:ProgramData\MspPlatform\PME\archives") {    
+        If (Test-Path -Path "$env:ProgramData\MspPlatform\PME\archives") {
             $PMEArchives = "$env:ProgramData\MspPlatform\PME\archives"
         }
-        If (Test-Path -Path "$env:ProgramData\MspPlatform") {    
+        If (Test-Path -Path "$env:ProgramData\MspPlatform") {
             $PMEProgramDataPath = "$env:ProgramData\MspPlatform"
-        }  
+        }
     }
     If (Test-Path -Path "$ProgramFiles\MspPlatform\RequestHandlerAgent\unins000.exe") {
         $PMERPCUninstall = "$ProgramFiles\MspPlatform\RequestHandlerAgent\unins000.exe"
     }
-    If (Test-Path -Path "$ProgramFiles\MspPlatform\FileCacheServiceAgent\unins000.exe") {    
+    If (Test-Path -Path "$ProgramFiles\MspPlatform\FileCacheServiceAgent\unins000.exe") {
         $PMECacheUninstall = "$ProgramFiles\MspPlatform\FileCacheServiceAgent\unins000.exe"
         If (Test-Path -Path "$PMEProgramDataPath\FileCacheServiceAgent") {
             $CacheServiceConfigFile = "$PMEProgramDataPath\FileCacheServiceAgent\config\FileCacheServiceAgent.xml"
-        }  
+        }
     }
 
     # < PME Version 2.0
     If (Test-Path -Path "$ProgramFiles\SolarWinds MSP\PME\unins000.exe") {
         $PMEAgentUninstall = "$ProgramFiles\SolarWinds MSP\PME\unins000.exe"
-        If (Test-Path -Path "$env:ProgramData\SolarWinds MSP\PME\archives") {    
+        If (Test-Path -Path "$env:ProgramData\SolarWinds MSP\PME\archives") {
             $PMEArchives = "$env:ProgramData\SolarWinds MSP\PME\archives"
         }
-        If (Test-Path -Path "$env:ProgramData\SolarWinds MSP") {    
+        If (Test-Path -Path "$env:ProgramData\SolarWinds MSP") {
             $PMEProgramDataPath = "$env:ProgramData\SolarWinds MSP"
         }
     }
     If (Test-Path -Path "$ProgramFiles\SolarWinds MSP\RpcServer\unins000.exe") {
         $PMERPCUninstall = "$ProgramFiles\SolarWinds MSP\RpcServer\unins000.exe"
     }
-    If (Test-Path -Path "$ProgramFiles\SolarWinds MSP\CacheService\unins000.exe") {    
+    If (Test-Path -Path "$ProgramFiles\SolarWinds MSP\CacheService\unins000.exe") {
         $PMECacheUninstall = "$ProgramFiles\SolarWinds MSP\CacheService\unins000.exe"
         If (Test-Path -Path "$PMEProgramDataPath\SolarWinds.MSP.CacheService") {
             $CacheServiceConfigFile = "$PMEProgramDataPath\SolarWinds.MSP.CacheService\config\CacheService.xml"
-        }     
+        }
     }
 
     # Fallback to new directory if not installed (required)
@@ -344,7 +348,7 @@ Function Test-Port ($server, $port) {
     Try {
         $client.Connect($server, $port)
         $true
-    } 
+    }
     Catch {
         $false
     }
@@ -359,7 +363,7 @@ Function Set-CryptoProtocol {
 Function Invoke-Delay {
     If ($PreventNetworkCongestion -eq "Yes") {
         $Delay = Get-Random -Minimum 1 -Maximum 60
-        Write-Output "$(get-timestamp) Execution will be delayed for $Delay seconds to avoid network congestion..."
+        Write-Output "Execution will be delayed for $Delay seconds to avoid network congestion..."
         Start-Sleep -Seconds $Delay
     }
 }
@@ -369,13 +373,13 @@ Function Get-RepairPMEUpdate {
         Write-Host "Checking if update is available for Repair-PME script..." -ForegroundColor Cyan    
         $RepairPMEVersionURI = "http://raw.githubusercontent.com/N-able/ScriptsAndAutomationPolicies/master/Repair-PME/LatestVersion.xml"
         $EventLogMessage = $null
-        $CatchError = $null    
+        $CatchError = $null
         [int]$DownloadAttempts = 0
         [int]$MaxDownloadAttempts = 10
         Do {
             Try {
                 $DownloadAttempts +=1
-                $Request = $null; $LatestPMEVersion = $null           
+                $Request = $null; $LatestPMEVersion = $null
                 [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$RepairPMEVersionURI") -split '<\?xml.*\?>')
                 $LatestPMEVersion  = $request.LatestVersion.Version
                 Write-Output "Current Repair-PME Version: $Version `nLatest Repair-PME Version: $LatestPMEVersion"
@@ -393,7 +397,7 @@ Function Get-RepairPMEUpdate {
             Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
             Throw $CatchError
         }
-        
+
         If ([version]$Version -ge [version]$LatestPMEVersion) {
             Write-Host "OK: Repair-PME is up to date" -ForegroundColor Green
         }
@@ -406,7 +410,7 @@ Function Get-RepairPMEUpdate {
             Write-Error "Unable to detect if Repair-PME is up to date!"
         }
     }
-} 
+}
 
 Function Test-Connectivity {
     # Performs connectivity tests to destinations required for PME
@@ -419,7 +423,7 @@ Function Test-Connectivity {
             If ($Test1.tcptestsucceeded -eq $True) {
                 Write-Host "OK: Connectivity to https://$_ ($(($Test1).RemoteAddress.IpAddressToString)) established" -ForegroundColor Green
                 $HTTPSError += "No"
-            } 
+            }
             Else {
                 Write-Host "ERROR: Unable to establish connectivity to https://$_ ($(($Test1).RemoteAddress.IpAddressToString))" -ForegroundColor Red
                 $HTTPSError += "Yes"
@@ -434,7 +438,7 @@ Function Test-Connectivity {
             If ($Test1.tcptestsucceeded -eq $True) {
                 Write-Host "OK: Connectivity to http://$_ ($(($Test1).RemoteAddress.IpAddressToString)) established" -ForegroundColor Green
                 $HTTPError += "No"
-            } 
+            }
             Else {
                 Write-Host "ERROR: Unable to establish connectivity to http://$_ ($(($Test1).RemoteAddress.IpAddressToString))" -ForegroundColor Red
                 $HTTPError += "Yes"
@@ -459,7 +463,7 @@ Function Test-Connectivity {
             Write-EventLog @WriteEventLogWarningParams -Message "WARNING: No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!`nScript: Repair-PME.ps1"
             Write-Warning "No connectivity to $($List2[2]) can be established, you will be unable to download Windows Feature Updates!"
         }
-    } 
+    }
     Else {
         Write-Host "Performing HTTPS connectivity tests for PME required destinations using legacy method..." -ForegroundColor Cyan
         $List1 = @("sis.n-able.com")
@@ -469,7 +473,7 @@ Function Test-Connectivity {
             If ($Test1 -eq $True) {
                 Write-Host "OK: Connectivity to https://$_ established" -ForegroundColor Green
                 $HTTPSError += "No"
-            } 
+            }
             Else {
                 Write-Host "ERROR: Unable to establish connectivity to https://$_ established" -ForegroundColor Red
                 $HTTPSError += "Yes"
@@ -484,7 +488,7 @@ Function Test-Connectivity {
             If ($Test1 -eq $True) {
                 Write-Host "OK: Connectivity to http://$_ established" -ForegroundColor Green
                 $HTTPError += "No"
-            } 
+            }
             Else {
                 Write-Host "ERROR: Unable to establish connectivity to http://$_ established" -ForegroundColor Red
                 $HTTPError += "Yes"
@@ -513,19 +517,36 @@ Function Test-Connectivity {
 }
 
 Function Get-NableCertificate ($url) {
-    [net.httpWebRequest] $WebRequest = [Net.WebRequest]::Create($url)
-    $WebRequest.AllowAutoRedirect = $true
-    $WebRequest.KeepAlive = $false
-    $WebRequest.Timeout = 10000
-    $chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
-    [Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-
-    # Request website
-    Try {
-        $Response = $WebRequest.GetResponse()
-        $Response.close()
-    } 
-    Catch {
+    $EventLogMessage = $null
+    $CatchError = $null
+    [int]$DownloadAttempts = 0
+    [int]$MaxDownloadAttempts = 10
+    Do {
+        Try {
+            # Request website
+            $DownloadAttempts +=1
+            $WebRequest = $null
+            [net.httpWebRequest] $WebRequest = [Net.WebRequest]::Create($url)
+            $WebRequest.AllowAutoRedirect = $true
+            $WebRequest.KeepAlive = $false
+            $WebRequest.Timeout = 10000
+            $chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+            [Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+            $Response = $WebRequest.GetResponse()
+            $Response.close()
+            Break
+        }
+        Catch {
+            $EventLogMessage = "Unable to obtain certificate chain, PME may have trouble downloading from https://sis.n-able.com, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
+            $CatchError = "Unable to obtain certificate chain, PME may have trouble downloading from https://sis.n-able.com, aborting. Error: $($_.Exception.Message)"
+        }
+        Write-Output "Download failed on attempt $DownloadAttempts of $MaxDownloadAttempts, retrying in 3 seconds..."
+        Start-Sleep -Seconds 3
+    }
+    While ($DownloadAttempts -lt 10)
+    If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+        Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
+        Throw $CatchError
     }
 
     # Creates Certificate
@@ -545,7 +566,7 @@ Function Get-NableCertificate ($url) {
 
 Function Test-NableCertificate {
     If ($null -eq $Fallback) {
-        Write-Host "Checking certificate chain for sis.n-able.com..." -ForegroundColor Cyan
+        Write-Host "Downloading and checking certificate chain for sis.n-able.com..." -ForegroundColor Cyan
         . Get-NableCertificate https://sis.n-able.com
         $Date = Get-Date
         $CertificateChain | ForEach-Object {
@@ -700,7 +721,7 @@ Function Confirm-PMEInstalled {
                         Write-Output "Installed PME RPC Server Service Date: $InstallDateFormatted"
                     }
                     If ($($app.DisplayName) -eq "Request Handler Agent") {
-                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
+                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion)
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -747,7 +768,7 @@ Function Confirm-PMEInstalled {
                         Write-Output "Installed PME Cache Service Date: $InstallDateFormatted"
                     }
                     If ($($app.DisplayName) -eq "File Cache Service Agent") {
-                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion) 
+                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion)
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -760,25 +781,25 @@ Function Confirm-PMEInstalled {
                         Write-Output "Installed PME File Cache Service Agent Date: $InstallDateFormatted"
                     }
                 }
-            } 
+            }
         }
     }
     If ($IsPMECacheServiceInstalled -ne "Yes") {
         Write-Host "PME Cache Service / File Cache Service Agent Already Installed: No" -ForegroundColor Yellow
     }
-}        
+}
 
 Function Get-PMESetupDetails {
     # Declare static URI of PMESetup_details.xml
     If ($Fallback -eq "Yes") {
         $PMESetup_detailsURI = "http://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
-    } 
+    }
     Else {
         $PMESetup_detailsURI = "https://sis.n-able.com/Components/MSP-PME/latest/PMESetup_details.xml"
     }
 
     $EventLogMessage = $null
-    $CatchError = $null    
+    $CatchError = $null
     [int]$DownloadAttempts = 0
     [int]$MaxDownloadAttempts = 10
     Do {
@@ -788,7 +809,7 @@ Function Get-PMESetupDetails {
             [xml]$request = ((New-Object System.Net.WebClient).DownloadString("$PMESetup_detailsURI") -split '<\?xml.*\?>')[-1]
             $PMEDetails = $request.ComponentDetails
             $LatestVersion = $request.ComponentDetails.Version
-            Break            
+            Break
         }
         Catch [System.Management.Automation.MetadataException] {
             $EventLogMessage = "Error casting to XML, could not parse PMESetup_details.xml from $PMESetup_detailsURI, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
@@ -809,7 +830,7 @@ Function Get-PMESetupDetails {
     }
 
     $EventLogMessage = $null
-    $CatchError = $null    
+    $CatchError = $null
     [int]$DownloadAttempts = 0
     [int]$MaxDownloadAttempts = 10
     Do {
@@ -835,15 +856,14 @@ Function Get-PMESetupDetails {
         Start-Sleep -Seconds 3
     }
     While ($DownloadAttempts -lt 10)
-    
-    If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
+        If (($DownloadAttempts -eq 10) -and ($null -ne $CatchError)) {
         Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
         Throw $CatchError
     }
 
     Write-Host "Checking Latest PME version..." -ForegroundColor Cyan
     Write-Output "Latest PME Version: $LatestVersion"
-    Write-Output "Latest PME Release Date: $PMEReleaseDate"    
+    Write-Output "Latest PME Release Date: $PMEReleaseDate"
 }
 
 Function Confirm-PMERecentInstall {
@@ -852,10 +872,10 @@ Function Confirm-PMERecentInstall {
         If ($null -ne $PMEAgentUninstall) {
             $InstallDatePMEAgent = (Get-Item $PMEAgentUninstall).LastWriteTime
         }
-        If ($null -ne $PMERPCUninstall) {     
+        If ($null -ne $PMERPCUninstall) {
             $InstallDatePMERPC = (Get-Item $PMERPCUninstall).LastWriteTime
         }
-        If ($null -ne $PMECacheUninstall) {    
+        If ($null -ne $PMECacheUninstall) {
             $InstallDatePMECache = (Get-Item $PMECacheUninstall).LastWriteTime
         }
         
@@ -865,10 +885,10 @@ Function Confirm-PMERecentInstall {
         If ($null -ne $InstallDatePMERPC) {
             $DaysInstalledPMERPC = (New-TimeSpan -Start $InstallDatePMERPC -End $Date).Days
         }
-        If ($null -ne $InstallDatePMECache) {    
+        If ($null -ne $InstallDatePMECache) {
             $DaysInstalledPMECache  = (New-TimeSpan -Start $InstallDatePMECache -End $Date).Days
-        }    
-        
+        }
+
         Write-Host "INFO: Repair-PME will force repair without update pending check if PME was installed in the last ($ForceRepairRecentInstallDays) days" -ForegroundColor Yellow -BackgroundColor Black
         If (($DaysInstalledPMEAgent -le $ForceRepairRecentInstallDays) -or ($DaysInstalledPMERPC -le $ForceRepairRecentInstallDays) -or ($DaysInstalledPMECache -le $ForceRepairRecentInstallDays)) {
             Write-Output "Less than ($ForceRepairRecentInstallDays) days has elapsed since PME has been installed. No update pending check required."
@@ -877,7 +897,7 @@ Function Confirm-PMERecentInstall {
         Else {
             Write-Output "More than ($ForceRepairRecentInstallDays) days has elapsed since PME has been installed. Update pending check required."
             $BypassUpdatePendingCheck = "No"
-        }    
+        }
     }
 }
 
@@ -895,15 +915,15 @@ Function Confirm-PMEUpdatePending {
         # Only run if current $Date is greater than or equal to $SelfHealingDate and $LatestVersion is greater than or equal to $app.DisplayVersion
         If (($Date -ge $SelfHealingDate) -and ([version]$LatestVersion -ge [version]$PMEAgentAppDisplayVersion)) {
             Write-Output "($DaysElapsed) days has elapsed since a new version of PME has been released and is allowed to be installed, script will proceed."
-        } 
+        }
         Else {
             Write-EventLog @WriteEventLogWarningParams -Message "($DaysElapsedReversed) days has elapsed since a new version of PME has been released, PME will only install after ($RepairAfterUpdateDays) days, aborting.`nScript: Repair-PME.ps1"
             Throw "($DaysElapsedReversed) days has elapsed since a new version of PME has been released, PME will only install after ($RepairAfterUpdateDays) days, aborting."
             Break
         }
-    } ElseIf ($BypassUpdatePendingCheck -eq "Yes"){
+    } ElseIf ($BypassUpdatePendingCheck -eq "Yes") {
         Write-Warning "Skipping update pending check as PME has recently been installed"
-    } 
+    }
     Else {
         Write-Warning "Skipping update pending check as PME is not currently installed"
     }
@@ -918,18 +938,18 @@ Function Clear-RepairPME {
             Try {
                 Write-Output "Performing cleanup of '$RepairPMEPath' folder"
                 [Void](Get-ChildItem -Path $RepairPMEPath -Recurse | Where-Object { $_.CreationTime -lt (Get-Date).AddDays(-30) -and ! $_.PSIsContainer } | Remove-Item -Recurse -Confirm:$false)
-            } 
+            }
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to cleanup '$RepairPMEPath' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                 Throw "Unable to cleanup '$RepairPMEPath' aborting. Error: $($_.Exception.Message)"
             }
-        } 
-    }    
+        }
+    }
 }
 
 Function Invoke-PMEDiagnostics {
     # Invokes official PME Diagnostics tool to capture logs for support
-    If (Test-Path -Path "$ProgramFiles\MspPlatform\PME\Diagnostics") {          
+    If (Test-Path -Path "$ProgramFiles\MspPlatform\PME\Diagnostics") {
         $PMEDiagnosticsFolderPath = "$ProgramFiles\MspPlatform\PME\Diagnostics"
         $PMEDiagnosticsExePath = "$PMEDiagnosticsFolderPath\PME.Diagnostics.exe"
         $RepairPMEDiagnosticsLogsPath = "$env:ProgramData\MspPlatform\Repair-PME\Diagnostic Logs"
@@ -940,7 +960,7 @@ Function Invoke-PMEDiagnostics {
         $PMEDiagnosticsExePath = "$PMEDiagnosticsFolderPath\SolarwindsDiagnostics.exe"
         $RepairPMEDiagnosticsLogsPath = "$env:ProgramData\SolarWinds MSP\Repair-PME\Diagnostic Logs"
         $ZipPath = "/`"ProgramData/SolarWinds MSP/Repair-PME/Diagnostic Logs/PMEDiagnostics$(Get-Date -Format 'yyyyMMdd-hhmmss').zip`""
-    } 
+    }
     Else  {
         $PMEDiagnosticsExePath = $False
     }
@@ -950,12 +970,12 @@ Function Invoke-PMEDiagnostics {
         Write-Output "PME Diagnostics located at '$PMEDiagnosticsExePath'"
         If (Test-Path -Path  "$RepairPMEDiagnosticsLogsPath") {
             Write-Output "Directory '$RepairPMEDiagnosticsLogsPath' already exists, no need to create directory"
-        } 
+        }
         Else {
             Try {
                 Write-Output "Directory '$RepairPMEDiagnosticsLogsPath' does not exist, creating directory"
                 [Void](New-Item -ItemType Directory -Path "$RepairPMEDiagnosticsLogsPath" -Force)
-            } 
+            }
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$RepairPMEDiagnosticsLogsPath' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                 Throw "Unable to create directory '$RepairPMEDiagnosticsLogsPath' required for saving log capture. Error: $($_.Exception.Message)"
@@ -965,7 +985,7 @@ Function Invoke-PMEDiagnostics {
         # Write-Output "DEBUG: PME Diagnostics started with:- Start-Process -FilePath "$PMEDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$PMEDiagnosticsFolderPath" -Verb RunAs -Wait"
         Start-Process -FilePath "$PMEDiagnosticsExePath" -ArgumentList "$ZipPath" -WorkingDirectory "$RepairPMEDiagnosticsLogsPath" -Verb RunAs -Wait
         Write-Output "PME Diagnostics completed, file saved to '$RepairPMEDiagnosticsLogsPath'"
-    } 
+    }
     Else {
         Write-Warning "Unable to detect PME Diagnostics, skipping log capture"
     }
@@ -999,7 +1019,7 @@ Function Stop-PMEServices {
             $ServiceStatus = (Get-Service $Service -ErrorAction SilentlyContinue).Status
             If ($ServiceStatus -eq "Stopped") {
                 Write-Host "OK: $Service service successfully stopped" -ForegroundColor Green
-            } 
+            }
             Else {
                 Write-Warning "$Service still running, temporarily disabling recovery and terminating"
                 # Set-Service -Name $Service -StartupType Disabled
@@ -1010,9 +1030,8 @@ Function Stop-PMEServices {
             }
         }
         Else {
-            Write-Host "OK: $Service is not running" -ForegroundColor Green            
+            Write-Host "OK: $Service is not running" -ForegroundColor Green
         }
-
     }
 }
 
@@ -1025,13 +1044,13 @@ Function Clear-PME {
             Try {
                 Write-Output "Performing cleanup of '$CacheFolderPath' folder"
                 [Void](Remove-Item -Path "$CacheFolderPath\*.*" -Force -Confirm:$false)
-            } 
+            }
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to cleanup '$CacheFolderPath\*.*' aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                 Throw "Unable to cleanup '$CacheFolderPath\*.*' aborting. Error: $($_.Exception.Message)"
             }
-        } 
-    }    
+        }
+    }
 }
 
 Function Get-PMESetup {
@@ -1040,7 +1059,7 @@ Function Get-PMESetup {
         $FallbackDownloadURL = ($PMEDetails.DownloadURL).Replace('https', 'http')
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
         $EventLogMessage = $null
-        $CatchError = $null    
+        $CatchError = $null
         [int]$DownloadAttempts = 0
         [int]$MaxDownloadAttempts = 10
         Do {
@@ -1061,11 +1080,11 @@ Function Get-PMESetup {
             Write-EventLog @WriteEventLogErrorParams -Message $EventLogMessage
             Throw $CatchError
         }
-    } 
+    }
     Else {
         Write-Output "Begin download of current $($PMEDetails.FileName) version $($PMEDetails.Version) from sis.n-able.com"
         $EventLogMessage = $null
-        $CatchError = $null    
+        $CatchError = $null
         [int]$DownloadAttempts = 0
         [int]$MaxDownloadAttempts = 10
         Do {
@@ -1092,7 +1111,7 @@ Function Get-PMESetup {
 Function Get-PMEConfigMisconfigurations {
     # Check PME Config and inform of possible misconfigurations
     Write-Host "Checking PME Configuration..." -ForegroundColor Cyan
-    Try {    
+    Try {
         If (Test-Path -Path "$CacheServiceConfigFile") {
             $xml = New-Object XML
             $xml.Load($CacheServiceConfigFile)
@@ -1100,33 +1119,33 @@ Function Get-PMEConfigMisconfigurations {
                 If ($null -ne $CacheServiceConfig) {
                     If ($CacheServiceConfig.CanBypassProxyCacheService -eq "False") {
                         Write-Warning "Patch profile doesn't allow PME to fallback to external sources, if probe is not reachable PME may not work!"
-                    } 
+                    }
                     ElseIf ($CacheServiceConfig.CanBypassProxyCacheService -eq "True") {
                         Write-Host "INFO: Patch profile allows PME to fallback to external sources" -ForegroundColor Yellow -BackgroundColor Black
-                    } 
+                    }
                     Else {
                         Write-Warning "Unable to determine if patch profile allows PME to fallback to external sources"
                     }
 
                     If ($CacheServiceConfig.CacheSizeInMB -eq 10240) {
                         Write-Host "INFO: Cache Service is set to default cache size of 10240 MB" -ForegroundColor Yellow -BackgroundColor Black
-                    } 
+                    }
                     Else {
                         $CacheSize = $CacheServiceConfig.CacheSizeInMB
                         Write-Warning "Cache Service is not set to default cache size of 10240 MB (currently $CacheSize MB), PME may not work at expected!"
                     }
-                } 
+                }
                 Else {
                     Write-Warning "Cache Service config file is empty, skipping checks"
                 }
-        } 
+        }
         Else {
             Write-Warning "Cache Service config file does not exist, skipping checks"
         }
-    }    
+    }
     Catch {
         Write-Warning "Unable to read Cache Service config file as a valid xml file, default cache size can't be checked"
-    }    
+    }
 }
 
 Function Set-PMEConfig {
@@ -1146,17 +1165,17 @@ Function Install-PME {
             Write-Output "Local copy of $($PMEDetails.FileName) is current and hash is correct"
             If (Test-Path -Path "$PMEProgramDataPath\Repair-PME") {
                 Write-Output "Directory '$PMEProgramDataPath\Repair-PME' already exists, no need to create directory"
-            } 
+            }
             Else {
                 Try {
                     Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
                     [Void](New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force)
-                } 
+                }
                 Catch {
                     Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                     Throw "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message)"
                 }
-            }              
+            }
             Write-Output "Installing $($PMEDetails.FileName) - logs will be saved to '$PMEProgramDataPath\Repair-PME'"
             $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
             $StartProcessParams = @{
@@ -1171,12 +1190,12 @@ Function Install-PME {
             } ElseIf ($Install.ExitCode -eq 5) {
                 Write-EventLog @WriteEventLogErrorParams -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"
                 Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode)"
-            } 
+            }
             Else {
                 Write-EventLog @WriteEventLogErrorParams -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"
                 Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'"
             }
-        } 
+        }
         Else {
             # Download
             Write-Output "Hash of local file ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, downloading the latest available version"
@@ -1189,17 +1208,17 @@ Function Install-PME {
                 Write-Output "Hash of file is correct"
                 If (Test-Path -Path "$PMEProgramDataPath\Repair-PME") {
                     Write-Output "Directory '$PMEProgramDataPath\Repair-PME' already exists, no need to create directory"
-                } 
+                }
                 Else {
                     Try {
                         Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
                         [Void](New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force)
-                    } 
+                    }
                     Catch {
                         Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                         Throw "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message)"
                     }
-                }               
+                }
                 Write-Output "Installing $($PMEDetails.FileName) - logs will be saved to '$PMEProgramDataPath\Repair-PME'"
                 $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
                 $StartProcessParams = @{
@@ -1214,29 +1233,29 @@ Function Install-PME {
                 } ElseIf ($Install.ExitCode -eq 5) {
                     Write-EventLog @WriteEventLogErrorParams -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"
                     Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode)"
-                } 
+                }
                 Else {
                     Write-EventLog @WriteEventLogErrorParams -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"
                     Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'"
                 }
-            } 
+            }
             Else {
                 Write-EventLog @WriteEventLogErrorParams -Message "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting.`nScript: Repair-PME.ps1"
                 Throw "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting"
             }
         }
-    } 
+    }
     Else {
         Write-Output "$($PMEDetails.FileName) does not exist, begin download and install phase"
         # Check for PME Archive Directory
         If (Test-Path -Path "$PMEArchives") {
             Write-Output "Directory '$PMEArchives' already exists, no need to create directory"
-        } 
+        }
         Else {
             Try {
                 Write-Output "Directory '$PMEArchives' does not exist, creating directory"
                 [Void](New-Item -ItemType Directory -Path "$PMEArchives" -Force)
-            } 
+            }
             Catch {
                 Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEArchives' required for download, aborting. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                 Throw "Unable to create directory '$PMEArchives' required for download, aborting. Error: $($_.Exception.Message)"
@@ -1252,7 +1271,7 @@ Function Install-PME {
             Write-Output "Hash of file is correct"
             If (Test-Path -Path "$PMEProgramDataPath\Repair-PME") {
                 Write-Output "Directory '$PMEProgramDataPath\Repair-PME' already exists, no need to create directory"
-            } 
+            }
             Else {
                 Try {
                     Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
@@ -1262,7 +1281,7 @@ Function Install-PME {
                     Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                     Throw "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message)"
                 }
-            }           
+            }
             Write-Output "Installing $($PMEDetails.FileName) - logs will be saved to '$PMEProgramDataPath\Repair-PME'"
             $DateTime = Get-Date -Format 'yyyy-MM-dd HH-mm-ss'
             $StartProcessParams = @{
@@ -1309,7 +1328,7 @@ Function Confirm-PMEServices {
             Throw "One or more of the PME services are not installed or running, investigation required"
         }
     }
-}    
+}
 
 Function Set-End {
     Write-EventLog @WriteEventLogInformationParams -Message "Repair-PME has finished.`nScript: Repair-PME.ps1"
