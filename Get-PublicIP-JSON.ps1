@@ -1,7 +1,7 @@
 <#      
     ************************************************************************************************************
     Name: Get-PublicIP-JSON.ps1
-    Version: 0.3.4.5.5 (19th December 2020)
+    Version: 0.4.0 (03rd August 2021)
     Purpose: Get Public IP and GeoLocation Details
     Get Public IP Address via ifconfig.me, ipquail.com, ipinfo.io, ident.me, ipecho.net, locate.now.sh
     Get GeoLocation data via ipdata.io  
@@ -9,24 +9,21 @@
 
     0.2 + Updated to use IPStack API
     0.3 + Updated to only use API when ip change detected
-    0.3.1 + Added a 3rd IPStack API Key to randomize
     0.3.2 + Changed to use IPData.io API for added details
     0.3.3 + updated for better PS 2.0 compatibility
-    0.3.4 + Added 2nd IPData.io API key for redundancy
     0.3.4.1 + Added Multiple IP Address Lookups for better balancing
     0.3.4.2 + added provisioning to ignore ssl trust for self-signed etc
     0.3.4.3 + Improved IP Address Detection
     0.3.4.4 + Generalized Script
     0.3.4.5 + Fixed ASN Detection
-    0.3.4.5.1 + Added 3rd IPData.io API key for redundancy, Investigating Cached Data Retrieval
     0.3.4.5.2 + Adding Local Count of API Usage to detect outliers, updating choice of public ip detection
-    0.3.4.5.3 + Can't explain API usage so adding a 4th key for now
-    0.3.4.5.4 + Changed API Keys being used, changed ip location services being used
-    0.3.4.5.5 + Changed API Key again
+	0.4 + New Public Release
 #>
-$Version = '0.3.4.5.5 (19th December 2020)'
+$Version = '0.4.0 (03rd August 2021)'
 Write-Host "Get-PublicIP-JSON " -nonewline; Write-Host "$Version`n" -ForegroundColor Green
 $Date = Get-Date
+
+# Set Company Name to create a Registry Branch to house the IP Data
 $Company='Doherty Associates'
 $path="HKLM:\SOFTWARE\$Company"
 
