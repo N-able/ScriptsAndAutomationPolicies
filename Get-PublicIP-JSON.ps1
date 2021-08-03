@@ -1,7 +1,7 @@
 <#      
     ************************************************************************************************************
     Name: Get-PublicIP-JSON.ps1
-    Version: 0.3.4.4 (01st March 2019)
+    Version: 0.3.4.5.5 (19th December 2020)
     Purpose: Get Public IP and GeoLocation Details
     Get Public IP Address via ifconfig.me, ipquail.com, ipinfo.io, ident.me, ipecho.net, locate.now.sh
     Get GeoLocation data via ipdata.io  
@@ -17,8 +17,14 @@
     0.3.4.2 + added provisioning to ignore ssl trust for self-signed etc
     0.3.4.3 + Improved IP Address Detection
     0.3.4.4 + Generalized Script
+    0.3.4.5 + Fixed ASN Detection
+    0.3.4.5.1 + Added 3rd IPData.io API key for redundancy, Investigating Cached Data Retrieval
+    0.3.4.5.2 + Adding Local Count of API Usage to detect outliers, updating choice of public ip detection
+    0.3.4.5.3 + Can't explain API usage so adding a 4th key for now
+    0.3.4.5.4 + Changed API Keys being used, changed ip location services being used
+    0.3.4.5.5 + Changed API Key again
 #>
-$Version = '0.3.4.4 (01st March 2019)'
+$Version = '0.3.4.5.5 (19th December 2020)'
 Write-Host "Get-PublicIP-JSON " -nonewline; Write-Host "$Version`n" -ForegroundColor Green
 $Date = Get-Date
 $Company='Doherty Associates'
@@ -26,16 +32,17 @@ $path="HKLM:\SOFTWARE\$Company"
 
 <#
 IPData.io API Keys. 
-These are limited to 1500 lookups/day on the free tier which is the best I could find from servic eproviders.
+These are limited to 1500 lookups/day on the free tier which is the best I could find from service providers.
 AFAIK; Crucialy, this does not exclude commercial usage.
 Depending on the rate on public ip change you will see amongst your device base, you may need to step up to a paid tier which are also very affordable.
 #>
-$array = 'a5f53737db5ff6d80eecd08c3b407430b10e4a24395ade94c4e406ac','c80a669bdd8c4d3c725adb8c2b6fe060bf59b7b1a5861902a6118229'
+
+$array = '<ipdata api key1>,<ipdata api key2>'
 
 # Array of multiple IP lookup services to spread the load
+#removed 'https://locate.now.sh/ip', 'http://ident.me' from the array
 $iparray = $null
-$iparray = ('https://ifconfig.me/ip','http://ipquail.com/ip','http://ipinfo.io/ip','http://ident.me','https://ipecho.net/plain','https://locate.now.sh/ip')
-
+$iparray = ('https://ifconfig.me/ip','http://ipquail.com/ip','http://ipinfo.io/ip','https://ipecho.net/plain')
 
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
 
@@ -93,8 +100,10 @@ Function Get-IP {
 $global:OldIPAddress = (Get-ItemProperty -path "$path\IP Address").IPAddress
 
 $iparray_rand = $iparray[(Get-Random -Maximum ([array]$iparray).count)]
-Write-Host "`nIP Lookup Service: " -nonewline; Write-Host "$iparray_rand" -ForegroundColor Green
-$global:newipaddress=(New-Object Net.WebClient).DownloadString($iparray_rand).trim() 
+$iplookup = $iparray_rand.trim() 
+Write-Host "`nIP Lookup Service: " -nonewline; Write-Host "$iplookup" -ForegroundColor Green
+Set-ItemProperty -path "$path\IP Address" -name IPLookupService -value "$iplookup"
+$global:newipaddress=(New-Object Net.WebClient).DownloadString($iplookup)
 
 Write-Host "Old IP Address: " -nonewline; Write-Host "$oldipaddress" -ForegroundColor Yellow
 Write-Host "New IP Address: " -nonewline; Write-Host "$newipaddress" -ForegroundColor Yellow
@@ -103,6 +112,7 @@ Write-Host "New IP Address: " -nonewline; Write-Host "$newipaddress" -Foreground
 Function Get-IPData {
 
 $apikey_rand = $array[(Get-Random -Maximum ([array]$array).count)]
+Write-Host "Using API Key:" -nonewline; Write-Host "$apikey_rand" -ForegroundColor Green
 $StringURL="https://api.ipdata.co?api-key=$apikey_rand" 
 
 $PSversion = $PSVersionTable.PSVersion.Major
@@ -179,19 +189,27 @@ $global:APICount =  $stringVal.count
     else {
         $RegionCode =  "N/A"
     }
-        if ($stringVal.asn) {
-        $ASN = $stringVal.asn
-        Set-ItemProperty -path "$path\IP Address" -name ASN -value $ASN
+    if ($stringVal.asn) {
+    $ASN = $stringVal.asn.asn
+    Set-ItemProperty -path "$path\IP Address" -name ASN -value $ASN
     }
     else {
         $ASN =  "N/A"
     }
-        if ($stringVal.organisation) {
-        $ISP =  $stringVal.organisation
-        Set-ItemProperty -path "$path\IP Address" -name ISP -value $ISP
+    if ($stringVal.organisation) {
+    $ISP = $stringVal.organisation
+    write-host "ISP: $stringval.organisation"
+    Set-ItemProperty -path "$path\IP Address" -name ISP -value $ISP
     }
     else {
-        $ISP =  "N/A"
+        if ($stringVal.asn) {
+        $ISP = $stringval.asn.name
+        write-host "ISP: $stringval.asn.name"
+        Set-ItemProperty -path "$path\IP Address" -name ISP -value $ISP
+        }
+        else {
+            $ISP = "N/A"
+        }
     }
 }
 
@@ -199,11 +217,25 @@ $global:APICount =  $stringVal.count
 
 set-companyregistry
 
+
+$IPLookupService = (test-registryvalue -Path "$path\IP Address" -Value 'IPLookupService')
+if ($IPLookupService -eq $false) {
+    Write-Host "`nSetting default value for IP Lookup Service" -ForegroundColor Cyan
+    Set-ItemProperty -path "$path\IP Address" -name IPLookupService -value 'N/A'
+}
+
 Get-IP
 Set-ItemProperty -path "$path\IP Address" -name LastRun -value $Date
+
 $LastRun_Reg = (Get-ItemProperty -path "$path\IP Address").LastRun
 
 Write-Host "Script Run: " -nonewline; Write-Host "$LastRun_Reg" -ForegroundColor Yellow
+
+$LocalAPIUsage = (test-registryvalue -Path "$path\IP Address" -Value 'LocalAPIUsage')
+if ($LocalAPIUsage -eq $false) {
+    Write-Host "`nSetting default value for Local API Usage" -ForegroundColor Cyan
+    Set-ItemProperty -path "$path\IP Address" -name LocalAPIUsage -value '0'
+}
 
 $CheckASN = (test-registryvalue -Path "$path\IP Address" -Value 'ASN')
 
@@ -212,19 +244,25 @@ if ($CheckASN -eq $False) {
     $update = $True
 }
 else {
-    if ($oldipaddress -eq $newipaddress) {
-    "`nNo IP Change Detected. Reading GeoLocation Details from Registry..."
+    $oldipaddress = $oldipaddress.trim()
+    $newipaddress = $newipaddress.trim()
+    if ($oldipaddress -eq $newipaddress){
+    Write-Host "`nNo IP Change Detected. Reading GeoLocation Details from Registry..." -ForegroundColor Green
     $Update = $False
+    
     }
     else {
-        Write-Host "`nIP Change Detected. Updating GeoLocation Details..."
+        Write-Host "`nIP Change Detected. Updating GeoLocation Details..." -ForegroundColor Yellow
         $Update = $True
     }
 }
 
 if ($update -eq $true) {
     . Get-IPData
-    Write-Host "API Usage Count: " -nonewline; Write-Host "$APICount" -ForegroundColor Green
+    $LocalAPIUsage = $LocalAPIUsage+1
+    Set-ItemProperty -path "$path\IP Address" -name LocalAPIUsage -value "$LocalAPIUsage"
+    Write-Host "Local API Usage Count: " -nonewline; Write-Host "$LocalAPIUsage" -ForegroundColor Green
+    Write-Host "Global API Usage Count: " -nonewline; Write-Host "$APICount" -ForegroundColor Green
 }
 
 $ExternalIP = (Get-ItemProperty -path "$path\IP Address").IPAddress
@@ -248,3 +286,6 @@ Write-Host "Country Code: " -nonewline; Write-Host "$CountryCode" -ForegroundCol
 Write-Host "Lat/Long: " -nonewline; Write-Host "$LatLong" -ForegroundColor Green
 Write-Host "ASN: " -nonewline; Write-Host "$ASN" -ForegroundColor Green
 Write-Host "ISP: " -nonewline; Write-Host "$ISP`n" -ForegroundColor Green
+
+$LocalAPIUsage = (Get-ItemProperty -path "$path\IP Address").LocalAPIUsage
+Write-Host "Local API Usage: " -nonewline; Write-Host "$localAPIUsage" -ForegroundColor Green
