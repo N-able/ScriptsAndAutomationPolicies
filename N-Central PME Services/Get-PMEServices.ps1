@@ -1,7 +1,7 @@
-<#    
-    *******************************************************************************************************
+<#*****************************************************************************************************
+
     Name: Get-PMEServices.ps1
-    Version: 0.2.2.8 (20/05/2021)
+    Version: 0.2.2.9 (15/11/2021)
     Author: Prejay Shah (Doherty Associates)
     Thanks To: Ashley How
     Purpose:    Get N-Central Patch Management Engine (PME) Status Details
@@ -75,6 +75,7 @@
                         0.2.2.7 + Updated for PME 2.1 Testing and minor information output improvements. 
                         Pending Update Fix courtesy of Ashley How
                         0.2.2.8 + Updated Parameter comment to help those who try to throw this script directly into AM's "Run Powershell Script" object
+                        0.2.2.9 + Updated for better Windows 11 Detection/compatibility
 
     Examples: 
     Diagnostics Input: False
@@ -82,8 +83,9 @@
     
     Diagnostics Input: True
     Force Diagnostics Mode to be enabled on the run regardless of PME Status
-    *******************************************************************************************************
-#> 
+
+*****************************************************************************************************#>
+
 # N-Able Automation Manager does not support the use of PS parameters within the "Run Powershell Script" object
 # Comment out the paramter below if you're trying to run this PS script within AM.
 
@@ -99,7 +101,7 @@ $PendingUpdateDays = "2"
 # *****************************************************************************************************
 
 #ddMMyy
-$Version = '0.2.2.8 (20/05/2021)'
+$Version = '0.2.2.9 (15/11/2021)'
 $EventLogCompanyName ="Doherty Associates"
 $winbuild = $null
 $osvalue = $null
@@ -143,7 +145,7 @@ write-Host "Windows Build Version: " -nonewline; Write-Host "$osbuildversion" -F
 
 $OSName = (Get-WmiObject Win32_OperatingSystem).Caption
 Write-Host "OS: " -nonewline; Write-Host "$OSName" -ForegroundColor Green
-    if (($osname -match "XP") -or ($osname -match "Vista")  -or ($osname -match "10 Home") -or ($osname -match "2003") -or (($osname -match "2008") -and ($osname -notmatch "2008 R2")) ) {
+    if (($osname -match "XP") -or ($osname -match "Vista")  -or ($osname -match "Home") -or ($osname -match "2003") -or (($osname -match "2008") -and ($osname -notmatch "2008 R2")) ) {
         
         $Continue = $False
         $PMECacheStatus = "N/A - N-Central PME does not support OS"
