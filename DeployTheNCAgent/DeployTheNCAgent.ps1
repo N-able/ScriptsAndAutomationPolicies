@@ -94,4 +94,4 @@ Else {
 }
 # Now that we've got the registration token for the specified customer, let's use it to install the Windows Agent
 Write-Host "Initiating the agent install."
-# Start-Process -NoNewWindow -FilePath "C:\Temp\WindowsAgentSetup.exe" -ArgumentList "/s /v`" /qn CUSTOMERID=$SpecifiedCustomerID CUSTOMERSPECIFIC=1 REGISTRATION_TOKEN=$RetrievedRegistrationToken SERVERPROTOCOL=HTTPS SERVERADDRESS=$serverHost SERVERPORT=443`""
+Start-Process -NoNewWindow -FilePath "C:\Temp\WindowsAgentSetup.exe" -ArgumentList "/s /v`" /qn CUSTOMERID=$SpecifiedCustomerID CUSTOMERSPECIFIC=1 REGISTRATION_TOKEN=$RetrievedRegistrationToken SERVERPROTOCOL=HTTPS SERVERADDRESS=$serverHost SERVERPORT=443`""
