@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="fc4c3036-939e-4df2-be5f-5310df73bcd8" Name="Install Office 365" Description="aW5zdGFsbHMgT2ZmaWNlIDM2NSBzb2Z0d2FyZQ0KMyBWYXJpYWJsZXMNCk8zNjUgVHlwZSA9IEJ1c2luZXNzIG9yIFByb1BsdXMNCkFyY2hpdGVjdHVyZSA9IDMyIG9yIDY0IChudW1iZXJzIG9ubHkpDQpSZW1vdmVNU0kgPSBEbyB5b3Ugd2FudCB0aGUgaW5zdGFsbGVyIHRvIHJlbW92ZSBvbGQgTVNJIG9mZmljZSBhcHBsaWNhdGlvbnM=" Version="2.6.0.6" RemoteCategory="0" ExecutionType="Local" PS3ObjectCount="0">
+  <Object ID="{866f13fd-f9ad-4fd4-b602-92f99d89cbaf}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;O365type&quot; Label=&quot;What type of Office are you installing Business or Pro&quot; ParameterType=&quot;string&quot; Value=&quot;Business&quot; /&gt;&lt;Parameter ParameterName=&quot;Architecture&quot; Label=&quot;32 or 64&quot; ParameterType=&quot;number&quot; Value=&quot;32&quot; /&gt;&lt;Parameter ParameterName=&quot;RemoveMSI&quot; Label=&quot;Remove MSI Verision of office?&quot; ParameterType=&quot;string&quot; Value=&quot;TRUE&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>463,2314</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy Builder" sap:VirtualizedContainerService.HintSize="463,2314" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:DeleteFolder Folder_ItemProp="{x:Null}" Force_ItemProp="{x:Null}" Recurse_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Delete Folder" Folder="c:\OfficeDeploy" Folder_DisplayArg="c:\OfficeDeploy" Folder_Item="{x:Null}" Force="True" Force_DisplayArg="" Force_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="427,81" Moniker="edbd9191-6f20-4552-8c55-1252ed5de36d" Recurse="True" Recurse_DisplayArg="true" Recurse_Item="{x:Null}" Result="[DeleteFolder_Result]" ResultString="[DeleteFolder_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="DeleteFolder" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:DeleteFolder>
+        <p:Wait WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Wait" sap:VirtualizedContainerService.HintSize="427,81" Moniker="f148a327-b7c1-4c3c-9846-fd039fe4a387" Result="[Wait_Result_2]" ResultString="[Wait_ResultString_2]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="Wait" WaitTime="4" WaitTime_DisplayArg="4" WaitTime_Item="{x:Null}" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:Wait>
+        <p:FolderExists Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional]" DisplayName="Folder Exists" Folder="c:\OfficeDeploy" Folder_DisplayArg="c:\OfficeDeploy" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="427,81" Moniker="4dd68853-5c4b-4349-963d-6bc6249e4ae7" Result="[FolderExists_Result]" ResultString="[FolderExists_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="FolderExists" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:FolderExists>
+        <p:IfObject Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" Condition_Item="{x:Null}" DisplayName="If" sap:VirtualizedContainerService.HintSize="427,81" Moniker="c89c3407-a5fd-45a1-ab8c-35a04c5c6f75" Result="[IfObject_Result]" ResultString="[IfObject_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg="False" Value_Type="x:String" Variable="[FolderExists_Conditional]" Variable_DisplayArg="Folder Exists.Conditional" Variable_Item="{x:Null}" Variable_Type="x:String" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="371,238" Name="SequenceActivity">
+              <p:SequenceActivity.Activities>
+                <p:CreateFolder Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Create Folder" Folder="c:\OfficeDeploy" FolderInfo="[CreateFolder_FolderInfo]" Folder_DisplayArg="c:\OfficeDeploy" Folder_Item="{x:Null}" sap:VirtualizedContainerService.HintSize="333,88" Moniker="7b7eb6db-8cf4-488c-ac45-53c93b8a0d12" Result="[CreateFolder_Result]" ResultString="[CreateFolder_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="CreateFolder" m_bTextLinkChange="False" />
+              </p:SequenceActivity.Activities>
+              <p:SequenceActivity.Variables>
+                <Variable x:TypeArguments="x:String" Name="CreateFolder_FolderInfo" />
+                <Variable x:TypeArguments="x:String" Name="CreateFolder_ResultString" />
+                <Variable x:TypeArguments="x:Double" Name="CreateFolder_Result" />
+              </p:SequenceActivity.Variables>
+            </p:SequenceActivity>
+          </p:IfObject.IfOption>
+          <p:IfObject.Value>
+            <InArgument x:TypeArguments="x:Object">
+              <p:ObjectLiteral Value="False" />
+            </InArgument>
+          </p:IfObject.Value>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:IfObject>
+        <p:RunPowerShellScript AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="427,81" Moniker="3a2a3b7f-c4a7-44f2-a284-9c5e9fd43b3d" OutPut_64="[RunPowerShellScript_OutPut_64_4]" Result="[RunPowerShellScript_Result_4]" ResultString="[RunPowerShellScript_ResultString_4]" Results_x64="[RunPowerShellScript_Results_x64_4]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" genArgEvent="80d517fd-17fe-4280-8496-5d880b660f8a" m_bTextLinkChange="False" script="JABsAGkAbgBrACAAPQAgACgAKABJAG4AdgBvAGsAZQAtAFcAZQBiAFIAZQBxAHUAZQBzAHQAIAAtAFUAcwBlAEIAYQBzAGkAYwBQAGEAcgBzAGkAbgBnACAALQBVAHIAaQAgABggaAB0AHQAcABzADoALwAvAHcAdwB3AC4AbQBpAGMAcgBvAHMAbwBmAHQALgBjAG8AbQAvAGUAbgAtAHUAcwAvAGQAbwB3AG4AbABvAGEAZAAvAGMAbwBuAGYAaQByAG0AYQB0AGkAbwBuAC4AYQBzAHAAeAA/AGkAZAA9ADQAOQAxADEANwAZICkALgBMAGkAbgBrAHMAIAB8ACAAVwBoAGUAcgBlACAAaQBuAG4AZQByAEgAVABNAEwAIAAtAGwAaQBrAGUAIAAcICoAKgAdICkALgBoAHIAZQBmACAAfAAgAFMAZQBsAGUAYwB0AC0AUwB0AHIAaQBuAGcAIAAtAHAAYQB0AHQAZQByAG4AIAAiAC4AZQB4AGUAIgAgAHwAIABnAGUAdAAtAHUAbgBpAHEAdQBlAA==">
+          <p:RunPowerShellScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <p:OutArg x:Key="link" ArgType="string" DisplayName="link" Name="link">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunPowerShellScript_link]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunPowerShellScript.OutArgs>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:RunPowerShellScript>
+        <p:Wait WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Wait" sap:VirtualizedContainerService.HintSize="427,81" Moniker="1f328665-5952-4637-af4d-9c4698a897cc" Result="[Wait_Result_1]" ResultString="[Wait_ResultString_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="Wait" WaitTime="5" WaitTime_DisplayArg="5" WaitTime_Item="{x:Null}" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:Wait>
+        <p:DownloadFileFromURL OverwriteExistingFile_ItemProp="{x:Null}" RemoteFileURL_ItemProp="{x:Null}" SaveAsFileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Download File From URL" sap:VirtualizedContainerService.HintSize="427,81" Moniker="22b61b12-2fce-4b23-bdc8-91a7d727d658" OverwriteExistingFile="True" OverwriteExistingFile_DisplayArg="true" OverwriteExistingFile_Item="{x:Null}" RemoteFileURL="[RunPowerShellScript_link]" RemoteFileURL_DisplayArg="Run PowerShell Script.link" RemoteFileURL_Item="{x:Null}" Result="[DownloadFileFromURL_Result]" ResultString="[DownloadFileFromURL_ResultString]" RunAsCurrentLoggedOnUser="False" SaveAsFileName="c:\OfficeDeploy\new.exe" SaveAsFileName_DisplayArg="c:\OfficeDeploy\new.exe" SaveAsFileName_Item="{x:Null}" ScriptExecutionMethod="ExecuteDebug" TypeName="DownloadFileFromURL" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:DownloadFileFromURL>
+        <p:RunPowerShellScript genArgEvent="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="427,81" Moniker="f0d18841-a1e8-4571-8355-93f0292a760f" OutPut_64="[RunPowerShellScript_OutPut_64]" Result="[RunPowerShellScript_Result]" ResultString="[RunPowerShellScript_ResultString]" Results_x64="[RunPowerShellScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" m_bTextLinkChange="False" script="YwBtAGQADQAKAGMAOgBcAE8AZgBmAGkAYwBlAEQAZQBwAGwAbwB5AFwAbgBlAHcALgBlAHgAZQAgAC8AcQB1AGkAZQB0ACAALwBlAHgAdAByAGEAYwB0ADoAYwA6AFwATwBmAGYAaQBjAGUARABlAHAAbABvAHkA">
+          <p:RunPowerShellScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+          </p:RunPowerShellScript.OutArgs>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:RunPowerShellScript>
+        <p:RunPowerShellScript AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="427,81" Moniker="e67cce4e-82a0-4dab-9829-359f0ddb7040" OutPut_64="[RunPowerShellScript_OutPut_64_2]" Result="[RunPowerShellScript_Result_2]" ResultString="[RunPowerShellScript_ResultString_2]" Results_x64="[RunPowerShellScript_Results_x64_2]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" genArgEvent="42499dbb-5c72-4181-9220-464265895243" m_bTextLinkChange="False" script="YwBkACAAXAANAAoAYwBkACAATwBmAGYAaQBjAGUARABlAHAAbABvAHkADQAKAGUAYwBoAG8AIAAiADwAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgA+AA0ACgAgACAAPABBAGQAZAAgAFMAbwB1AHIAYwBlAFAAYQB0AGgAPQAiACIAYwA6AFwAbwBmAGYAaQBjAGUAZABlAHAAbABvAHkAIgAiACAATwBmAGYAaQBjAGUAQwBsAGkAZQBuAHQARQBkAGkAdABpAG8AbgA9ACIAIgAkAEEAcgBjAGgAIgAiACAAQwBoAGEAbgBuAGUAbAA9ACIAIgBCAHIAbwBhAGQAIgAiACAAQQBsAGwAbwB3AEMAZABuAEYAYQBsAGwAYgBhAGMAawA9ACIAIgBUAFIAVQBFACIAIgAgAEYAbwByAGMAZQBVAHAAZwByAGEAZABlAD0AIgAiAFQAUgBVAEUAIgAiAD4ADQAKACAAIAAgACAAPABQAHIAbwBkAHUAYwB0ACAASQBEAD0AIgAiAE8AMwA2ADUAIgAkAFQAeQBwAGUAIgBSAGUAdABhAGkAbAAiACIAPgANAAoAIAAgACAAIAAgACAAPABMAGEAbgBnAHUAYQBnAGUAIABJAEQAPQAiACIAZQBuAC0AdQBzACIAIgAgAC8APgANAAoAIAAgACAAIAA8AC8AUAByAG8AZAB1AGMAdAA+AA0ACgAgACAAPAAvAEEAZABkAD4ADQAKACAAIAA8AFAAcgBvAHAAZQByAHQAeQAgAE4AYQBtAGUAPQAiACIAUwBoAGEAcgBlAGQAQwBvAG0AcAB1AHQAZQByAEwAaQBjAGUAbgBzAGkAbgBnACIAIgAgAFYAYQBsAHUAZQA9ACIAIgAwACIAIgAgAC8APgANAAoAIAAgADwAUAByAG8AcABlAHIAdAB5ACAATgBhAG0AZQA9ACIAIgBQAGkAbgBJAGMAbwBuAHMAVABvAFQAYQBzAGsAYgBhAHIAIgAiACAAVgBhAGwAdQBlAD0AIgAiAFQAUgBVAEUAIgAiACAALwA+AA0ACgAgACAAPABVAHAAZABhAHQAZQBzACAARQBuAGEAYgBsAGUAZAA9ACIAIgBUAFIAVQBFACIAIgAgAC8APgANAAoAIAAgADwAUgBlAG0AbwB2AGUATQBTAEkAIABBAGwAbAA9ACIAIgAkAEQARQBMAE0AUwBJACIAIgAgAC8APgANAAoAPAAvAEMAbwBuAGYAaQBnAHUAcgBhAHQAaQBvAG4APgAgACIAIAB8ACAAbwB1AHQALQBmAGkAbABlACAALQBlAG4AYwBvAGQAaQBuAGcAIABhAHMAYwBpAGkAIAAuAFwATwBmAGYAaQBjAGUAMwA2ADUALgB4AG0AbAA=">
+          <p:RunPowerShellScript.InArgs>
+            <p:InArg Item="{x:Null}" ItemProp="{x:Null}" x:Key="Type" ArgType="string" DisplayArg="Input Parameters.What type of Office are you installing Business or Pro" DisplayName="Type of Office Business or ProPlus?" Name="Type" isRequired="False">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[O365type]</InArgument>
+              </p:InArg.Arg>
+            </p:InArg>
+            <p:InArg Item="{x:Null}" ItemProp="{x:Null}" x:Key="Arch" ArgType="number" DisplayArg="Input Parameters.32 or 64" DisplayName="Arch" Name="Arch" isRequired="False">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:Double">[Architecture]</InArgument>
+              </p:InArg.Arg>
+            </p:InArg>
+            <p:InArg Item="{x:Null}" ItemProp="{x:Null}" x:Key="DELMSI" ArgType="string" DisplayArg="Input Parameters.Remove MSI Verision of office?" DisplayName="DELMSI" Name="DELMSI" isRequired="False">
+              <p:InArg.Arg>
+                <InArgument x:TypeArguments="x:String">[RemoveMSI]</InArgument>
+              </p:InArg.Arg>
+            </p:InArg>
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+          </p:RunPowerShellScript.OutArgs>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:RunPowerShellScript>
+        <p:Wait WaitTime_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Wait" sap:VirtualizedContainerService.HintSize="427,81" Moniker="a53a8eef-d940-408b-baad-a49a5c16d412" Result="[Wait_Result]" ResultString="[Wait_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="Wait" WaitTime="5" WaitTime_DisplayArg="5" WaitTime_Item="{x:Null}" m_bTextLinkChange="False">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:Wait>
+        <p:RunPowerShellScript genArgEvent="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="427,81" Moniker="9f304c0e-b2e7-42f2-803d-d35772814874" OutPut_64="[RunPowerShellScript_OutPut_64_3]" Result="[RunPowerShellScript_Result_3]" ResultString="[RunPowerShellScript_ResultString_3]" Results_x64="[RunPowerShellScript_Results_x64_3]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" m_bTextLinkChange="False" script="YwBkAFwADQAKAGMAZAAgAE8AZgBmAGkAYwBlAEQAZQBwAGwAbwB5AA0ACgBlAGMAaABvACAAIgBjADoAXABPAGYAZgBpAGMAZQBEAGUAcABsAG8AeQBcAHMAZQB0AHUAcAAuAGUAeABlACAALwBkAG8AdwBuAGwAbwBhAGQAIABjADoAXABPAGYAZgBpAGMAZQBEAGUAcABsAG8AeQBcAG8AZgBmAGkAYwBlADMANgA1AC4AeABtAGwADQAKAA0ACgBUAGkAbQBlAE8AdQB0ACAAOQAwADAADQAKAA0ACgBjADoAXABPAGYAZgBpAGMAZQBEAGUAcABsAG8AeQBcAHMAZQB0AHUAcAAuAGUAeABlACAALwBjAG8AbgBmAGkAZwB1AHIAZQAgAGMAOgBcAE8AZgBmAGkAYwBlAEQAZQBwAGwAbwB5AFwAbwBmAGYAaQBjAGUAMwA2ADUALgB4AG0AbAANAAoADQAKAFQAaQBtAGUAbwB1AHQAIAA5ADAAMAAiACAAfAAgAG8AdQB0AC0AZgBpAGwAZQAgAC0AZQBuAGMAbwBkAGkAbgBnACAAYQBzAGMAaQBpACAALgBcAHMAZQB0AHUAcAAuAGIAYQB0AA==">
+          <p:RunPowerShellScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+          </p:RunPowerShellScript.OutArgs>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:RunPowerShellScript>
+        <p:RunPowerShellScript genArgEvent="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="427,81" Moniker="1d34df8d-a6fc-4888-815e-198e7f6313c8" OutPut_64="[RunPowerShellScript_OutPut_64_1]" Result="[RunPowerShellScript_Result_1]" ResultString="[RunPowerShellScript_ResultString_1]" Results_x64="[RunPowerShellScript_Results_x64_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" m_bTextLinkChange="False" script="YwBtAGQALgBlAHgAZQAgAC8AYwAgACIAYwA6AFwATwBmAGYAaQBjAGUARABlAHAAbABvAHkAXABzAGUAdAB1AHAALgBiAGEAdAAiAA==">
+          <p:RunPowerShellScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+          </p:RunPowerShellScript.OutArgs>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:RunPowerShellScript>
+        <p:FolderExists Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" Conditional="[FolderExists_Conditional_1]" DisplayName="Folder Exists" Folder="C:\Program Files (x86)\Microsoft Office\root\Office16" Folder_DisplayArg="C:\Program Files (x86)\Microsoft Office\root\Office16" sap:VirtualizedContainerService.HintSize="427,88" Moniker="dc522dfe-4646-4193-8f99-d0b61c1ec202" Result="[FolderExists_Result_1]" ResultString="[FolderExists_ResultString_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="FolderExists" m_bTextLinkChange="False" />
+        <p:IfObject Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="427,511" Moniker="0fe5e70d-83b8-4dc6-9aac-68526937ee20" Result="[IfObject_Result_1]" ResultString="[IfObject_ResultString_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg="True" Value_Type="x:String" Variable="[FolderExists_Conditional_1]" Variable_DisplayArg="Folder Exists.Conditional" Variable_Type="x:String" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="371,310" Name="SequenceActivity">
+              <p:SequenceActivity.Activities>
+                <p:DeleteFolder Folder_Item="{x:Null}" Folder_ItemProp="{x:Null}" Force_Item="{x:Null}" Force_ItemProp="{x:Null}" Recurse_Item="{x:Null}" Recurse_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.6.0.6, Culture=neutral, PublicKeyToken=null" DisplayName="Delete Folder" Folder="c:\OfficeDeploy" Folder_DisplayArg="c:\OfficeDeploy" Force="True" Force_DisplayArg="" sap:VirtualizedContainerService.HintSize="333,160" Moniker="86fa5b82-abbd-4d4c-8ec7-25b85e312a6b" Recurse="True" Recurse_DisplayArg="true" Result="[DeleteFolder_Result_1]" ResultString="[DeleteFolder_ResultString_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="DeleteFolder" m_bTextLinkChange="False" />
+              </p:SequenceActivity.Activities>
+              <p:SequenceActivity.Variables>
+                <Variable x:TypeArguments="x:String" Name="DeleteFolder_ResultString_1" />
+                <Variable x:TypeArguments="x:Double" Name="DeleteFolder_Result_1" />
+              </p:SequenceActivity.Variables>
+            </p:SequenceActivity>
+          </p:IfObject.IfOption>
+          <p:IfObject.Value>
+            <InArgument x:TypeArguments="x:Object">
+              <p:ObjectLiteral Value="True" />
+            </InArgument>
+          </p:IfObject.Value>
+        </p:IfObject>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional" />
+        <Variable x:TypeArguments="x:String" Name="FolderExists_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="FolderExists_Result" />
+        <Variable x:TypeArguments="x:String" Name="IfObject_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result" />
+        <Variable x:TypeArguments="x:String" Name="DownloadFileFromURL_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="DownloadFileFromURL_Result" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64_1" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString_1" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64_1" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result_1" />
+        <Variable x:TypeArguments="x:String" Name="Wait_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="Wait_Result" />
+        <Variable x:TypeArguments="x:Double" Name="Wait_Result_1" />
+        <Variable x:TypeArguments="x:String" Name="Wait_ResultString_1" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64_2" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result_2" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString_2" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64_2" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64_3" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result_3" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString_3" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64_3" />
+        <Variable x:TypeArguments="x:String" Name="DeleteFolder_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="DeleteFolder_Result" />
+        <Variable x:TypeArguments="x:Double" Name="Wait_Result_2" />
+        <Variable x:TypeArguments="x:String" Name="Wait_ResultString_2" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64_4" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result_4" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString_4" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64_4" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_link" />
+        <Variable x:TypeArguments="x:String" Default="Fun" Name="O365type" />
+        <Variable x:TypeArguments="x:Double" Default="69" Name="Architecture" />
+        <Variable x:TypeArguments="x:String" Default="hell" Name="RemoveMSI" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_1" />
+        <Variable x:TypeArguments="x:String" Name="IfObject_ResultString_1" />
+        <Variable x:TypeArguments="x:String" Name="FolderExists_Conditional_1" />
+        <Variable x:TypeArguments="x:Double" Name="FolderExists_Result_1" />
+        <Variable x:TypeArguments="x:String" Name="FolderExists_ResultString_1" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>

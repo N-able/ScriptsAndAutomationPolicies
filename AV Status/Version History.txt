@@ -1,0 +1,165 @@
+Version History
+
+2.37  - Addressed an issue where the script was erroneously reporting that SentinelOne "Virus Scanning Enabled" was disabled.
+2.36  - Added support for Bitdefender Endpoint Security Tools and Carbon Black Cloud. Fixed an issue where the script was truncating the first number of the SentinelOne version string.
+2.35  - Refined how the script detect S1, so that it can now distinguish between an S1 install that is managed through SolarWinds, vs an install that is not. Addressed an issue where the script wasn't properly detecting whether or not Panda Adaptive Defense was up-to-date.
+2.34  - Updated the script to properly handle date comparisons when devices are running Kaspersky Endpoint Security and are in Belgium. Tweaked the script to detect "SCEP Managed Defender" separately from Microsoft SCEP. The script now reports "SolarWinds EDR" when S1 is found, instead of calling it "SentinelOne". Addressed a bug where the script wasn't reporting on the version of SolarWinds EDR that was installed on the device. Added support for Trend Micro Apex One Security.
+2.33  - Updated the script to properly handle date comparisons when devices are running Kaspersky Endpoint Security and are in Germany or the Netherlands. Updated the script to detect FireEye Endpoint Security and SentinelOne.
+2.32  - Updated the script to more accurately detect Symantec Endpoint Protection Cloud. Updated how the script monitors Palo Alto Traps so that it correctly obtains the product version; detecting when Palo Alto Traps is running older A/V definitions is still unsupported. Added support for Panda Adaptive Defence 360. Updated the script to use a global %ProgramData% variable, instead of calling it separately in different parts of the code. Moved detection of SCEP to happen before Cisco AMP, to avoid issues with partially uninstalled versions of Cisco AMP.
+2.31  - Fixed an issue where some permutations of Microsoft SCEP installs weren't being detected, due to the changes made in v2.30 of the script. Fixed a logic flaw that was impacting Trend Micro monitoring. Fixed an order-of-operations problem that prevented the script from properly detecting Vipre Business Agent.
+2.30  - Added support for Sophos for Virtual Environments and Sophos Endpoint Protection. Added detection (but not yet monitoring) for Palo Alto Networks Traps™. Tweaked how the script detects Microsoft SCEP, so that it properly monitors SCEP-managed installs of Windows Defender. Fixed an issue that was causing the script to crash when trying to monitor F-Secure.
+2.29  - Updated the script to work with date format modifications that Kaspersky and AVG have made in their logs. Addressed an issue where the script was crashing when trying to monitor McAffee ENS 10.6.
+2.28  - Moved the detection of Microsoft Security Essentials to be "last", as it was being found before other 3rd party AV products. Added support for detecting Cisco AMP. Fixed an issue where Microsoft Defender was not being detected on Server-class operating systems.
+2.27  - Fixed an issue where the script was terminating if a required file from AVG Business Security wasn't present. Added support for FortiClient AV.
+2.26  - Fixed an issue where the script was throwing an exception when monitoring Sophos AntiVirus 10.
+2.25  - Added support for AVG Business Security 18.8. Fixed an issue where the script wasn't correctly monitoring stand-alone versions of Kaspersky Endpoint Security. Addressed a problem where the script was incorrectly determining that Webroot SecureAnywhere didn't have Real-Time Scanning enabled. Fixed an issue where the script was incorrectly reporting that Sophos wasn't up-to-date.
+2.24  - Added support for "Kaspersky Endpoint Security 10 SP2 for Windows", and for "Kaspersky Endpoint Security 11 for Windows".
+2.23  -  Fixed an issue where the script was failing to detect Windows Defender. Updated the script to handle Dutch messages when it finds ESET. Fixed an issue where the script wasn't detecting that Sophos was out-of-date.
+2.22  - Added support for Norman Anti-Virus and for Kaspersky 10 SP2. Updated how the script determines if Kaspersky AV has virus scanning enabled. Fixed a bug where the script would state that Sophos was up-to-date, even if it was out-of-date. Fixed a bug where the script wasn't properly querying the root\SecurityCenter2 WMI namespace (foolishly created by my last fix in this area)
+2.21  - Refined how the script detects AV Defender; in some cases it was detecting that AVD was installed because there was a folder left behind on the file system. Fixed an issue with how the script was detecting the presence or absense of data in WMI. Fixed a problem with how the script detects AV in the root\SecurityCenter2 WMI namespace.
+2.20  - Added support for ESET Endpoint Security.
+2.19  - Added support for Cylance PROTECT and ESET Mail Security. Fixed an issue where the service falsely reported a Failed status when ESET detected that the OS was missing patches, or that the license for ESET was going to expire in the near future. Fixed an issue with AV Defender detection.
+2.18  - Completely re-wrote how the script monitors Sophos AV, based on some updated code snippets from a Sales Engineer at Sophos. Fixed a problem with Kaspersky monitoring where the script would exit with a "Kaspersky Ux file not found" error message. Added support for ESET's File Security product.
+2.17  - Added support for Vipre Business Online 6.x. Fixed an issue with Avast! monitoring where the version number wasn't getting pushing to WMI.
+2.16  - Fixed an issue where the script would crash if there was no AV on the device, and the root\SecurityCenter2 WMI namespace did not exist. Added support for the McAfee Move AV Client 5.0. Standardized what data (A/V application version) goes into the "Version Number" metric. Fixed a NULL handling issue with Kaspersky monitoring.
+2.15  - Fixed an issue where the script wasn't properly monitoring Trend OfficeScan
+2.14  - Resolved a problem when monitoring Symantec Endpoint Protection.Cloud v22.9 and above - Symantec changed the registry keys in that version of their .Cloud product
+2.13  - Updated how the script detects the "verison" of F-Secure, as it was reporting incorrect information in certain situations
+2.12  - Fixed an issue where the script was terminating if the root\SecurityCenter2 namespace existed, but the AntiVirusProduct WMI class did not exist. Updated how the script detects F-Secure. Added support for AVG Protection. Fixed an issue where the script was throwing an exception when monitoring the latest version of Kaspersky 10.x.
+2.11  - Fixed an issue where the script wouldn't detect Windows Defender if there were no entries in the root\SecurityCenter2 WMI namespace. Added support for Trend Micro Deep Security. 
+2.10  - The "When was the script last run" metric is now formatted to use a consistent date format, regardless of the local of the device. Updated how the script detects whether or not Trend products are up-to-date or not. Fixed several issues with how the script detects and monitors Sophos
+2.9   - Updated how the script detects Microsoft's SCEP product - thanks to Steve Moore for the help! Also fixed a bug where the script wouldn't properly detect if the WMI namespace/class already existed, which sometimes led to old information getting left in WMI.
+2.8   - Added a bit of debug logging around Trend WFBSS, and fixed an issue where the script was erroring out during the deletion/creation of the WMI namespace and class
+2.7   - Added support for Trend Micro Messaging Security Agent, fixed an issue with Symantec Endpoint.Cloud, and fixed an issue with McAfee monitoring
+2.6   - Added in logic that detects if AV Defender (Bitdefender) has been installed, fixed an issue around detecting the root\SecurityCenter2 WMI class, and separated out the detection of SCEP from MS Security Essentials
+2.5   - Updated the Symantec.Cloud section so that it works properly with both old and new versions of that AV product
+2.4   - Fixed an issue with Symantec.Cloud section, as there were some situations where the script wasn't finding the AV definition date. 
+2.3   - Removed support for Malwarebytes Anti-Exploit, as the code wasn't in-place. Added support for Malwarebytes Corporate Edition
+2.2   - Fixed an issue where the script wasn't looking at the right registry value for the AV definition date for Trend WFBSS
+2.1   - Fixed an issue where the script wasn't properly detecting/monitoring SCEP 2012 on Windows 10
+2.0   - Fixed an issue with calcuating the AV pattern date for Symantec Endpoint Protection 11.x, and a problem with Trend WFBSS monitoring
+1.1.8 - Fixed registry change for Trend Micro WFBSS
+1.1.6 - Added support for Kaspersky Security 10 for Windows Servers
+1.1.5 - Added support for Sophos 10.x
+1.1.4 - added support for McAfee endpoint protection 10.1 
+1.1.1 - added new file monitoring for Kaspersky 10 sp1 (U1313g.xml)
+1.1.0 - added component for sophos and changed numbering to a new method
+1.105 - Updated a registry check for Sophos (Thank you to Tim Wiser @GCI for providing the trouble as well as the fix)
+1.104 - updated Trend Micro registry lookup due to change in their AV
+1.103 - added support for Kaspersky Small Office Security 3
+1.102 - updated monitoring for AVG Business Edition (new wmi entry)
+1.101 - Updated support for KES V10 SP1 (changed registry and file paths)
+1.100 - Added new monitoring for AVG 2013 Business Edition on Desktop OS
+1.99 - Added new verification for Eset 6.x
+1.98 - fixed a date formatting issue with McAfee endpoint security 10
+1.97 - First check for the new catalog file for Panda Cloud Endpoint Protection
+1.96 - added McAfee Endpoint Security 10 - 1.96 fixed registry issue with McAfee 
+1.94 - File checked to see if product is up-to-date changed for Panda Cloud Endpoint Protection
+     - Fixed registry change for Kaspersky 10 + 10SP1
+1.93 - Added Fix for Kaspersky Endpoint Security 10 SP1
+1.92 - Fixed registry issue with Webroot SecureAnywhere
+1.91 - Added to script by Tim Wiser 10/03/2015 to catch rare cases where no AV is installed yet the two health variables were being set incorrectly
+1.90 - Added Malwarebytes Anti-Exploit AV
+1.89 - updated Trend Micro Monitoring
+1.88 - Added support for Vipre Business Agent (ThreatTrack)
+1.87 - Added support for Avast
+1.86 - Fixed issue with systems without AV and discovery of securitycenter2 (misconfigured state) and fixed new date formatting for Trend AV
+1.85 - Updated AVG monitoring and fixed a few issues with AV
+1.84 - Fixed issue with obtaining last update date for ESET NOD32 Antivirus
+1.83 - Fixed date formatting issue with Kaspersky 10.x
+1.82 - Added Windows Defender registry entry for av version date' - NOT RELEASED TO PUBLIC
+1.81 - updated av definition file setting for Symantec Endpoint.Cloud (SEP Cloud) to report updated date. - NOT RELEASED TO PUBLIC
+1.80 - added new registry entry for MS Forefront AV - May 7th 2014
+1.79 - Added support for Kaspersky 10.2 - April 17th - 2014
+1.78 - fixed issue with Microsoft Security Essentials on Windows 7 due to change in date formatting , and added MS SCEP - April 17th - 2014
+1.77 - Added support for updated version of SEP Cloud 20.4 - February 26, 2014
+1.76 - Added support for AVG 2014 - February 20, 2014
+1.75 - Added support for Vipre AV date formatting change (added 22 instead of 21 on line 1687), and - October 15, 2013
+1.72 - Added suport for Panda Cloud Endpoint Protection 6.11 - September 30th, 2013
+1.71 - Adding support for Webroot SecureAnywhere & Fixed issue with Ms Forefront Date Formating - September 17th 2013
+1.70 - fixing regional settings with Kaspersky - August 12, 2013
+1.69 - Fixed date formatting issue with Kaspersky (lines 1950-1960), and fixed an issue with date formatting in windows defender AV - July 12, 2013
+1.68 - Fixed issue with TrendMicro AV (Thanks Jean-Pierre) - July 11th, 2013
+1.66 - Changed the registry key that is used to detect the AV Definition date of Trend WFBS (June 6th, 2013)
+1.65 - Fixed another issue with detecting Trend WFBS 7 (April 29th, 2013)
+1.64 - Added partial support for Windows Defender (April 8th, 2013)
+     - Fixed an issue with detecting Trend WFBS 7 on 64-bit machines. Thanks to Greg Michael for finding the issue!
+1.63 - Added support for Kaspersky Endpoint Security 10 (March 4th, 2013)
+1.62 - Fixed an issue where the version of Trend OfficeScan wasn't being correctly detected if the machine was switched from Conventional Scans to Smart Scans (March 4th, 2013)
+     - Added support for AVG 2013
+     - Added support for Trend Micro Worry-Free Business Security 8.x
+     - Added a new property in WMI that lists when the script was last ran. The AV Status service (in N-central) will need to be updated to support displaying this value.
+1.61 - Updated the code for Trend Micro to go to the correct spot in the registry for both 32-bit and 64-bit machines. (Feb 4th, 2013)
+1.60 - Fixed an issue where the fix in build 1.59 was missing a \ character in the path (Feb 4th, 2013)
+1.59 - Fixed an issue where the script couldn't find the XML file for Kaspersky 8.0 Enterprise on Windows 2003 Servers (Jan 28th, 2013)
+1.58 - Added support for Symantec Endpoint.Cloud (Symantec Endpoint Protection - SBE2013)
+1.572 - fixed a date formatting issue with regional settings that was incorectly reporting wrong AV date
+1.571 - for F-Secure, swapped FS@AQUA.INI to be first and FS@HYDRA.INI to be second for definition dating
+1.57 - Added more descriptive name details for F-Secure AV (October 9 2012)
+1.56 - Added support to return Version as well as AV Date in version field (October 2 2012)
+1.55 - Added support for F-Secure Endpoint and Antivirus (October 1 2012)
+1.54b - Changed how the script detects the A/V Definition Date for Kaspersky 8.0 for Servers - in some cases the value is not present in the registry (Sept. 20th, 2012)
+1.53 - Fixed an issue where the script was returning a NULL 'VersionNumber' value on some installations of Trend Micro Worry Free  (July 17th, 2012)
+1.52 - Modified the script so that if the DONOTWRITE parameter is specified, the script will clear out any data that exists in the AntiVirusProduct WMI class. (July 4th, 2012)
+1.51 - Added support for Avira 10.x on Windows Servers, and Kaspersky Small Office Security 2 (June 27th, 2012)
+1.50 - Fixed an issue where the script wasn't correctly determining the version of Symantec Endpoint Protection 12.x on x64 machines. (June 27th, 2012)
+     - Removed the AVG-specific code, and replaced it with code that checks the root\SecurityCenter2 WMI namespace for any installed A/V. While this only works on Vista, Windows 7 and Windows 8, it should make the script able to more reliabily detect A/V products
+1.49 - Added a command line flag (possible values are WRITE and DONOTWRITE) that lets users choose whether or not the script should write data to WMI if no known A/V product is detected. (June 11th, 2012)
+     - Added support for AVG 2012
+     - Confirmed that the script supports Symantec Endpoint Protection 12.x (it previously had only been tested against Symantec Endpoint Protection 11.x)
+1.48 - Added support for Avira AntiVirus 12.x (June 6th, 2012)
+1.47 - Added support for Total Defense r12, and cleaned up some messy, unecessarily repetitive code that was writing text to 'standard out'. (May 29th, 2012)
+1.46 - Fixed an issue where the Microsoft Security Essentials portion of the script reported an error with the RawAVDefDate variable. This issue only affected 64-bit machines. (May 24th, 2012)
+1.45 - Added support for Kaspersky Small Office Security (May 18th, 2012)
+1.44 - Fixed an issue in the Kaspersky SubRoutine where an incorrect registry key was being called. (May 15th, 2012)
+1.43 - Forced the script to launch in the 32-bit CMD prompt so that it will properly detect Sophos. Thanks Jason Berg! (May 8th, 2012)
+1.42 - Added support for Kaspersky Enterprise 6.0 for Windows Servers, and fixed how the script calculates the A/V Definition date for Kaspersky Enterprise 6.0 and 8.0 (May 7th, 2012)
+1.41 - Updated how the script detects the server version of Kaspersky 8 and all versions of ESET, and how it detects the N-central Endpoint Security product. (March 30th, 2012)
+1.40 - Fixed an issue that was preventing McAfee from being correct detected. Thansk Leon Boers! (March 8th, 2012)
+1.39 - Fixed an issue that was preventing Symantec AntiVirus from being detected. Thanks Kyler Wolf! (Feb 20th, 2012)
+1.38 - Added a 'Set' command that was preventing the Sophos portion of the script from launching successfully. Thanks Joe Sheehan! (Feb. 16th, 2012)
+1.37 - Fixed a typo that prevented the script from launching successfully. (Feb 14th, 2012)
+1.36 - Fixed an issue where an extra, unnecessary comma was preventing the Sophos portion of the script from running correctly. (Feb. 13th, 2012)
+     - Added support for McAfee Security-As-A-Service v5.x. Thanks Khaled Antar! (Feb 14th, 2012)
+     - Added support for Microsoft Forefront. Thanks Pat Albert! (Feb 10th, 2012)
+1.35 - Added support for Kaspersky 8.0 Server Edition. Thanks Pat Albert! (Feb 10th, 2012)
+1.34 - Added support for ESET NOD32 Antivirus 4.x. Thanks Leon Boers! (Feb 6th, 2012)
+1.33 - Added support for GFI Vipre Antivirus Business 5.x and Vipre Antivirus 2012. Thanks Herb Meyerowitz! (Feb 2nd, 2012)
+1.32 - Added support for Kaspersky 8.0. Thanks Pat Albert! (Jan 20th, 2011)
+     - The script now appends the version of Symantec Endpoint Protection to the 'AntiVirus Product Name' value
+1.31 - Fixed an issue where the script failed to detect really old versions of Trend Micro OfficeScan. Thanks to David Lynnwood for the help! (Jan 17th, 2012)
+     - Fixed an issue where the script wasn't correctly detecting N-able's Endpoint Security product on Windows 7 machines. Thanks to James Clay for the help! (Jan 17th, 2012)
+1.30 - Fixed an issue where the script reported the month of the A/V Definition Date for Symantec as 00 instead of 01 if the month was January. Thanks to Jonathan Baker for the help! (Jan 9th, 2012)
+1.29 - Added a check for N-able's Endpoint Security product. If ES is found, the script exits immediately and doesn't write any values to WMI. This check was added because ES scans don't run properly when A/V data is stored in WMI. (Dec. 14th, 2011)
+     - Fixed bug in Trend Micro Worry-Free Business Security 7 when checking for definition version
+1.28 - Added support for Microsoft Security Essentials (Nov. 30th, 2011)
+1.27 - Added support for Kaspersky 6.0 (Nov. 7th, 2011)
+1.26 - Added support for Kaspersky Anti-Virus 2012 (Oct. 18th, 2011)
+1.25 - Fixed an issue where Symantec ES SBS wasn't being detected. Also, the A/V Security Center service will now report a Failed status if no A/V has been found - previously the service just went Misconfigured. (Oct. 18th, 2011)
+1.24 - Updated the way that the script obtains Trend Worry Free 7 data (Oct. 7th, 2011)
+1.23 - Changed how Vipre Enterprise and Vipre AV works - the script now grabs the install location from the registry (Oct. 6th, 2011)
+1.22 - Added support for Vipre's Enterprise A/V product. Cleaned up the code by making a new 'CalculateAVAge' function that removes some unneeded duplicate lines of code (Oct 6th, 2011)
+1.21 - Added a variable called OutOfDateDays that lets users configure how old the Definitions must be before the service will throw a Failure. (Oct 6th, 2011)
+1.20 - Added more screen output when Trend is detected (Oct. 5th, 2011)
+1.19 - Added support for Trend Worry-Free Business Security where the 'ProductName' registry value doesn't contain a version number (Oct. 5th, 2011)
+1.18 - Fixed an issue where the script reported the version of McAfee being run instead of the version of the A/V DAT file (Sept. 23rd, 2011)
+1.17 - Added support for McAfee AntiVirus version 8.5.x, and streamlined how some of the McAfee code was written (Sept. 22nd, 2011)
+1.16 - Changed the command that was outputting text to the screen from wscript.echo to output.writeline - this will make the output show up when running the script in N-central. (Sept. 22nd, 2011)
+1.15 - Added support for Mcafee (thanks Leon Boers!) and Vipre A/V (thanks Chris Jonas!) and fixed an issue with monitoring Sophos (Sept. 12th, 2011)
+1.14 - Fixed a few issues are detecting and monitoring Trend WFBS 7 (May 27th, 2011)
+1.13 - Added code sourced from Sophos to better support their product line (March 31st, 2011)
+1.12 - Added support for 'Trend Micro Worry-Free Business Security Services', and made detection of Symantec more accurate (Mar. 30th, 2011)
+1.11 - Added support for Trend Micro Worry Free Business 7 (Jan. 22nd, 2011)
+1.10 - Added support for Sophos AntiVirus (Nov. 2nd, 2010)
+1.9 - Fixed an issue where Trend wasn't getting detected on a Windows 2003 server (Oct. 5th, 2010)
+1.8 - Fixed an issue where Symantec Endpoint Protection wasn't being detected (Sept. 7th, 2010)
+1.7 - Added support for checking whether or not Real-Time Scanning is enabled for Symantec Anti-Virus (Aug. 11th, 2010)
+1.6 - Added support for Trend Office Scan (July 8th, 2010)
+    - Changed how the script detects a 32-bit OS vs a 64-bit OS
+    - The script now logs to the 'AntiVirusProduct' WMI class in the root\SecurityCenter WMI namespace
+1.5 - Added support for Symantec Endpoint Security (June 27th, 2010)
+1.4 - Added checking for 32-bit vs. 64-bit operating systems (this affects which registry key needs to be queried.)   (June 7th, 2010)
+1.3 - Added checks to see if the InternalPatternVerKey for Trend is populated.
+1.2 - Cast the PatternAge variable as a UINT32, instead of a string value. This will allow users to threshold on that value. (May 20th, 2010)
+1.1 - Added a check to make sure that the WMI Namespace exists before checking for the presence of the WMI class. (May 20th, 2010)
+1.0 - Initial Release (May 18th, 2010)

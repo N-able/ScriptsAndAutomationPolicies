@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="{e449fc79-df1e-4c0e-8515-bd7005afdf92}" Name="Install Windows Update Agent" Description="Rm9yIGFsbCBXaW5kb3dzIDcgYW5kIDguMSBkZXZpY2VzIChhbmQgU2VydmVycyksIGRvd25sb2FkcyBhbmQgaW5zdGFsbHMgdGhlIERlY2VtYmVyIDIwMTUgVXBkYXRlIEFnZW50IChLQjMxMTIzNDMpLg==" Version="2.0.3.32" RemoteCategory="0" ExecutionType="CurrentLoggedOnUser" PS3ObjectCount="0">
+  <Object ID="{58c11ccd-9678-4861-ac67-5eb9ef295642}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;GlobalVariables&gt;&lt;Parameter ParameterName=&quot;URL&quot; Label=&quot;URL&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;Parameter ParameterName=&quot;AgentMSU&quot; Label=&quot;Windows Update Agent MSU&quot; ParameterType=&quot;string&quot; Value=&quot;***Blank***&quot; /&gt;&lt;/GlobalVariables&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1188.8,3157.6</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy" sap:VirtualizedContainerService.HintSize="1188.8,3157.6" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RunScript AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Get OS Version" sap:VirtualizedContainerService.HintSize="1152,80" Moniker="5ff6271d-e1d9-4c87-a1ff-6d93e3f2ad72" OutPut_64="[RunScript_OutPut_64]" Result="[RunScript_Result]" ResultString="[RunScript_ResultString]" Results_x64="[RunScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunScript" genArgEvent="a8b8b544-ff8b-4874-a6e1-7980636610cf" m_bTextLinkChange="False" script="JE9TID0gR2V0LVdNSU9iamVjdCBXaW4zMl9PcGVyYXRpbmdTeXN0ZW0NCg0KJFZlcnNpb24gPSAkT1MuVmVyc2lvbiAtc3BsaXQgIlwuIg0KDQokJWlkJU1ham9yJWlkJSAgPSAkVmVyc2lvblswXQ0KJCVpZCVNaW5vciVpZCUgPSAkVmVyc2lvblsxXQ0KJCVpZCVCdWlsZCVpZCUgPSAgJFZlcnNpb25bMl0NCiQlaWQlTmFtZSVpZCUgPSAkT1MuQ2FwdGlvbg0K">
+          <p:RunScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunScript.InArgs>
+          <p:RunScript.OutArgs>
+            <p:OutArg x:Key="Name" ArgType="string" DisplayName="Name" Name="Name">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunScript_Name]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="Build" ArgType="number" DisplayName="Build" Name="Build">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_Build]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="Minor" ArgType="number" DisplayName="Minor Version" Name="Minor">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_Minor]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+            <p:OutArg x:Key="Major" ArgType="number" DisplayName="Major Version" Name="Major">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:Double">[RunScript_Major]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunScript.OutArgs>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:RunScript>
+        <p:IfObject Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="1152,2694.4" Moniker="e7ab8fa1-f3b0-49ba-9b23-ace06229890b" Result="[IfObject_Result_2]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg="6" Value_Type="x:Double" Variable="[RunScript_Major]" Variable_DisplayArg="Get OS Version.Major Version" Variable_Type="x:Double" m_bTextLinkChange="False">
+          <p:IfObject.IfOption>
+            <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="1120,2494.4" Name="SequenceActivity">
+              <p:SequenceActivity.Activities>
+                <p:IfObject Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="1081.6,80" Moniker="a5a82c59-a22d-402e-ad13-b68656502cc1" Result="[IfObject_Result_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg="1" Value_Type="x:Double" Variable="[RunScript_Minor]" Variable_DisplayArg="Get OS Version.Minor Version" Variable_Type="x:Double" m_bTextLinkChange="False">
+                  <p:IfObject.IfOption>
+                    <p:SequenceActivity DisplayName="Then Windows 7 / Server 2008 R2" sap:VirtualizedContainerService.HintSize="388.8,521.6" Name="SequenceActivity">
+                      <p:SequenceActivity.Activities>
+                        <p:IfElse Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="contains" Condition_DisplayArg="contains" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="351.2,372" Moniker="385a7cda-8f42-41f5-902b-08bdd5a1956c" Result="[IfElse_Result_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfElse" Value_DisplayArg="Server" Value_Type="x:String" Variable="[RunScript_Name]" Variable_DisplayArg="Get OS Version.Name" Variable_Type="x:String" m_bTextLinkChange="False">
+                          <p:IfElse.ElseOption>
+                            <p:SequenceActivity DisplayName="Else Windows 7" sap:VirtualizedContainerService.HintSize="171.2,80" Name="SequenceActivity">
+                              <p:SequenceActivity.Activities>
+                                <p:GetOSArchitecture AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Get OS Architecture" sap:VirtualizedContainerService.HintSize="940.8,80" Moniker="8a4cae00-4f7c-4ae4-9b99-b5f3f9e7a522" Result="[GetOSArchitecture_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="GetOSArchitecture" Value="[GetOSArchitecture_Value]" m_bTextLinkChange="False" />
+                                <p:IfElse Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="940.8,1312.8" Moniker="b164eb86-f91d-4abf-99f2-2da183969e6c" Result="[IfElse_Result_2]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfElse" Value_DisplayArg="64-bit" Value_Type="x:String" Variable="[GetOSArchitecture_Value]" Variable_DisplayArg="Get OS Architecture.Value" Variable_Type="x:String" m_bTextLinkChange="False">
+                                  <p:IfElse.ElseOption>
+                                    <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="908.8,550.4" Name="SequenceActivity">
+                                      <p:SequenceActivity.Activities>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="871.2,180" Moniker="92407bc2-07d8-401e-a344-494482514ddc" Result="[Assignment_Result_4]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="https://download.microsoft.com/download/3/0/B/30B6E9CF-8BD5-4F0D-8759-D42147C990D3/Windows6.1-KB3112343-x86.msu" Value_Type="x:String" Variable="[URL]" Variable_DisplayArg="Global Variables.URL" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="https://download.microsoft.com/download/3/0/B/30B6E9CF-8BD5-4F0D-8759-D42147C990D3/Windows6.1-KB3112343-x86.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="871.2,180" Moniker="dfa1da79-b245-4536-bf8f-0deb4589b6ba" Result="[Assignment_Result_5]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="KB3112343-x86.msu" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="KB3112343-x86.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                      </p:SequenceActivity.Activities>
+                                      <p:SequenceActivity.Variables>
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_4" />
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_5" />
+                                      </p:SequenceActivity.Variables>
+                                    </p:SequenceActivity>
+                                  </p:IfElse.ElseOption>
+                                  <p:IfElse.IfOption>
+                                    <p:SequenceActivity DisplayName="Then Windows 7 x64" sap:VirtualizedContainerService.HintSize="902.4,550.4" Name="SequenceActivity">
+                                      <p:SequenceActivity.Activities>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="864.8,180" Moniker="ef601905-07aa-4f8c-96bf-5e5747441e63" Result="[Assignment_Result_2]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="https://download.microsoft.com/download/5/E/3/5E37D67D-42E6-4AC4-B199-5B335EE092F6/Windows6.1-KB3112343-x64.msu" Value_Type="x:String" Variable="[URL]" Variable_DisplayArg="Global Variables.URL" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="https://download.microsoft.com/download/5/E/3/5E37D67D-42E6-4AC4-B199-5B335EE092F6/Windows6.1-KB3112343-x64.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="864.8,180" Moniker="3f52c840-5dc4-4538-9c6d-98aef2f78466" Result="[Assignment_Result_3]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="KB3112343-x64.msu" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="KB3112343-x64.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                      </p:SequenceActivity.Activities>
+                                      <p:SequenceActivity.Variables>
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_2" />
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_3" />
+                                      </p:SequenceActivity.Variables>
+                                    </p:SequenceActivity>
+                                  </p:IfElse.IfOption>
+                                  <p:IfElse.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="64-bit" />
+                                    </InArgument>
+                                  </p:IfElse.Value>
+                                </p:IfElse>
+                              </p:SequenceActivity.Activities>
+                              <p:SequenceActivity.Variables>
+                                <Variable x:TypeArguments="x:Double" Name="GetOSArchitecture_Result" />
+                                <Variable x:TypeArguments="x:String" Name="GetOSArchitecture_Value" />
+                                <Variable x:TypeArguments="x:Double" Name="IfElse_Result_2" />
+                              </p:SequenceActivity.Variables>
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                            </p:SequenceActivity>
+                          </p:IfElse.ElseOption>
+                          <p:IfElse.IfOption>
+                            <p:SequenceActivity DisplayName="Then Server 2008 R2" sap:VirtualizedContainerService.HintSize="192,80" Name="SequenceActivity">
+                              <p:SequenceActivity.Activities>
+                                <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="867.2,180" Moniker="e479a5aa-aec4-44e0-9485-5c518a3f1b4b" Result="[Assignment_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="https://download.microsoft.com/download/3/7/1/371993AB-C803-4F49-B6CB-6B7A0F1B9C71/Windows6.1-KB3112343-x64.msu" Value_Type="x:String" Variable="[URL]" Variable_DisplayArg="Global Variables.URL" Variable_Type="x:String" m_bTextLinkChange="False">
+                                  <p:Assignment.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="https://download.microsoft.com/download/3/7/1/371993AB-C803-4F49-B6CB-6B7A0F1B9C71/Windows6.1-KB3112343-x64.msu" />
+                                    </InArgument>
+                                  </p:Assignment.Value>
+                                </p:Assignment>
+                                <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="867.2,180" Moniker="7260386f-bdd2-4cc0-ae25-d166f530939d" Result="[Assignment_Result_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="KB3112343-x64.msu" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+                                  <p:Assignment.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="KB3112343-x64.msu" />
+                                    </InArgument>
+                                  </p:Assignment.Value>
+                                </p:Assignment>
+                              </p:SequenceActivity.Activities>
+                              <p:SequenceActivity.Variables>
+                                <Variable x:TypeArguments="x:Double" Name="Assignment_Result" />
+                                <Variable x:TypeArguments="x:Double" Name="Assignment_Result_1" />
+                              </p:SequenceActivity.Variables>
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                            </p:SequenceActivity>
+                          </p:IfElse.IfOption>
+                          <p:IfElse.Value>
+                            <InArgument x:TypeArguments="x:Object">
+                              <p:ObjectLiteral Value="Server" />
+                            </InArgument>
+                          </p:IfElse.Value>
+                          <sap:WorkflowViewStateService.ViewState>
+                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            </scg:Dictionary>
+                          </sap:WorkflowViewStateService.ViewState>
+                        </p:IfElse>
+                      </p:SequenceActivity.Activities>
+                      <p:SequenceActivity.Variables>
+                        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_1" />
+                      </p:SequenceActivity.Variables>
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                    </p:SequenceActivity>
+                  </p:IfObject.IfOption>
+                  <p:IfObject.Value>
+                    <InArgument x:TypeArguments="x:Object">
+                      <p:ObjectLiteral>
+                        <p:ObjectLiteral.Value>
+                          <x:Double>1</x:Double>
+                        </p:ObjectLiteral.Value>
+                      </p:ObjectLiteral>
+                    </InArgument>
+                  </p:IfObject.Value>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </p:IfObject>
+                <p:IfObject Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If" sap:VirtualizedContainerService.HintSize="1081.6,2224" Moniker="51396e7d-2d6a-443e-946f-6ec7c4b902b3" Result="[IfObject_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg="3" Value_Type="x:Double" Variable="[RunScript_Minor]" Variable_DisplayArg="Get OS Version.Minor Version" Variable_Type="x:Double" m_bTextLinkChange="False">
+                  <p:IfObject.IfOption>
+                    <p:SequenceActivity DisplayName="Then Windows 8.1 / Server 2012 R2" sap:VirtualizedContainerService.HintSize="1049.6,2024" Name="SequenceActivity">
+                      <p:SequenceActivity.Activities>
+                        <p:IfElse Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="contains" Condition_DisplayArg="contains" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="1011.2,1874.4" Moniker="282acaac-0899-4029-b336-815552707246" Result="[IfElse_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfElse" Value_DisplayArg="Server" Value_Type="x:String" Variable="[RunScript_Name]" Variable_DisplayArg="Get OS Version.Name" Variable_Type="x:String" m_bTextLinkChange="False">
+                          <p:IfElse.ElseOption>
+                            <p:SequenceActivity DisplayName="Else Windows 8.1" sap:VirtualizedContainerService.HintSize="979.2,1582.4" Name="SequenceActivity">
+                              <p:SequenceActivity.Activities>
+                                <p:GetOSArchitecture AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Get OS Architecture" sap:VirtualizedContainerService.HintSize="940.8,80" Moniker="3aa40cb3-235b-4bd6-bee4-9f780657788e" Result="[GetOSArchitecture_Result_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="GetOSArchitecture" Value="[GetOSArchitecture_Value_1]" m_bTextLinkChange="False" />
+                                <p:IfElse Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="940.8,1312.8" Moniker="66fd7365-fe77-41a3-968a-ef56bb4d9ee0" Result="[IfElse_Result_3]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfElse" Value_DisplayArg="64-bit" Value_Type="x:String" Variable="[GetOSArchitecture_Value_1]" Variable_DisplayArg="Get OS Architecture.Value" Variable_Type="x:String" m_bTextLinkChange="False">
+                                  <p:IfElse.ElseOption>
+                                    <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="904,550.4" Name="SequenceActivity">
+                                      <p:SequenceActivity.Activities>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="866.4,180" Moniker="f1958b2a-756d-4289-84dd-10873b497794" Result="[Assignment_Result_10]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="https://download.microsoft.com/download/C/6/0/C60E8D85-FD51-4B27-A78F-7F68093A1DCF/Windows8.1-KB3112336-x86.msu" Value_Type="x:String" Variable="[URL]" Variable_DisplayArg="Global Variables.URL" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="https://download.microsoft.com/download/C/6/0/C60E8D85-FD51-4B27-A78F-7F68093A1DCF/Windows8.1-KB3112336-x86.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="866.4,180" Moniker="c8bc2cdf-d9be-415d-9fd6-6a89671d5081" Result="[Assignment_Result_11]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="KB3112336-x86.msu" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="KB3112336-x86.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                      </p:SequenceActivity.Activities>
+                                      <p:SequenceActivity.Variables>
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_10" />
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_11" />
+                                      </p:SequenceActivity.Variables>
+                                    </p:SequenceActivity>
+                                  </p:IfElse.ElseOption>
+                                  <p:IfElse.IfOption>
+                                    <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="908.8,550.4" Name="SequenceActivity">
+                                      <p:SequenceActivity.Activities>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="871.2,180" Moniker="1ec0aa0f-157e-46c2-9a43-3269e1e6781d" Result="[Assignment_Result_8]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="https://download.microsoft.com/download/0/6/5/06585DC5-F6E3-4DB8-B11C-DD8CCF867DF3/Windows8.1-KB3112336-x64.msu" Value_Type="x:String" Variable="[URL]" Variable_DisplayArg="Global Variables.URL" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="https://download.microsoft.com/download/0/6/5/06585DC5-F6E3-4DB8-B11C-DD8CCF867DF3/Windows8.1-KB3112336-x64.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="871.2,180" Moniker="463985b6-e6a4-409a-9c5c-6078cc3fb561" Result="[Assignment_Result_9]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="KB3112336-x64.msu" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+                                          <p:Assignment.Value>
+                                            <InArgument x:TypeArguments="x:Object">
+                                              <p:ObjectLiteral Value="KB3112336-x64.msu" />
+                                            </InArgument>
+                                          </p:Assignment.Value>
+                                        </p:Assignment>
+                                      </p:SequenceActivity.Activities>
+                                      <p:SequenceActivity.Variables>
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_8" />
+                                        <Variable x:TypeArguments="x:Double" Name="Assignment_Result_9" />
+                                      </p:SequenceActivity.Variables>
+                                    </p:SequenceActivity>
+                                  </p:IfElse.IfOption>
+                                  <p:IfElse.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="64-bit" />
+                                    </InArgument>
+                                  </p:IfElse.Value>
+                                </p:IfElse>
+                              </p:SequenceActivity.Activities>
+                              <p:SequenceActivity.Variables>
+                                <Variable x:TypeArguments="x:Double" Name="GetOSArchitecture_Result_1" />
+                                <Variable x:TypeArguments="x:String" Name="GetOSArchitecture_Value_1" />
+                                <Variable x:TypeArguments="x:Double" Name="IfElse_Result_3" />
+                              </p:SequenceActivity.Variables>
+                            </p:SequenceActivity>
+                          </p:IfElse.ElseOption>
+                          <p:IfElse.IfOption>
+                            <p:SequenceActivity DisplayName="Then Server 2012 R2" sap:VirtualizedContainerService.HintSize="192,80" Name="SequenceActivity">
+                              <p:SequenceActivity.Activities>
+                                <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="867.2,180" Moniker="b5a997ea-c1fa-4420-967c-33fafecb7f8c" Result="[Assignment_Result_6]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="https://download.microsoft.com/download/A/B/F/ABF9D437-A624-4AA3-94B4-1429BCA122F4/Windows8.1-KB3112336-x64.msu" Value_Type="x:String" Variable="[URL]" Variable_DisplayArg="Global Variables.URL" Variable_Type="x:String" m_bTextLinkChange="False">
+                                  <p:Assignment.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="https://download.microsoft.com/download/A/B/F/ABF9D437-A624-4AA3-94B4-1429BCA122F4/Windows8.1-KB3112336-x64.msu" />
+                                    </InArgument>
+                                  </p:Assignment.Value>
+                                </p:Assignment>
+                                <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="867.2,180" Moniker="a9ef28c4-de1b-465d-b71e-ba5e220012b0" Result="[Assignment_Result_7]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value_DisplayArg="KB3112336-x64.msu" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+                                  <p:Assignment.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="KB3112336-x64.msu" />
+                                    </InArgument>
+                                  </p:Assignment.Value>
+                                </p:Assignment>
+                              </p:SequenceActivity.Activities>
+                              <p:SequenceActivity.Variables>
+                                <Variable x:TypeArguments="x:Double" Name="Assignment_Result_6" />
+                                <Variable x:TypeArguments="x:Double" Name="Assignment_Result_7" />
+                              </p:SequenceActivity.Variables>
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                            </p:SequenceActivity>
+                          </p:IfElse.IfOption>
+                          <p:IfElse.Value>
+                            <InArgument x:TypeArguments="x:Object">
+                              <p:ObjectLiteral Value="Server" />
+                            </InArgument>
+                          </p:IfElse.Value>
+                        </p:IfElse>
+                      </p:SequenceActivity.Activities>
+                      <p:SequenceActivity.Variables>
+                        <Variable x:TypeArguments="x:Double" Name="IfElse_Result" />
+                      </p:SequenceActivity.Variables>
+                    </p:SequenceActivity>
+                  </p:IfObject.IfOption>
+                  <p:IfObject.Value>
+                    <InArgument x:TypeArguments="x:Object">
+                      <p:ObjectLiteral>
+                        <p:ObjectLiteral.Value>
+                          <x:Double>3</x:Double>
+                        </p:ObjectLiteral.Value>
+                      </p:ObjectLiteral>
+                    </InArgument>
+                  </p:IfObject.Value>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </p:IfObject>
+              </p:SequenceActivity.Activities>
+              <p:SequenceActivity.Variables>
+                <Variable x:TypeArguments="x:Double" Name="IfObject_Result_1" />
+                <Variable x:TypeArguments="x:Double" Name="IfObject_Result" />
+              </p:SequenceActivity.Variables>
+            </p:SequenceActivity>
+          </p:IfObject.IfOption>
+          <p:IfObject.Value>
+            <InArgument x:TypeArguments="x:Object">
+              <p:ObjectLiteral>
+                <p:ObjectLiteral.Value>
+                  <x:Double>6</x:Double>
+                </p:ObjectLiteral.Value>
+              </p:ObjectLiteral>
+            </InArgument>
+          </p:IfObject.Value>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:IfObject>
+        <p:IfElse Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" Condition="equals" Condition_DisplayArg="equals" DisplayName="If/Else" sap:VirtualizedContainerService.HintSize="1152,80" Moniker="70f37b09-505a-4174-8e37-19c25352300e" Result="[IfElse_Result_4]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfElse" Value_DisplayArg="***Blank***" Value_Type="x:String" Variable="[AgentMSU]" Variable_DisplayArg="Global Variables.Windows Update Agent MSU" Variable_Type="x:String" m_bTextLinkChange="False">
+          <p:IfElse.ElseOption>
+            <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="488,1145.6" Name="SequenceActivity">
+              <p:SequenceActivity.Activities>
+                <p:GetEnvironmentVariable Type_Item="{x:Null}" Type_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Temp" sap:VirtualizedContainerService.HintSize="450.4,124" Moniker="f41a9eb5-eb95-4e0a-bffb-7496ea7229d4" Result="[GetEnvironmentVariable_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" Type="Machine" TypeName="GetEnvironmentVariable" Type_DisplayArg="Machine" Value="[GetEnvironmentVariable_Value]" Variable="TEMP" Variable_DisplayArg="TEMP" m_bTextLinkChange="False" />
+                <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Path and Filename" FormattedString="[FormatString_FormattedString]" sap:VirtualizedContainerService.HintSize="450.4,160" Input0="[GetEnvironmentVariable_Value]" Input0_DisplayArg="Temp.Value" Input1="[AgentMSU]" Input1_DisplayArg="Global Variables.Windows Update Agent MSU" Moniker="9ae8196f-1ade-4ccd-9387-0af8e6da0db4" Result="[FormatString_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" Text="{}{0}\{1}" Text_DisplayArg="{}{0}\{1}" TypeName="FormatString" m_bTextLinkChange="False" />
+                <p:DownloadFileFromURL OverwriteExistingFile_Item="{x:Null}" OverwriteExistingFile_ItemProp="{x:Null}" RemoteFileURL_Item="{x:Null}" RemoteFileURL_ItemProp="{x:Null}" SaveAsFileName_Item="{x:Null}" SaveAsFileName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Download File from URL" sap:VirtualizedContainerService.HintSize="450.4,160" Moniker="46de8fa2-7c39-4aef-9c2c-2cb222cf414b" OverwriteExistingFile="True" OverwriteExistingFile_DisplayArg="true" RemoteFileURL="[URL]" RemoteFileURL_DisplayArg="Global Variables.URL" Result="[DownloadFileFromURL_Result]" RunAsCurrentLoggedOnUser="False" SaveAsFileName="[FormatString_FormattedString]" SaveAsFileName_DisplayArg="Path and Filename.FormattedString" ScriptExecutionMethod="ExecuteDebug" TypeName="DownloadFileFromURL" m_bTextLinkChange="False" />
+                <p:FormatString Input0_Item="{x:Null}" Input0_ItemProp="{x:Null}" Input1_Item="{x:Null}" Input1_ItemProp="{x:Null}" Text_Item="{x:Null}" Text_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="WUSA Arguments" FormattedString="[FormatString_FormattedString_1]" sap:VirtualizedContainerService.HintSize="450.4,160" Input0="[FormatString_FormattedString]" Input0_DisplayArg="Path and Filename.FormattedString" Input1="/quiet /norestart" Input1_DisplayArg="/quiet /norestart" Moniker="9e85c95e-2cdd-44fa-9ebd-d96e8323ac02" Result="[FormatString_Result_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" Text="{}{0} {1}" Text_DisplayArg="{}{0} {1}" TypeName="FormatString" m_bTextLinkChange="False" />
+                <p:RunProgram Arguments_Item="{x:Null}" Arguments_ItemProp="{x:Null}" Program_Item="{x:Null}" Program_ItemProp="{x:Null}" WaitForCompletion_Item="{x:Null}" WaitForCompletion_ItemProp="{x:Null}" WindowType_Item="{x:Null}" WindowType_ItemProp="{x:Null}" WorkingDirectory="{x:Null}" WorkingDirectory_DisplayArg="{x:Null}" WorkingDirectory_Item="{x:Null}" WorkingDirectory_ItemProp="{x:Null}" Arguments="[FormatString_FormattedString_1]" Arguments_DisplayArg="WUSA Arguments.FormattedString" AssemblyName="PolicyExecutionEngine, Version=1.7.0.28, Culture=neutral, PublicKeyToken=null" DisplayName="Run Program" sap:VirtualizedContainerService.HintSize="450.4,232" Moniker="be21cf27-76eb-4108-9381-175b17cfea7b" ProcessID="[RunProgram_ProcessID]" Program="wusa.exe" Program_DisplayArg="wusa.exe" Result="[RunProgram_Result]" RunAsCurrentLoggedOnUser="True" ScriptExecutionMethod="None" TypeName="RunProgram" WaitForCompletion="True" WaitForCompletion_DisplayArg="" WindowType="Hidden" WindowType_DisplayArg="Hidden" m_bTextLinkChange="False" />
+              </p:SequenceActivity.Activities>
+              <p:SequenceActivity.Variables>
+                <Variable x:TypeArguments="x:Double" Name="DownloadFileFromURL_Result" />
+                <Variable x:TypeArguments="x:String" Name="RunProgram_ProcessID" />
+                <Variable x:TypeArguments="x:Double" Name="RunProgram_Result" />
+                <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString" />
+                <Variable x:TypeArguments="x:Double" Name="FormatString_Result" />
+                <Variable x:TypeArguments="x:Double" Name="GetEnvironmentVariable_Result" />
+                <Variable x:TypeArguments="x:String" Name="GetEnvironmentVariable_Value" />
+                <Variable x:TypeArguments="x:String" Name="FormatString_FormattedString_1" />
+                <Variable x:TypeArguments="x:Double" Name="FormatString_Result_1" />
+              </p:SequenceActivity.Variables>
+            </p:SequenceActivity>
+          </p:IfElse.ElseOption>
+          <p:IfElse.IfOption>
+            <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="403.2,238.4" Name="SequenceActivity">
+              <p:SequenceActivity.Activities>
+                <p:Log Message_Item="{x:Null}" Message_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.0.3.32, Culture=neutral, PublicKeyToken=null" DisplayName="Log" sap:VirtualizedContainerService.HintSize="364.8,88" LogMessage="[Log_LogMessage]" Message="This agent update policy does not apply" Message_DisplayArg="This agent update policy does not apply" Moniker="a418838d-8f9d-4f15-9399-c1cca4ed18be" Result="[Log_Result]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="Log" m_bTextLinkChange="False" />
+              </p:SequenceActivity.Activities>
+              <p:SequenceActivity.Variables>
+                <Variable x:TypeArguments="x:String" Name="Log_LogMessage" />
+                <Variable x:TypeArguments="x:Double" Name="Log_Result" />
+              </p:SequenceActivity.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+            </p:SequenceActivity>
+          </p:IfElse.IfOption>
+          <p:IfElse.Value>
+            <InArgument x:TypeArguments="x:Object">
+              <p:ObjectLiteral Value="***Blank***" />
+            </InArgument>
+          </p:IfElse.Value>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </p:IfElse>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Default="none" Name="URL" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_OutPut_64" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_ResultString" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunScript_Results_x64" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Result" />
+        <Variable x:TypeArguments="x:String" Default="***Blank***" Name="AgentMSU" />
+        <Variable x:TypeArguments="x:Double" Name="IfObject_Result_2" />
+        <Variable x:TypeArguments="x:Double" Name="IfElse_Result_4" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Major" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Minor" />
+        <Variable x:TypeArguments="x:Double" Name="RunScript_Build" />
+        <Variable x:TypeArguments="x:String" Name="RunScript_Name" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
