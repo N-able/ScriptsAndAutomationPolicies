@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="affb15e3-2ad7-4b44-a80e-3575157916c1" Name="Get-Win11-22H2Compatibility" Description="IyBVc2luZyBpbmZvcm1hdGlvbiBmcm9tIGh0dHBzOi8vd3d3LmdoYWNrcy5uZXQvMjAyMi8wNi8yMy9hLWxvb2staW4tdGhlLXJlZ2lzdHJ5LXJldmVhbHMtaWYteW91ci1wYy1pcy1jb21wYXRpYmxlLXdpdGgtd2luZG93cy0xMS12ZXJzaW9uLTIyaDIv" Version="2.10.0.19" RemoteCategory="0" ExecutionType="Local" MinimumPSVersionRequired="0.0.0">
+  <Object ID="{bbf390fd-3fac-49c5-ac04-da294f93e93c}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;OutputParameters&gt;&lt;Parameter ParameterName=&quot;CompatOut&quot; Label=&quot;22H2 Compatibility Problems&quot; ParameterType=&quot;string&quot; Value=&quot;Global Variables.Compatibility&quot; /&gt;&lt;/OutputParameters&gt;&lt;GlobalVariables&gt;&lt;Parameter ParameterName=&quot;CompatVar&quot; Label=&quot;Compatibility&quot; ParameterType=&quot;string&quot; Value=&quot;Not Run&quot; /&gt;&lt;/GlobalVariables&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System">
+      <d2p1:TupleOfstringstringstringstring>
+        <d2p1:m_Item1>GlobalVariable.CompatVar</d2p1:m_Item1>
+        <d2p1:m_Item2>OutputObject</d2p1:m_Item2>
+        <d2p1:m_Item3></d2p1:m_Item3>
+        <d2p1:m_Item4>CompatOut</d2p1:m_Item4>
+      </d2p1:TupleOfstringstringstringstring>
+    </hashset>
+  </LinkManager>
+  <Diagnostics OriginalVersion="2.40.0.10" />
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>504,967</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy Builder" sap:VirtualizedContainerService.HintSize="504,967" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:RunPowerShellScript AssemblyName="PolicyExecutionEngine, Version=2.40.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="468,522" Moniker="a049868b-7b98-493d-909f-f128248591eb" OutPut_64="[RunPowerShellScript_OutPut_64]" Result="[RunPowerShellScript_Result]" ResultString="[RunPowerShellScript_ResultString]" Results_x64="[RunPowerShellScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" genArgEvent="d7fbdf1f-3a73-406f-8988-de2491bb944b" m_bTextLinkChange="False" script="IwAgAFUAcwBpAG4AZwAgAGkAbgBmAG8AcgBtAGEAdABpAG8AbgAgAGYAcgBvAG0AIABoAHQAdABwAHMAOgAvAC8AdwB3AHcALgBnAGgAYQBjAGsAcwAuAG4AZQB0AC8AMgAwADIAMgAvADAANgAvADIAMwAvAGEALQBsAG8AbwBrAC0AaQBuAC0AdABoAGUALQByAGUAZwBpAHMAdAByAHkALQByAGUAdgBlAGEAbABzAC0AaQBmAC0AeQBvAHUAcgAtAHAAYwAtAGkAcwAtAGMAbwBtAHAAYQB0AGkAYgBsAGUALQB3AGkAdABoAC0AdwBpAG4AZABvAHcAcwAtADEAMQAtAHYAZQByAHMAaQBvAG4ALQAyADIAaAAyAC8ADQAKAA0ACgAkAEMAbwBtAHAAYQB0AFIAZQBnACAAPQAgACgAZwBlAHQALQBpAHQAZQBtAHAAcgBvAHAAZQByAHQAeQAgACIASABLAEwATQA6AFwAUwBPAEYAVABXAEEAUgBFAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzACAATgBUAFwAQwB1AHIAcgBlAG4AdABWAGUAcgBzAGkAbwBuAFwAQQBwAHAAQwBvAG0AcABhAHQARgBsAGEAZwBzAFwAVABhAHIAZwBlAHQAVgBlAHIAcwBpAG8AbgBVAHAAZwByAGEAZABlAEUAeABwAGUAcgBpAGUAbgBjAGUASQBuAGQAaQBjAGEAdABvAHIAcwBcAE4ASQAyADIASAAyACIAKQAuAFIAZQBkAFIAZQBhAHMAbwBuAA0ACgAkAEMAbwBtAHAAYQB0AFIAZQBnACAAPQAgACQAQwBvAG0AcABhAHQAUgBlAGcAIAB8ACAATwB1AHQALQBTAHQAcgBpAG4AZwANAAoADQAKAGkAZgAgACgAJABuAHUAbABsACAALQBlAHEAIAAkAEMAbwBtAHAAYQB0AFIAZQBnACkAIAB7AA0ACgAgACAAIAAgACQAQwBvAG0AcABhAHQAIAA9ACAAIgAkACgARwBlAHQALQBEAGEAdABlACAALQBGAG8AcgBtAGEAdAAgACcAeQB5AHkAeQAtAE0ATQAtAGQAZAAgAEgASAA6AG0AbQA6AHMAcwAnACkAIAB8ACAARQBSAFIATwBSACAAfAAgAFUAbgBhAGIAbABlACAAdABvACAAUgBlAGEAZAAgAFIAZQBnAGkAcwB0AHIAeQAgAFYAYQBsAHUAZQAiAA0ACgAgACAAIAAgAGUAeABpAHQAIAAyAA0ACgB9AA0ACgBlAGwAcwBlACAAewANAAoAIAAgACAAIABpAGYAIAAoACQAQwBvAG0AcABhAHQAUgBlAGcAIAAtAG0AYQB0AGMAaAAgACIATgBvAG4AZQAiACkAIAB7AA0ACgAgACAAIAAgACAAIAAgACAAJABDAG8AbQBwAGEAdAAgAD0AIAAiACQAKABHAGUAdAAtAEQAYQB0AGUAIAAtAEYAbwByAG0AYQB0ACAAJwB5AHkAeQB5AC0ATQBNAC0AZABkACAASABIADoAbQBtADoAcwBzACcAKQAgAHwAIABJAE4ARgBPACAAfAAgACQAQwBvAG0AcABhAHQAUgBlAGcAIAAtACAATgBvACAAaABhAHIAZAB3AGEAcgBlACAAYwBvAG0AcABhAHQAaQBiAGkAbABpAHQAeQAgAGkAcwBzAHUAZQBzACAAaABhAHYAZQAgAGIAZQBlAG4AIABkAGUAdABlAGMAdABlAGQAIABiAHkAIABXAGkAbgBkAG8AdwBzACAAVABlAGwAZQBtAGUAdAByAHkAIABEAGEAdABhACIADQAKACAAIAAgACAAIAAgACAAIABXAHIAaQB0AGUALQBIAG8AcwB0ACAAJABDAG8AbQBwAGEAdAAgAC0ARgBvAHIAZQBnAHIAbwB1AG4AZABDAG8AbABvAHIAIABHAHIAZQBlAG4ADQAKACAAIAAgACAAIAAgACAAIABFAHgAaQB0ACAAMAANAAoAIAAgACAAIAB9AA0ACgAgACAAIAAgAGUAbABzAGUAIAB7AA0ACgAgACAAIAAgACAAIAAgACAAJABDAG8AbQBwAGEAdAAgAD0AIAAiACQAKABHAGUAdAAtAEQAYQB0AGUAIAAtAEYAbwByAG0AYQB0ACAAJwB5AHkAeQB5AC0ATQBNAC0AZABkACAASABIADoAbQBtADoAcwBzACcAKQAgAHwAIABFAFIAUgBPAFIAIAB8ACAAJABDAG8AbQBwAGEAdABSAGUAZwAiAA0ACgAgACAAIAAgACAAIAAgACAAVwByAGkAdABlAC0ASABvAHMAdAAgACQAQwBvAG0AcABhAHQAIAAtAEYAbwByAGUAZwByAG8AdQBuAGQAQwBvAGwAbwByACAAUgBlAGQADQAKACAAIAAgACAAIAAgACAAIABFAHgAaQB0ACAAMQANAAoAIAAgACAAIAB9AA0ACgB9AA==">
+          <p:RunPowerShellScript.InArgs>
+            <scg:Dictionary x:TypeArguments="x:String, p:InArg" />
+          </p:RunPowerShellScript.InArgs>
+          <p:RunPowerShellScript.OutArgs>
+            <p:OutArg x:Key="Compat" ArgType="string" DisplayName="22H2 Compatibility" Name="Compat">
+              <p:OutArg.Arg>
+                <OutArgument x:TypeArguments="x:String">[RunPowerShellScript_Compat]</OutArgument>
+              </p:OutArg.Arg>
+            </p:OutArg>
+          </p:RunPowerShellScript.OutArgs>
+        </p:RunPowerShellScript>
+        <p:Assignment Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.40.0.10, Culture=neutral, PublicKeyToken=null" DisplayName="Global Variable Assignment" sap:VirtualizedContainerService.HintSize="468,182" Moniker="07636d8e-687f-4266-9487-422da001912b" Result="[Assignment_Result]" ResultString="[Assignment_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="Assignment" Value="[RunPowerShellScript_Compat]" Value_DisplayArg="Run PowerShell Script.22H2 Compatibility" Value_Type="x:String" Variable="[CompatVar]" Variable_DisplayArg="Global Variables.Compatibility" Variable_Type="x:String" m_bTextLinkChange="False" />
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64" />
+        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result" />
+        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_Compat" />
+        <Variable x:TypeArguments="x:String" Name="Assignment_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="Assignment_Result" />
+        <Variable x:TypeArguments="x:String" Default="Not Run" Name="CompatVar" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
