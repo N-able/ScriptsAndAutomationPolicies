@@ -1,11 +1,11 @@
   ' *************************************************************************************************************************************************
 ' Script: AVStatus.vbs
-' Version: 2.37
-' Maintained by : Chris Reid @SolarWinds MSP
+' Version: 2.45
+' Maintained by : Chris Reid @N-able
 ' Description: This script checks the status of the A/V software installed on 
 '              the machine, and writes data about the A/V software to the 
 '              AntiVirusProduct WMI Class in the root\SecurityCenter WMI namespace.
-' Date: Nov 6th, 2020
+' Date: April 3rd, 2022
 ' Compatibility : It is tested on the current versions of Windows but it also should work on all desktop and server versions, from Windows XP to Windows Server 2019.
 ' Usage in N-Central : avstatus.vbs WRITE     OR     avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
 ' Usage in Windows Command Prompt : CSCRIPT avstatus.vbs WRITE     OR     CSCRIPT avstatus.vbs DONOTWRITE   (the second option will write no data into WMI if an A/V product cannot be found)
@@ -54,12 +54,12 @@ Dim strMalwareBytesRegPath64, SCEPInstalled, FoundGUID, StatusCode, StatusText
 Dim sMonth, sDay, sYear, sHour, sMinutes, sSeconds, strTMMSARegPath, recentFile, NamespacetoCheck, strTMDSARegPath, fileSystem, folder, file, newestfile, ProgramFiles64, stravg2016defpath, stravg2016regpath, colServices, objService
 Dim strNormanregpath32, strNormanregpath64, strNormanrootpath, boolNormanversion9, strNormandefpath, strKasperskyStandAlonePath, LastUpdateDate, AVGBusSecDataFolder, arrIniFileLines, ProviderRealTimeScanningEnabled, UserRealTimeScanningDisabled
 Dim objFileToRead, objFileToWrite, node, UpToDateState, strFortiClientPath, FortiClientInstallPath, objApp, strKasperskyKESServerAVVersionPath, strSophosVirtualAVKeyPath, RawProtectionStatus, strPandaAdaptiveDefencePath64, strPandaAdaptiveDefencePath32
-Dim ProgramData, objFolder, objSubFolders, objSubFolder, oShell, oExec, sLine, sExecPath, sNewestFolder, dPrevDate, SCEPUninstallString, objXMLHTTP, objADOStream, S1HelperObj, S1AgentStatus, IndexOfAgentVersion, LenOfVersion
-
+Dim ProgramData, objFolder, objSubFolders, objSubFolder, oShell, oExec, sLine, sExecPath, sNewestFolder, sNewestFolderDate, dPrevDate, SCEPUninstallString, objXMLHTTP, objADOStream, S1HelperObj, S1AgentStatus, IndexOfAgentVersion, LenOfVersion
+Dim strCrowdStrikeStatusPath, CrowdStrikeUninstallPath, strCrowdStrikeRawAVDefDate, strCylancestatuspath, TempDir, EPSVersion, LatestEPSVersion, LatestDatContents
 
 ' Specify values for some of the variables
 
-Version = "2.37"
+Version = "2.45"
 
 HKEY_LOCAL_MACHINE = &H80000002
 strComputer = "."
@@ -78,8 +78,8 @@ Set WshShell = WScript.CreateObject("WScript.Shell")
 Set output = Wscript.stdout
 OutOfDateDays = 5
 InstallLocation = WshShell.ExpandEnvironmentStrings("%AllUsersProfile%")
-CurrentDate=Now
-Set objXMLHTTP = CreateObject("WinHttp.WinHttpRequest.5.1") 
+TempDir = WshShell.ExpandEnvironmentStrings("%SystemDrive%")
+CurrentDate=Now 
 
 
 
@@ -186,7 +186,7 @@ End If
     ObtainVIPREAVData 'Call the function we created to grab info about Vipre Antivirus 2012 from the registry
     
     
-  ElseIf InstalledAV="ESET NOD32 Antivirus" OR InstalledAV="ESET Endpoint Antivirus" Then
+  ElseIf InstalledAV="ESET NOD32 Antivirus" OR InstalledAV="ESET Endpoint Antivirus" OR InstalledAV="ESET Internet Security" OR InstalledAV="ESET Server Security" Then
     ObtainESETAVData 'Call the function we created to grab info about ESET from the registry
     
     
@@ -259,8 +259,12 @@ End If
     Path = InstallLocation & "\Kaspersky Lab\KES10\Data\u0607g.xml"
     ObtainKESServerData 'Call the function we created to grab info about Kaspersky from the registry
     
-  ElseIf InstalledAV="Kaspersky Endpoint Security 11 for Windows" Then
-    strKasperskyKESServerKeyPath = Registry & "KasperskyLab\Components\34\Connectors\KES\11.0.0.0\" 
+  ElseIf (InstalledAV = "Kaspersky Endpoint Security 11 for Windows" OR InstalledAV = "Kaspersky Security 11 for Windows Server") Then
+    If RegKeyExists ("HKLM\" & Registry & "KasperskyLab\Components\34\Connectors\WSEE\10.1.0.0\" & "ConnectorVersion") Then
+        strKasperskyKESServerKeyPath = Registry & "KasperskyLab\Components\34\Connectors\WSEE\10.1.0.0\"
+    Else
+        strKasperskyKESServerKeyPath = Registry & "KasperskyLab\Components\34\Connectors\KES\11.0.0.0\"
+    End If
     Path = InstallLocation & "\Kaspersky Lab\KES10\Data\u0607g.xml"
     ObtainKESServerData 'Call the function we created to grab info about Kaspersky from the registry
 
@@ -302,7 +306,7 @@ End If
     strPandaAVDefinitionPath = "C:\Program Files (x86)\Panda Security\WaAgent\WalUpd\Data\Catalog"
     ObtainPandaCloudOfficeData 'Call the function we created to grab info about Kaspersky Endpoint Security 6 from the registry
 	
-  ElseIf InstalledAV="Windows Defender" then
+  ElseIf (InstalledAV="Windows Defender" or InstalledAV="Microsoft Defender for Endpoint") then
           ObtainWindowsDefenderData
                 
   ElseIf InstalledAV="AVG 2013" Then
@@ -346,6 +350,9 @@ End If
     
   ElseIf InstalledAV="Sophos for Virtual Environments" Then
     ObtainSophosVirtualAVData 'Call the function to grab info about Sophos for Virtual Environments
+ 
+ElseIf InstalledAV="Sophos Endpoint Agent" Then
+    ObtainSophosEndpointDefenseData 'Call the function to grab info about the Sophos Endpoint Agent    
     
   ElseIf InstalledAV="Palo Alto Networks Traps" Then
     ObtainPaloAltoTrapsAVData 'Call the function to grab info about Palo Alto Networks Traps  
@@ -358,6 +365,16 @@ End If
 
   ElseIf InstalledAV="Cb Defense Sensor" Then
     ObtainCarbonBlackData 'Call the function to grab info about Carbon Black 
+
+  ElseIf InstalledAV="CrowdStrike Sensor Platform" Then
+	 ObtainCrowdStrikeAVData 'Call the function to grab info about CrowdStrike from the registry
+  
+  ElseIf InstalledAV="Malwarebytes Endpoint Agent" Then
+	 ObtainMalwarebytesEndpointAgentData 'Call the function to grab info about Malwarebytes Endpoint Agent from the registry
+       
+  ElseIf InstalledAV="FireEye Endpoint Agent" Then
+	 ObtainFireEyeEndpointAgentData 'Call the function to grab info about FireEye Endpoint Agent from the registry      
+ 
  
   End If
 
@@ -415,6 +432,7 @@ Next
     'This is a 32-bit machine
     Registry = Registry32
     ProgramFiles = WshShell.ExpandEnvironmentStrings("%PROGRAMFILES%")
+    ProgramFiles64 = WshShell.ExpandEnvironmentStrings("%PROGRAMFILES%")
     output.writeline "- This is a 32-bit machine."
   Else
     'Windows doesn't know what OS Type it's running
@@ -473,7 +491,6 @@ Sub DetectInstalledAV
     strFSecureRegPath3= "SOFTWARE\F-Secure\Anti-Virus\" 
     strFSecureRegPath5= "SOFTWARE\Wow6432Node\Data Fellows\F-Secure\Anti-Virus Definition Databases\" 
     strFSecureRegPath6= "SOFTWARE\F-Secure\Anti-Virus Definition Databases\"
-    strFSecureRegPath000= "SOFTWARE\Wow6432Node\F-Secure\OneClient\" 
     strKES10KeyPath = Registry & "KasperskyLab\protected\KES10\settings\"
     strKES10KeyPathSP1 = Registry & "KasperskyLab\protected\KES10SP1\settings\"
     strKES10KeyPathSP2 = Registry & "KasperskyLab\protected\KES10SP2\settings\"
@@ -507,6 +524,9 @@ Sub DetectInstalledAV
     strFortiClientPath = "SOFTWARE\Fortinet\FortiClient\FA_FMON"
     strPandaAdaptiveDefencePath64 = "Software\wow6432node\Panda Security\Nano Av\Setup"
     strPandaAdaptiveDefencePath32 = "Software\Panda Security\Nano Av\Setup"
+	strCrowdStrikeStatusPath = "SOFTWARE\CrowdStrike\"
+	CrowdStrikeUninstallPath = "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{C4D62B03-B182-488C-939A-EFB05152F51B}"
+    strCylancestatuspath = ProgramData & "\Cylance\Status"
 
     
 
@@ -553,12 +573,89 @@ Sub DetectInstalledAV
       objReg.GetStringValue HKEY_LOCAL_MACHINE,strTrendKeyPath,strValue,RegstrValue
       InstalledAV = RegstrValue
       
+    ElseIf  WMINamespaceExistanceCheck("FSECURE") Then 'If the F-Secure WMI namespace exists, let's use that. If not, we'll fall back to the alternate method.
+        Set objWMIService = GetObject("winmgmts:\\" & "." & "\root\FSECURE")
+        ' Let's determine what version of F-Secure has been installed
+        Set colItems = objWMIService.ExecQuery("SELECT Version,Name FROM Product", "WQL", wbemFlagReturnImmediately + wbemFlagForwardOnly)
+        For Each objItem in colItems
+            FormattedAVVersion = objItem.Version
+            InstalledAV = objItem.Name
+        Next
+           
+    ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath0 & "ProductName") Then
+    output.writeline "- Found it!"
+      objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath0,"ProductName",InstalledAV      
+
+      If RegKeyExists ("HKLM\" & strFSecureRegPath1 & "InstallationDirectory") Then
+                      strFSecureRegPathLoc=strFSecureRegPath1 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "InstallationDirectory") Then
+                      strFSecureRegPathLoc=strFSecureRegPath2 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "InstallationDirectory") Then
+                      strFSecureRegPathLoc=strFSecureRegPath3 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "InstallationDirectory") Then
+         strFSecureRegPathLoc=strFSecureRegPath4 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "InstallationDirectory") Then
+                      strFSecureRegPathLoc=strFSecureRegPath5 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "InstallationDirectory") Then
+                      strFSecureRegPathLoc=strFSecureRegPath6 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath1 & "Path") Then
+                      strFSecureRegPathLoc=strFSecureRegPath1 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "Path") Then
+                      strFSecureRegPathLoc=strFSecureRegPath2 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "Path") Then
+                      strFSecureRegPathLoc=strFSecureRegPath3 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "Path") Then
+                      strFSecureRegPathLoc=strFSecureRegPath4 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "Path") Then
+                      strFSecureRegPathLoc=strFSecureRegPath5 
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "Path") Then
+                      strFSecureRegPathLoc=strFSecureRegPath6  
+      End If
+                   
+                   
+      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath00 & "ProductName") Then
+      output.writeline "- Found it #2!"
+       objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath00,"ProductName",InstalledAV
+       
+
+        If RegKeyExists ("HKLM\" & strFSecureRegPath1 & "InstallationDirectory") Then
+                        strFSecureRegPathLoc=strFSecureRegPath1 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "InstallationDirectory") Then
+                        strFSecureRegPathLoc=strFSecureRegPath2 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "InstallationDirectory") Then
+                        strFSecureRegPathLoc=strFSecureRegPath3 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "InstallationDirectory") Then
+           strFSecureRegPathLoc=strFSecureRegPath4 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "InstallationDirectory") Then
+                        strFSecureRegPathLoc=strFSecureRegPath5 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "InstallationDirectory") Then
+                        strFSecureRegPathLoc=strFSecureRegPath6 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath1 & "Path") Then
+                        strFSecureRegPathLoc=strFSecureRegPath1 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "Path") Then
+                        strFSecureRegPathLoc=strFSecureRegPath2 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "Path") Then
+                        strFSecureRegPathLoc=strFSecureRegPath3 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "Path") Then
+                        strFSecureRegPathLoc=strFSecureRegPath4 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "Path") Then
+                        strFSecureRegPathLoc=strFSecureRegPath5 
+        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "Path") Then
+                        strFSecureRegPathLoc=strFSecureRegPath6 
+        End If
+
       
-    ElseIf (objFSO.FolderExists(ProgramData & "\Bitdefender\Endpoint Security") AND isProcessRunning(".","epag.exe")) Then
+      
+    ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath000 & "ProductName") Then
+        output.writeline "- Found it #3!"
+        objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath000,"ProductName",InstalledAV
+      
+      
+    ElseIf (objFSO.FolderExists(ProgramData & "\Bitdefender\Endpoint Security") AND (isProcessRunning(".","epag.exe") OR isProcessRunning(".","epsecurityservice.exe"))) Then
       InstalledAV = "Bitdefender Endpoint Security Tools"
       
 
-    ElseIf objFSO.FolderExists(ProgramFiles64 & "\SentinelOne") Then
+    ElseIf objFSO.FolderExists(ProgramFiles64 & "\SentinelOne") OR objFSO.FolderExists(ProgramFiles & "\SentinelOne")Then
     'ElseIf (objFSO.FolderExists(ProgramFiles64 & "\SentinelOne") AND isProcessRunning(".","SentinelAgent.exe")) Then
       InstalledAV = "SentinelOne"
 
@@ -666,84 +763,7 @@ Sub DetectInstalledAV
        
     ElseIf RegKeyExists ("HKLM\" & strAviraServerKeyPath & "EngineVersion") Then
        InstalledAV = "Avira AntiVirus"
-             
-    ElseIf  WMINamespaceExistanceCheck("FSECURE") Then 'If the F-Secure WMI namespace exists, let's use that. If not, we'll fall back to the alternate method.
-        Set objWMIService = GetObject("winmgmts:\\" & "." & "\root\FSECURE")
-        ' Let's determine what version of F-Secure has been installed
-        Set colItems = objWMIService.ExecQuery("SELECT Version,Name FROM Product", "WQL", wbemFlagReturnImmediately + wbemFlagForwardOnly)
-        For Each objItem in colItems
-            FormattedAVVersion = objItem.Version
-            InstalledAV = objItem.Name
-        Next
-           
-    ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath0 & "ProductName") Then
-    output.writeline "- Found it!"
-      objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath0,"ProductName",InstalledAV      
-
-      If RegKeyExists ("HKLM\" & strFSecureRegPath1 & "InstallationDirectory") Then
-                      strFSecureRegPathLoc=strFSecureRegPath1 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "InstallationDirectory") Then
-                      strFSecureRegPathLoc=strFSecureRegPath2 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "InstallationDirectory") Then
-                      strFSecureRegPathLoc=strFSecureRegPath3 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "InstallationDirectory") Then
-         strFSecureRegPathLoc=strFSecureRegPath4 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "InstallationDirectory") Then
-                      strFSecureRegPathLoc=strFSecureRegPath5 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "InstallationDirectory") Then
-                      strFSecureRegPathLoc=strFSecureRegPath6 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath1 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath1 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath2 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath3 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath4 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath5 
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "Path") Then
-                      strFSecureRegPathLoc=strFSecureRegPath6  
-      End If
-                   
-                   
-      ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath00 & "ProductName") Then
-       objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath00,"ProductName",InstalledAV
-       
-
-        If RegKeyExists ("HKLM\" & strFSecureRegPath1 & "InstallationDirectory") Then
-                        strFSecureRegPathLoc=strFSecureRegPath1 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "InstallationDirectory") Then
-                        strFSecureRegPathLoc=strFSecureRegPath2 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "InstallationDirectory") Then
-                        strFSecureRegPathLoc=strFSecureRegPath3 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "InstallationDirectory") Then
-           strFSecureRegPathLoc=strFSecureRegPath4 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "InstallationDirectory") Then
-                        strFSecureRegPathLoc=strFSecureRegPath5 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "InstallationDirectory") Then
-                        strFSecureRegPathLoc=strFSecureRegPath6 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath1 & "Path") Then
-                        strFSecureRegPathLoc=strFSecureRegPath1 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath2 & "Path") Then
-                        strFSecureRegPathLoc=strFSecureRegPath2 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath3 & "Path") Then
-                        strFSecureRegPathLoc=strFSecureRegPath3 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath4 & "Path") Then
-                        strFSecureRegPathLoc=strFSecureRegPath4 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath5 & "Path") Then
-                        strFSecureRegPathLoc=strFSecureRegPath5 
-        ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath6 & "Path") Then
-                        strFSecureRegPathLoc=strFSecureRegPath6 
-        End If
-
-
-    ElseIf RegKeyExists ("HKLM\" & strFSecureRegPath000 & "ProductName") Then
-       objReg.GetStringValue HKEY_LOCAL_MACHINE,strFSecureRegPath000,"ProductName",InstalledAV
-       
-
-                                                
-
+                                                            
   ElseIf RegKeyExists ("HKLM\" & strKES10KeyPath & "SettingsVersion") Then
       InstalledAV = "Kaspersky Endpoint Security 10"
   
@@ -755,6 +775,9 @@ Sub DetectInstalledAV
       
   ElseIf RegKeyExists ("HKLM\" & Registry & "KasperskyLab\Components\34\Connectors\KES\11.0.0.0\" & "ConnectorVersion") Then
       InstalledAV = "Kaspersky Endpoint Security 11 for Windows"
+
+  ElseIf RegKeyExists ("HKLM\" & Registry & "KasperskyLab\Components\34\Connectors\WSEE\10.1.0.0\" & "ConnectorVersion") Then
+      InstalledAV = "Kaspersky Security 11 for Windows Server"
   
   ElseIf RegKeyExists ("HKLM\" & Registry & "KasperskyLab\Components\34\1103\1.0.0.0\Statistics\AVState\" & "Protection_NagentVersion") Then
       InstalledAV = "Kaspersky Endpoint Security 10 for Windows"
@@ -898,7 +921,17 @@ Sub DetectInstalledAV
      
      output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled 
      ProductUpToDate = "TRUE"
-     FormattedAVVersion = "Unknown"  
+     FormattedAVVersion = "Unknown"
+     Set objFSO = CreateObject("Scripting.FileSystemObject") 
+     If objFSO.FolderExists(strCylancestatuspath) Then
+        If objFSO.FileExists(strCylancestatuspath & "\Status.json") Then 
+            Dim json, str, o, i
+            Set json = New VbsJson
+            str = objFSO.OpenTextFile(strCylancestatuspath & "\Status.json").ReadAll
+            Set o = json.Decode(str)
+            FormattedAVVersion= o("ProductInfo")("version")
+        End If
+     End If 
      
     '--- Check for AVG Business Security ---                                    
     ElseIf objFSO.FileExists(ProgramData & "\AVG\Persistent Data\Antivirus\Logs\update.log") Then
@@ -907,11 +940,16 @@ Sub DetectInstalledAV
     '--- Check for FortiClient ---   
     ElseIf RegKeyExists ("HKLM\" & strFortiClientPath & "\enabled") Then
         InstalledAV = "FortiClient"
+  
+    '--- Check for Sophos Endpoint Defense ---
+    ElseIf objFSO.FolderExists (ProgramFiles64 & "\Sophos\Sophos Endpoint Agent\") Then
+        InstalledAV = "Sophos Endpoint Agent"
+          
       
     '--- Check for Sophos AV ---   
     ElseIf RegKeyExists ("HKLM\" & strSophosAVVersionPath & "\MarketingVersion") Then
         objReg.GetStringValue HKEY_LOCAL_MACHINE,strSophosAVVersionPath,"MarketingVersion",RegstrValue
-        If inStr(RegstrValue, "9.")  Then
+        If Left(RegstrValue, Len("9.")) = "9." Then
             InstalledAV = "Sophos Anti-Virus"
         ElseIf inStr(RegstrValue, "10.1") OR  inStr(RegstrValue, "10.2") OR  inStr(RegstrValue, "10.3") Then
             InstalledAV = "Sophos Anti-Virus"
@@ -921,9 +959,12 @@ Sub DetectInstalledAV
 		    InstalledAV = "Sophos Anti-Virus 10" 
 	   End If
 
+
     '--- Check for Sophos for Virtual Environments --- 
     ElseIf RegKeyExists ("HKLM\" & strSophosVirtualAVKeyPath & "SGVM Deployment Service\InstalledPath") Then
         InstalledAV = "Sophos for Virtual Environments"    
+        
+ 
         
     '--- Check for Carbon Black a.k.a. "Cb Defense Sensor 64-bit" --- 
     ElseIf isServiceRunning("CbDefense") Then
@@ -965,8 +1006,20 @@ Sub DetectInstalledAV
     '--- Check for Palo Alto Traps  ---	
     ElseIf RegKeyExists ("HKLM\SOFTWARE\Palo Alto Networks\Traps\ProtectionStatus") Then
         InstalledAV = "Palo Alto Networks Traps"
- 
+        
+    ' --- Check for CrowdStrike ---	  
+    ElseIf RegKeyExists ("HKLM\" & strCrowdStrikeStatusPath) Then
+	   InstalledAV = "CrowdStrike Sensor Platform"
        
+    ' --- Check for Malwarebytes Endpoint Agent ---	  
+    ElseIf objFSO.FileExists (ProgramFiles64 & "\Malwarebytes Endpoint Agent\UserAgent\EACmd.exe") Then
+	   InstalledAV = "Malwarebytes Endpoint Agent"
+       
+
+ ' --- Check for FireEye Endpoint Agent ---	  
+    ElseIf objFSO.FileExists(ProgramFiles & "\FireEye\xagt\xagt.exe") Then
+        InstalledAV = "FireEye Endpoint Agent"
+     
                   	  
 
     Else 
@@ -978,13 +1031,21 @@ Sub DetectInstalledAV
             ObtainSecurityCenter2Data                 
         ElseIf RegKeyExists ("HKLM\" & strWindowsDefenderPath & "ProductStatus") Then
             output.writeline "- The root\securityCenter2 namespace exists, but the AntiVirusProduct WMI class does not - that's really weird."
-            output.writeline "- Windows Defender has been detected, by querying the registry."
-            InstalledAV = "Windows Defender"
+            If RegKeyExists ("HKLM\SOFTWARE\Microsoft\Windows Advanced Threat Protection\Status\OnboardingState") Then
+                InstalledAV = "Microsoft Defender for Endpoint"
+            Else
+                InstalledAV = "Windows Defender"
+            End If
+            output.writeline "- " & InstalledAV & " has been detected, by querying the registry."
         End If
     ' If the root\SecurityCenter2 WMI namespace doesn't exist (and it doesn't if you're looking at a Server-class OS, then let's see if Windows Defender is installed)
     ElseIf RegKeyExists ("HKLM\" & strWindowsDefenderPath & "ProductStatus") Then
-        output.writeline "- Windows Defender has been detected, by querying the registry."
-        InstalledAV = "Windows Defender"
+        If RegKeyExists ("HKLM\SOFTWARE\Microsoft\Windows Advanced Threat Protection\Status\OnboardingState") Then
+            InstalledAV = "Microsoft Defender for Endpoint"
+        Else
+            InstalledAV = "Windows Defender"
+        End If
+        output.writeline "- " & InstalledAV & " has been detected, by querying the registry."
              
     Else 
 
@@ -1416,8 +1477,17 @@ End Sub
 ' Function: ObtainSophos10AVData
 ' *****************************
 Sub ObtainSophos10AVData
+  On Error Resume Next  
   Set objComponentMgr = CreateObject("Infrastructure.ComponentManager")
+  If Err.Number <> 0 Then
+    output.writeline "- An error was logged when loading a Sophos component. Here are the details: " & Err.Description
+    wscript.quit(1)
+  End If
   Set objConfigMgr = objComponentMgr.FindComponent("ConfigurationManager")
+  If Err.Number <> 0 Then
+    output.writeline "- An error was logged when loading a Sophos component. Here are the details: " & Err.Description
+    wscript.quit(1)
+  End If
   
 
   ' Let's figure out when Sophos was last updated
@@ -2841,17 +2911,16 @@ Sub ObtainPandaCloudOfficeData
   	ElseIf RegKeyExists ( "HKLM\" & strPandaCloudEPPath64 & "\Normal") Then
       objReg.GetStringValue HKEY_LOCAL_MACHINE,strPandaCloudEPPath64 ,"Normal",RawAVVersion 
     Else
-    	RawAVVersion = "UNKNOWNVERSION"
+    	RawAVVersion = "Unknown A/V Version"
 	End If
 	FormattedAVVersion =  InstalledAV & " - " & RawAVVersion
-	output.writeline "- " & InstalledAV & " has been found on this device."
-	output.writeline "- Panda Cloud Endpoint Protection is running the following A/V Definition Version: " & FormattedAVVersion 
+	output.writeline "- " & InstalledAV & "  is running the following A/V Definition Version: " & RawAVVersion 
 
-  output.writeline "- The current date is: " & CurrentDate
-  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
-  output.writeline "- The last time Panda Cloud Endpoint Protection was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+    output.writeline "- The current date is: " & CurrentDate
+    CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
+    output.writeline "- The last time " & InstalledAV & " was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
 
-  CalculateAVAge 'Call the function to determine how old the A/V Definitions are
+    CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
 End Sub
 
@@ -2950,20 +3019,19 @@ End Sub
 Sub ObtainAvastData
 	
   Set objFSO = CreateObject("Scripting.FileSystemObject") 
-
   If objFSO.FolderExists(strAvastInstallPath & "\Defs") Then
 	  Set objFile = objFSO.GetFile( StrAvastInstallPath & "\defs\aswdefs.ini") 
 	  AVDatVersion = objFile.DateLastModified
   Else
 		AVDatVersion="01/01/2001"
-	    output.writeline "the AV Definition file is not found"
+	    output.writeline "- The AV Definition file is not found."
   End If  
-  
-	If isProcessRunning(".","avastsvc.exe") Then
-		OnAccessScanningEnabled	=TRUE
-	Else
-		OnAccessScanningEnabled	=FALSE
-	End If
+	
+  If isProcessRunning(".","avastsvc.exe") Then
+    OnAccessScanningEnabled	=TRUE
+  Else
+    OnAccessScanningEnabled	=FALSE
+  End If
 
 	If RegKeyExists ( "HKLM\" & strAvastRegPath32 & "\Version"	  ) Then
 	 objReg.GetStringValue HKEY_LOCAL_MACHINE,strAvastRegPath32,"Version",FormattedAVVersion
@@ -3228,7 +3296,6 @@ Sub ObtainSecurityCenter2Data
      ' Because there's nothing in the SecurityCenter2 namespace, the last check we need to perform is to see if Windows Defender is installed
      If RegKeyExists ("HKLM\" & strWindowsDefenderPath & "ProductStatus") Then
       InstalledAV = "Windows Defender"
-      output.writeline "- " & InstalledAV & " has been detected."
      End If  
      Exit Sub 'Because there was nothing in the SecurityCenter2 namespace, we should continue querying for other A/V products
    ElseIf colItems.Count = "1" Then
@@ -3241,52 +3308,68 @@ Sub ObtainSecurityCenter2Data
 
     If colItems.Count > 0 Then
       For Each objItem In colItems
-      If  objItem.displayName = "Windows Defender" Then
-        InstalledAV = objItem.displayName
-      End If
-      
-      If ((objItem.displayName <> "AVG update module") AND (objItem.displayName <> "Windows Defender")) Then
+        If  objItem.displayName = "Windows Defender" Then
+            If RegKeyExists ("HKLM\SOFTWARE\Microsoft\Windows Advanced Threat Protection\Status\OnboardingState") Then
+                InstalledAV = "Microsoft Defender for Endpoint"
+            Else
+                InstalledAV = "Windows Defender"
+            End If
+        End If
         
-        onAccessScanningEnabled = "FALSE"
-        ProductUpToDate = "FALSE"
-  		
-        InstalledAV = objItem.displayName
-  		FormattedAVVersion = "Unable to detect the version of A/V Definitions being used - this information is not available through the Windows Security Center."
-  		output.writeline "- " & InstalledAV & " has been detected."
-  		
-  		' The 'ProductState' value needs to be converted into HEX, and the parsed into 3 different sub-values, according to the following article: 
-  		' http://neophob.com/2010/03/wmi-query-windows-securitycenter2/
-  		' Keep this line around for debugging purposes. output.writeline "- According to WMI, the state of " & InstalledAV & " is " & objItem.ProductState
-  		HexProductState = Hex(objItem.ProductState)
-  		' Keep this line around for debugging purposes. output.writeline "- Converting that value to HEX, we get " & HexProductState
-  
-  		' The middle of the 3 HEX values equates to the scanner state
-  		HexScannerState =  Mid(HexProductState,2,2)
-  		' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexScannerState)
-  			 
-         
-        If CLng("&H" & HexScannerState) = 16 Then
-  		    OnAccessScanningEnabled = TRUE
-  			Else
-  		        OnAccessScanningEnabled = FALSE
-  			End If
-  			output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled  
-  			
-  			' The last of the 3 HEX values tells us if the A/V definition files are up-to-date or not
-  			HexAVDefState =  Right(HexProductState,2)
-  			' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexAVDefState)
-  			If CLng("&H" & HexAVDefState) = 0 Then
-  			   ProductUpToDate = TRUE
-  			Else
-  			    ProductUpToDate = FALSE
-  			End If
-  			output.writeline "- Are the AV Definitions up-to-date? " & ProductUpToDate
-        
-            CalculateAVAge 'Call the function to determine how old the A/V Definitions are 
+        If ((objItem.displayName <> "AVG update module") AND (objItem.displayName <> "Windows Defender")AND (objItem.displayName <> "Microsoft Defender for Endpoint")) Then
+          
+            onAccessScanningEnabled = "FALSE"
+            ProductUpToDate = "FALSE"
+            InstalledAV = objItem.displayName
+            If ((InstalledAV = "FireEye Endpoint Security") OR (InstalledAV = "FireEye Endpoint Agent")) Then
+                ' Let's figure out what version of FireEye has been installed.
+                If objFSO.FileExists(ProgramFiles & "\FireEye\xagt\xagt.exe") Then
+                    FormattedAVVersion = objFSO.GetFileVersion("C:\Program Files (x86)\FireEye\xagt\xagt.exe")
+                Else
+                    FormattedAVVersion = "Unable to detect the version of A/V Definitions being used - this information is not available through the Windows Security Center."
+                End If
+            End If
+            
+            
 
-  		End If
-        If  InStr(objItem.displayName,"FireEye Endpoint Security") Then Exit For
-    Next
+    		output.writeline "- " & InstalledAV & " has been detected."
+    		
+    		' The 'ProductState' value needs to be converted into HEX, and the parsed into 3 different sub-values, according to the following article: 
+    		' http://neophob.com/2010/03/wmi-query-windows-securitycenter2/
+    		' Keep this line around for debugging purposes. 
+            output.writeline "- According to WMI, the state of " & InstalledAV & " is " & objItem.ProductState
+    		HexProductState = Hex(objItem.ProductState)
+    		' Keep this line around for debugging purposes. 
+            output.writeline "- Converting that value to HEX, we get " & HexProductState
+    
+    		' The middle of the 3 HEX values equates to the scanner state
+    		HexScannerState =  Mid(HexProductState,2,2)
+    		' Keep this line around for debugging purposes. 
+            output.writeline "- The Scanner State value is: " & CLng("&H" & HexScannerState)
+    			 
+           
+          If CLng("&H" & HexScannerState) = 16 Then
+    		    OnAccessScanningEnabled = TRUE
+    			Else
+    		        OnAccessScanningEnabled = FALSE
+    			End If
+    			output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled  
+    			
+    			' The last of the 3 HEX values tells us if the A/V definition files are up-to-date or not
+    			HexAVDefState =  Right(HexProductState,2)
+    			' Keep this line around for debugging purposes. output.writeline CLng("&H" & HexAVDefState)
+    			If CLng("&H" & HexAVDefState) = 0 Then
+    			   ProductUpToDate = TRUE
+    			Else
+    			    ProductUpToDate = FALSE
+    			End If
+    			output.writeline "- Are the AV Definitions up-to-date? " & ProductUpToDate
+          
+              CalculateAVAge 'Call the function to determine how old the A/V Definitions are 
+  
+    		End If
+          If  (InStr(objItem.displayName,"FireEye Endpoint Security") OR InStr(objItem.displayName,"FireEye Endpoint Agent")) Then Exit For
+        Next
     End If    
       
     
@@ -3316,16 +3399,21 @@ sub ObtainTrendMicroDeepSecurity
                 
   'Let's figure out when the Deep Security Agent was last updated
   Set fileSystem = CreateObject("Scripting.FileSystemObject") 
-  If fileSystem.FolderExists("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages") Then
-    Set folder = fileSystem.GetFolder("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages") 
+  If fileSystem.FolderExists("C:\ProgramData\Trend Micro\Deep Security Agent\relay\www\packages") Then
+    Set folder = fileSystem.GetFolder("C:\ProgramData\Trend Micro\Deep Security Agent\relay\www\packages")
+  ElseIf fileSystem.FolderExists("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages") Then
+    Set folder = fileSystem.GetFolder("C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages")  
+  Else
+    output.writeline "- Unable to find the files for the Deep Security Agent. Exiting the script."
+    wscript.quit(0)
+  End If 
+
     For Each file In folder.Files         
       If file.DateLastModified > newestfile Then         
         newestfile = file.DateLastModified
       End If
     Next
-  Else
-    output.writeline "- The file C:\Users\All Users\Trend Micro\Deep Security Agent\iaurepo\packages was not found."
-  End If
+
   AVDatVersion = newestfile 
   CalculatedPatternAge = DateDiff("d",newestfile,CurrentDate)
   output.writeline "- The last time Trend Micro Deep Security was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
@@ -3479,42 +3567,81 @@ Sub ObtainAVGBusinessSecurity
       i = i + 1 
     Loop 
     objFile.Close
+    
+    
+    'Let's see if real-time scanning is enabled or disable through the AVG GUI 
+    For Each strLine in arrIniFileLines
+        If InStr(strLine,"ProviderEnabled") Then 'Check if it's the right line before we look for the value - it'll start with the word 'ProviderEnabled'
+            If InStr(strLine,"ProviderEnabled=1") Then
+                ProviderRealTimeScanningEnabled = TRUE
+            ElseIf InStr(strLine,"ProviderEnabled=0") Then
+                ProviderRealTimeScanningEnabled = FALSE
+            Else
+                output.writeline "- Here's what we saw in the log file: " & strLine
+                ProviderRealTimeScanningEnabled = "UNKNOWN"    
+            End If
+            Exit For
+        End If
+    Next
+    
+    output.writeline "- Has real-time scanning been enabled through the AVG GUI? " & ProviderRealTimeScanningEnabled
+  
+    'Let's see if real-time scanning is enabled or disable through the AVG system tray menu
+    UserRealTimeScanningDisabled = FALSE 'Let's start off by assuming that it hasn't been disabled, unless we find evidence to the contrary 
+    For Each strLine in arrIniFileLines
+        If InStr (strLine,"TemporaryDisabled") Then 'Check if it's the right line before we look for the value - it'll start with the word 'TemporaryDisabled'
+            If InStr(strLine,"TemporaryDisabled=0") Then
+                UserRealTimeScanningDisabled = FALSE
+            ElseIf InStr(strLine,"TemporaryDisabled=1") Then
+                UserRealTimeScanningDisabled = TRUE 
+            End If
+        Exit For
+        End If
+    Next  
+    output.writeline "- Has real-time scanning been disabled through the system tray icon? " & UserRealTimeScanningDisabled
+  
   Else
-    output.writeline "The FileSystemShield.ini file does not exist. That's.......not.......very.....good."
+    output.writeline "The FileSystemShield.ini file does not exist. Trying the registry values instead."
+    ' First lets see if the protection has been temporarily disabled
+    If RegKeyExists("HKLM\" & Registry & "AVG\Antivirus\properties\FileSystemShield\Common\TemporaryDisabled") Then
+        ' Try getting it as a DWORD first, and then a String second
+        objReg.GetDWORDValue HKEY_LOCAL_MACHINE,"SOFTWARE\AVG\Antivirus\properties\FileSystemShield\Common\","TemporaryDisabled",UserRealTimeScanningDisabled
+        'If the DWORD call returned a NULL value, then we'll try getting it as a string
+        If IsNull(UserRealTimeScanningDisabled) Then
+            objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\AVG\Antivirus\properties\FileSystemShield\Common\","TemporaryDisabled",UserRealTimeScanningDisabled    
+        End If 
+        output.writeline "- Here's the value of the TemporaryDisabled registry value: " & UserRealTimeScanningDisabled
+        If UserRealTimeScanningDisabled = 1 Then
+            UserRealTimeScanningDisabled = TRUE
+        Else
+            UserRealTimeScanningDisabled = FALSE
+        End If
+    Else
+        output.writeline "- Unable to find the TemporaryDisabled registry value on this device. That's......not.....very......good."
+    End If
+    
+    ' Now lets see if protection has been suspended indefinitely
+    If RegKeyExists("HKLM\" & Registry & "AVG\Antivirus\properties\FileSystemShield\Common\ProviderEnabled") Then
+        ' Try getting it as a DWORD first, and then a String second
+        objReg.GetDWORDValue HKEY_LOCAL_MACHINE,"SOFTWARE\AVG\Antivirus\properties\FileSystemShield\Common\","ProviderEnabled",ProviderRealTimeScanningEnabled
+        'If the DWORD call returned a NULL value, then we'll try getting it as a string
+        If IsNull(ProviderRealTimeScanningEnabled) Then
+            objReg.GetStringValue HKEY_LOCAL_MACHINE,"SOFTWARE\AVG\Antivirus\properties\FileSystemShield\Common\","ProviderEnabled",ProviderRealTimeScanningEnabled    
+        End If 
+        output.writeline "- Here's the value of the ProviderEnabled registry value: " & ProviderRealTimeScanningEnabled
+        If ProviderRealTimeScanningEnabled = 1 Then
+            ProviderRealTimeScanningEnabled = TRUE
+        Else
+            ProviderRealTimeScanningEnabled = FALSE
+        End If
+         
+    Else
+        output.writeline "- Unable to find the ProviderEnabled registry value on this device. That's......not.....very......good."
+    End If
   End If
  
  
-  'Let's see if real-time scanning is enabled or disable through the AVG GUI 
-  For Each strLine in arrIniFileLines
-    If InStr(strLine,"ProviderEnabled") Then 'Check if it's the right line before we look for the value - it'll start with the word 'ProviderEnabled'
-      If InStr(strLine,"ProviderEnabled=1") Then
-        ProviderRealTimeScanningEnabled = TRUE
-      ElseIf InStr(strLine,"ProviderEnabled=0") Then
-        ProviderRealTimeScanningEnabled = FALSE
-      Else
-        output.writeline "- Here's what we saw in the log file: " & strLine
-        ProviderRealTimeScanningEnabled = "UNKNOWN"    
-      End If
-      Exit For
-    End If
-  Next
-    
-  output.writeline "- Has real-time scanning been enabled through the AVG GUI? " & ProviderRealTimeScanningEnabled
-  
-  'Let's see if real-time scanning is enabled or disable through the AVG system tray menu
-  UserRealTimeScanningDisabled = FALSE 'Let's start off by assuming that it hasn't been disabled, unless we find evidence to the contrary 
-  For Each strLine in arrIniFileLines
-    If InStr (strLine,"TemporaryDisabled") Then 'Check if it's the right line before we look for the value - it'll start with the word 'TemporaryDisabled'
-      If InStr(strLine,"TemporaryDisabled=0") Then
-        UserRealTimeScanningDisabled = FALSE
-      ElseIf InStr(strLine,"TemporaryDisabled=1") Then
-        UserRealTimeScanningDisabled = TRUE 
-      End If
-      Exit For
-    End If
-  Next  
-  output.writeline "- Has real-time scanning been disabled through the system tray icon? " & UserRealTimeScanningDisabled
-  
+
   
   If ((ProviderRealTimeScanningEnabled = TRUE) And (UserRealTimeScanningDisabled = FALSE)) Then
     OnAccessScanningEnabled = TRUE
@@ -3639,15 +3766,14 @@ Sub ObtainPandaAdaptiveDefenceData
 	End If
 
     FormattedAVVersion =  InstalledAV & " - " & RawAVVersion
-	output.writeline "- " & InstalledAV & " has been found on this device."
-	output.writeline "- Panda Cloud Endpoint Protection is running the following A/V Definition Version: " & FormattedAVVersion 
+	output.writeline "- " & InstalledAV & " is running the following A/V Definition Version: " & RawAVVersion 
 
-  output.writeline "- The current date is: " & CurrentDate
-  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
-  output.writeline "- The last time Panda Cloud Endpoint Protection was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
-  output.writeline "- Is Real-Time Scanning Enabled? " & OnAccessScanningEnabled
+    output.writeline "- The current date is: " & CurrentDate
+    CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
+    output.writeline "- The last time " & InstalledAV & " was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+    output.writeline "- Is Real-Time Scanning Enabled? " & OnAccessScanningEnabled
 
-  CalculateAVAge 'Call the function to determine how old the A/V Definitions are
+    CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
 End Sub
 
@@ -3735,15 +3861,25 @@ Sub ObtainSentinelOneData
     
     ' First, we need to find the location of the SentinelCtl executable, as it's stored in a folder whose name changes with each version of SentinelOne.
     ' As there could be many folders (for example, if multiple versions of SentinelOne have been installed) we need to find the newest folder
-    Set objFolder = objFSO.GetFolder(ProgramFiles64 & "\SentinelOne")
+    If AddressWidth = 64 Then
+            Set objFolder = objFSO.GetFolder(ProgramFiles64 & "\SentinelOne")
+    ElseIf AddressWidth = 32 Then
+        Set objFolder = objFSO.GetFolder(ProgramFiles & "\SentinelOne")
+    End If
+
     Set objSubFolders = objFolder.SubFolders
     sNewestFolder = NULL
     For Each objSubFolder In objSubFolders
         If IsNull(sNewestFolder) Then
             sNewestFolder = objSubFolder.Path
-            dPrevDate = objSubFolder.DateLastModified
-        ElseIf dPrevDate < objSubFolder.DateLastModified Then
+            sNewestFolderDate = objSubFolder.DateLastModified
+            Version = Mid(objSubFolder.Name,16)
+            ' output.writeline "- The initial folder found was " & sNewestFolder & " which was modified on: " & sNewestFolderDate
+        ElseIf (Cdate(objSubFolder.DateLastModified) - Cdate(sNewestFolderDate))>0 Then
             sNewestFolder = objSubFolder.Path
+            sNewestFolderDate = objSubFolder.DateLastModified
+            Version = Mid(objSubFolder.Name,16)
+            ' output.writeline "- The folder " & objSubFolder.Path & " was last modified on " & objSubFolder.DateLastModified & " which is more recently than the previously detected folder, that was modified on " & sNewestFolderDate
         End If
     Next
     
@@ -3771,12 +3907,12 @@ Sub ObtainSentinelOneData
     output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled 
     
 
-    ' Now let's determine if this S1 install is one that was purchased through SolarWinds, or another vendor.
+    ' Now let's determine if this S1 install is one that was purchased through N-able, or another vendor.
     set oExec = WshShell.Exec(sNewestFolder & "\SentinelCtl.exe config server.mgmtServer")
     sLine = oExec.StdOut.ReadLine
                 
     If InStr(sLine, "swprd") <> 0 Then
-        InstalledAV = "SolarWinds EDR"
+        InstalledAV = "N-able EDR"
         output.writeline "- This is an installation of SolarWinds EDR."
     Else
         output.writeline "- This is an installation of SentinelOne that is not managed through SolarWinds."
@@ -3830,32 +3966,103 @@ Sub ObtainSophosVirtualAVData
 
     ProductUpToDate = True 'There aren't pattern file versions that can be monitored from the machine itself - only from the Management Console so this option is N/A
 
-End Sub  
+End Sub
+
+
+' *************************************  
+' Sub: ObtainSophosEndpointDefenseData
+' *************************************
+Sub ObtainSophosEndpointDefenseData
+    ' Let's determine whether or not Real-Time Scanning is enabled
+    objReg.GetDWORDValue HKEY_LOCAL_MACHINE,"SOFTWARE\Sophos\EndpointDefense\PolicyConfiguration\","OnAccessEnabled",RawOnAccessScanningEnabled
+    If RawOnAccessScanningEnabled = 0 Then
+      OnAccessScanningEnabled = FALSE
+    ElseIf RawOnAccessScanningEnabled = 1 Then
+      OnAccessScanningEnabled = TRUE
+    End If
+    
+    output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
+    
+    ' Let's determine what version of Sophos Endpoint Defense has been installed
+    If objFSO.FileExists(ProgramFiles64 & "\Sophos\Endpoint Defense\SEDService.exe") Then
+        FormattedAVVersion = objFSO.GetFileVersion(ProgramFiles64 & "\Sophos\Endpoint Defense\SEDService.exe")
+        output.writeline "- The version of Sophos Endpoint Defense that is installed on this device is " & FormattedAVVersion
+    Else
+        FormattedAVVersion = "Unable to detect the version of Sophos Endpoint Defense that has been installed - the file " & ProgramFiles & "\Sophos\Endpoint Defense\SEDService.exe was not found on this device."
+        Output.writeline "- Unable to detect the version of Sophos Endpoint Defense that has been installed - the file " & ProgramFiles & "\Sophos\Endpoint Defense\SEDService.exe was not found on this device."
+    End If
+
+
+    ' There aren't any registry keys to query, or commands to run, to detect if SED is actually up-to-date or not. In lieu of that, we'll just confirm that the SED service is running.
+    If isServiceRunning("Sophos Endpoint Defense Service") Then
+        ProductUpToDate = True
+    Else
+        ProductUpToDate = False
+    End If
+    
+    output.writeline "- Is the Sophos Endpoint Defense service running (and therefore Sophos Endpoint Defense is up-to-date)? " & ProductUpToDate  
+
+End Sub   
 
 
 ' *************************************  
 ' Sub: ObtainBESTData
 ' *************************************
 Sub ObtainBESTData
+
+    'Let's grab the latest DAT file from BD, so we know which version of the rmm.eps.exe file to download/check against        
+        If DownloadFile("https://download.bitdefender.com/SMB/RMM/Tools/Win/latest.dat", TempDir & "\Temp\","latest.dat") = TRUE Then
+            Set LatestDatContents = objFSO.OpenTextFile (TempDir & "\Temp\latest.dat")
+            Do While LatestDatContents.AtEndOfStream <> True 
+            LatestEPSVersion = LatestDatContents.Readall
+            Loop
+            LatestDatContents.close
+            ' output.writeline "- The latest version of the eps.rmm.exe executable is: " & LatestEPSVersion
+            ' Now that we have the version from the latest.dat file, let's delete it so that we don't leave files behind.
+            objFSO.DeleteFile TempDir & "\Temp\latest.dat"
+        Else 
+            output.writeline "- Unable to download the latest.dat file from Bitdefender."
+        End If
+        
     
-    ' Let's see if the eps.rmm.exe file is in C:\Temp
+    
+    ' Let's see if the eps.rmm.exe file is in the Temp directory of this device
     Set objFSO = CreateObject("Scripting.FileSystemObject")
-    If objFSO.FileExists("C:\Temp\eps.rmm.exe") Then
+    If objFSO.FileExists(TempDir & "\Temp\eps.rmm.exe") Then
         output.writeline "- The Bitdefender RMM SDK is present on this device."
+        
+        ' Let's check to see which version has been installed, and if it's the latest version or not.
+        ' First, let's grab the version of the currently-downloaded file
+        EPSVersion = objFSO.GetFileVersion(TempDir & "\Temp\eps.rmm.exe")
+        output.writeline "- Version " & EPSVersion & " of the eps.rmm.exe is currently installed on this device."
+        
+        ' Now let's compare that against the latest version from Bitdefender       
+        If CInt(Right(EPSVersion,Len(EPSVersion) - InStrRev(EPSVersion,"."))) < CInt(Right(LatestEPSVersion,Len(LatestEPSVersion) - InStrRev(LatestEPSVersion,"."))) Then
+            If DownloadFile("https://download.bitdefender.com/SMB/RMM/Tools/Win/" & LatestEPSVersion & "/x64/eps.rmm.exe", TempDir & "\Temp\","eps.rmm.exe") = TRUE Then
+                output.writeline "- A newer version of the eps.rmm.exe executable has been found and downloaded"
+            Else
+                output.writeline "- Unable to download the latest version of the eps.rmm.exe executable from: https://download.bitdefender.com/SMB/RMM/Tools/Win/" & LatestEPSVersion & "/x64/eps.rmm.exe" 
+            End If
+        Else
+            output.writeline "- The latest version - " & EPSVersion & " - of the eps.rmm.exe executable is already present on this device."
+        End If    
+        
+        
+        
              
-    ElseIf DownloadFile("http://download.bitdefender.com/SMB/RMM/Tools/Win/1.0.0.88/x64/eps.rmm.exe", "C:\Temp\") = True Then
-        output.writeline "- The eps.rmm.exe file was not found in C:\temp, but it's been successfully downloaded."
+    ElseIf DownloadFile("https://download.bitdefender.com/SMB/RMM/Tools/Win/" & LatestEPSVersion & "/x64/eps.rmm.exe", TempDir & "\Temp\","eps.rmm.exe") = True Then
+        output.writeline "- The eps.rmm.exe file was not found in " & TempDir & "\temp, but it's been successfully downloaded."
     
     Else
         output.writeline "- The Bitdefender RMM SDK is not present on this device, and could not be downloaded."
-        output.writeline "- Please download the Bitdefender RMM SDK from http://download.bitdefender.com/SMB/RMM/Tools/Win/ and place it in the C:\Temp folder."
+        output.writeline "- Please download the Bitdefender RMM SDK from http://download.bitdefender.com/SMB/RMM/Tools/Win/ and place it in the " & TempDir & "\Temp folder."
         output.writeline "- Exiting the script."
         Wscript.quit(0)
     End If
     
     
     ' Now that we know where to go to find the eps.rmm executable, let's use it to determine what version of Bitdefender is installed on the device.
-    Set oExec = WshShell.Exec("C:\Temp\eps.rmm.exe -getProductVersion")
+    Set oExec = WshShell.Exec(TempDir & "\Temp\eps.rmm.exe -getProductVersion")
     sLine = oExec.StdOut.ReadLine
                 
     If InStr(sLine, ".") <> 0 Then
@@ -3867,22 +4074,17 @@ Sub ObtainBESTData
     output.writeline "- The version of Bitdefender running on this machine is: " & FormattedAVVersion
         
     ' Now let's use the eps.rmm.exe to determine whether or not Bitdefender is up-to-date.
-    Set oExec = WshShell.Exec("C:\Temp\eps.rmm.exe -isUpToDate")
+    Set oExec = WshShell.Exec(TempDir & "\Temp\eps.rmm.exe -getLastUpdate")
     sLine = oExec.StdOut.ReadLine
-    
-    output.writeline "- Returned value: " & sLine
-    output.writeline "- If 1, then Up-To-Date; if 0, BEST is not up-to-date."
-               
-    If sLine="1" Then
-        ProductUpToDate = True
-    Else
-        ProductUpToDate = False
-    End If
-        
-    output.writeline "- Is Bitdefender up-to-date? " & ProductUpToDate
+
+    ' As the value returned by the -getLastUpdate flag is a Unix timestamp, we need to convert it to a human-readable format
+    CalculatedPatternAge = DateAdd("s", sLine, "01/01/1970 00:00:00")
+    CalculatedPatternAge = DateDiff ("d", CDate(CalculatedPatternAge), Date)
+     
+    CalculateAVAge 'Call the function to determine how old the A/V Definitions are
         
     ' Now let's use the eps.rmm.exe to determine whether or not Real-Time Scanning is enabled.
-    Set oExec = WshShell.Exec("C:\Temp\eps.rmm.exe -getFeatureStatus")
+    Set oExec = WshShell.Exec(TempDir & "\Temp\eps.rmm.exe -getFeatureStatus")
     sLine = oExec.StdOut.ReadLine
                 
     If InStr(sLine, "AntivirusScan=1") <> 0 Then
@@ -3893,7 +4095,31 @@ Sub ObtainBESTData
         
         output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
 
-End Sub  
+End Sub 
+
+
+' *************************************  
+' Sub: ObtainCrowdStrikeAVData 
+' *************************************
+Sub ObtainCrowdStrikeAVData
+
+  ' Let's figure out what version of CrowdStrike has been installed.
+    If objFSO.FileExists(ProgramFiles64 & "\CrowdStrike\CSFalconService.exe") Then
+        FormattedAVVersion = objFSO.GetFileVersion(ProgramFiles64 & "\CrowdStrike\CSFalconService.exe")
+    Else
+        FormattedAVVersion = "Unable to detect the version of A/V Definitions being used - this information is not available."
+     End If
+
+	ProductUpToDate = TRUE 'CrowdStrike doesn't use local definitions, so this is always true. 
+	
+	'Determine OnAccessScanning Enabled from processes if SecurityCenter2 namespace is unavailable.
+	ServiceActive = isServiceRunning("CSFalconService")
+	If (ServiceActive) Then
+		OnAccessScanningEnabled = TRUE
+	Else
+		OnAccessScanningEnabled = FALSE
+	End If
+End Sub 
 
 
 ' *************************************  
@@ -3951,7 +4177,110 @@ Sub ObtainCarbonBlackData
         
     output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
 
-End Sub          
+End Sub 
+
+
+
+' *************************************  
+' Sub: ObtainMalwarebytesEndpointAgentData
+' *************************************
+Sub ObtainMalwarebytesEndpointAgentData
+    
+    ' Let's see if the EACmd.exe tool is in %ProgramFiles%\Malwarebytes Endpoint Agent\UserAgent
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    If objFSO.FileExists(ProgramFiles64 & "\Malwarebytes Endpoint Agent\UserAgent\EACmd.exe") Then
+        ' output.writeline "- Successfully located the EACmd.exe tool."   
+    Else
+        output.writeline "- Unable to locate the EACmd.exe tool."
+        output.writeline "- Exiting the script."
+        Wscript.quit(0)
+    End If
+    
+    
+    ' Now that we know where to go to find the EACmd executable, let's use it to determine what version of Malwarebytes Endpoint Agent  is installed on the device.
+    Set oExec = WshShell.Exec(ProgramFiles64 & "\Malwarebytes Endpoint Agent\UserAgent\EACmd.exe --versions")
+    FormattedAVVersion = "Unknown"
+    sLine = NULL
+
+    Do While oExec.Stdout.atEndOfStream <> True 'Because the status command output is a JSON array, let's use a Do/Loop command to assign the output to a variable
+        sLine = sLine & oExec.StdOut.ReadLine & vbCrLf
+    Loop
+    
+    ' The last line of the command isn't part of the array, so we need to strip it out. Thanks to https://www.tek-tips.com/viewthread.cfm?qid=1702118 for this code.
+    sLine = Replace(Replace(Replace(sLine, "Command complete: Success (0) - Gather versions completed successfully", ""),vbCrLf,""),"Initiate collect versionsWait for messageRead stream is not nullCommand successfully received by server","")    
+    
+    ' Now that we have the JSON array stored as a variable, let's parse it
+    Dim json, o
+    Set json = New VbsJson
+    Set o = json.Decode(sLine)
+    FormattedAVVersion= o("versions")(0).Item("Version") ' Thanks to https://stackoverflow.com/questions/41610139/using-vbscript-to-access-all-values-in-json-data for the answer on how to get this          
+
+        
+    output.writeline "- The version of the Malwarebytes Endpoint Agent running on this machine is: " & FormattedAVVersion
+        
+    ' Now let's determine whether or not Malwarebytes Endpoint Agent is up-to-date. Thanks to https://forums.malwarebytes.com/topic/241724-announcing-script-to-display-malwarebytes-endpoint-protection-agent/?tab=comments#comment-1306083, it looks like the file of choice is policy.ea
+  Set objFSO = CreateObject("Scripting.FileSystemObject") 
+  If objFSO.FileExists(ProgramData & "\Malwarebytes Endpoint Agent\policy.ea") Then
+    Set objFile = objFSO.GetFile(ProgramData & "\Malwarebytes Endpoint Agent\policy.ea") 
+    AVDatVersion = objFile.DateLastModified
+    output.writeline "- The file was last modified on: " & AVDatVersion
+  Else
+    output.writeline "- Unable to find the policy.ea file."
+    AVDatVersion = "01/01/1970 00:00:00"
+  End If
+    
+    CalculateAVAge 'Call the function to determine how old the A/V Definitions are
+
+        
+    ' Now let's use see if the Malwarebytes Endpoint Agent executable is running; that's how we'll determine whether or not Real-Time Scanning is enabled.
+    If isProcessRunning(".","MBCloudEA.exe") Then
+        OnAccessScanningEnabled = TRUE
+    Else
+        OnAccessScanningEnabled = FALSE
+    End If
+        
+    output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
+
+
+End Sub    
+
+
+' *************************************  
+' Sub: ObtainFireEyeEndpointAgentData
+' *************************************
+Sub ObtainFireEyeEndpointAgentData
+
+    ' Let's figure out what version of FireEye has been installed
+    If objFSO.FileExists(ProgramFiles & "\FireEye\xagt\xagt.exe") Then
+        FormattedAVVersion = objFSO.GetFileVersion("C:\Program Files (x86)\FireEye\xagt\xagt.exe")
+    Else
+        FormattedAVVersion = "Unable to detect the version of FireEye That has been installed."
+    End If
+    
+    ' Now let's find out when FireEye most recently updated its A/V definitions
+    Set objFolder = objFSO.GetFolder("C:\ProgramData\FireEye\xagt\exts\MalwareProtection\sandbox\content\av")
+
+    Set objSubFolders = objFolder.SubFolders
+    sNewestFolder = NULL
+    For Each objSubFolder In objSubFolders
+        If IsNull(sNewestFolder) Then
+            sNewestFolder = objSubFolder.Path
+            sNewestFolderDate = objSubFolder.DateLastModified
+        ElseIf (Cdate(objSubFolder.DateLastModified) - Cdate(sNewestFolderDate))>0 Then
+            sNewestFolder = objSubFolder.Path
+            sNewestFolderDate = objSubFolder.DateLastModified
+        End If
+    Next
+    
+    output.writeline "- FireEye last updated its AV definitions on: " & sNewestFolderDate
+        
+    CalculatedPatternAge = DateDiff ("d", CDate(sNewestFolderDate), Date)
+    CalculateAVAge 'Call the function to determine how old the A/V Definitions are
+    
+    ' Finally, let's set Protection to true, as it's always enabled with FireEye
+    OnAccessScanningEnabled = TRUE
+
+End Sub    
         
 
 ' *************************************  
@@ -4032,9 +4361,11 @@ on error goto 0
   End If    
   output.writeline "- Is Real Time Scanning Enabled? " & OnAccessScanningEnabled
 
-
-
 End Sub
+
+
+
+
 
 Private Function dConvertWMItoVBSDate(sDate)
   sMonth = Mid(sDate,5,2)
@@ -4080,13 +4411,13 @@ End Function
 
 
 
-Function DownloadFile(strFileURL, strHDLocation)
+Function DownloadFile(strFileURL, strHDLocation, strFileName)
 
     ' Sourced from: https://serverfault.com/questions/29707/download-file-from-vbscript
     ' Fetch the file
-    
-    output.writeline "- Will attempt to download the following file: " & strFileURL
-    output.writeline "- The file will be stored at the following path: " & strHDLocation
+    Set objXMLHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+    ' output.writeline "- Will attempt to download the following file: " & strFileURL
+    ' output.writeline "- The file will be stored at the following path: " & strHDLocation
     objXMLHTTP.open "GET", strFileURL, false
     objXMLHTTP.send()
 
@@ -4104,7 +4435,7 @@ Function DownloadFile(strFileURL, strHDLocation)
             Set objFSO = Nothing
         End If
             
-        objADOStream.SaveToFile strHDLocation & "eps.rmm.exe"
+        objADOStream.SaveToFile strHDLocation & strFileName,2
         objADOStream.Close
         Set objADOStream = Nothing
       
@@ -4112,8 +4443,345 @@ Function DownloadFile(strFileURL, strHDLocation)
     
     Else
         DownloadFile = FALSE
+        output.writeline "- Unable to download " & strFileName & " from " & strFileURL
+        output.writeline "- The download attempt returned a " & objXMLHTTP.Status & " error code."
+        output.writeline "- Error details: " & objXMLHTTP.StatusText
+        
     End If
 
     Set objXMLHTTP = Nothing
 
 End Function
+
+
+' *****************************  
+' Class: VbsJson
+' *****************************
+Class VbsJson
+    'Author: Demon
+    'Date: 2012/5/3
+    'Website: http://demon.tw
+    Private Whitespace, NumberRegex, StringChunk
+    Private b, f, r, n, t
+
+    Private Sub Class_Initialize
+        Whitespace = " " & vbTab & vbCr & vbLf
+        b = ChrW(8)
+        f = vbFormFeed
+        r = vbCr
+        n = vbLf
+        t = vbTab
+
+        Set NumberRegex = New RegExp
+        NumberRegex.Pattern = "(-?(?:0|[1-9]\d*))(\.\d+)?([eE][-+]?\d+)?"
+        NumberRegex.Global = False
+        NumberRegex.MultiLine = True
+        NumberRegex.IgnoreCase = True
+
+        Set StringChunk = New RegExp
+        StringChunk.Pattern = "([\s\S]*?)([""\\\x00-\x1f])"
+        StringChunk.Global = False
+        StringChunk.MultiLine = True
+        StringChunk.IgnoreCase = True
+    End Sub
+
+    'Return a JSON string representation of a VBScript data structure
+    'Supports the following objects and types
+    '+-------------------+---------------+
+    '| VBScript          | JSON          |
+    '+===================+===============+
+    '| Dictionary        | object        |
+    '+-------------------+---------------+
+    '| Array             | array         |
+    '+-------------------+---------------+
+    '| String            | string        |
+    '+-------------------+---------------+
+    '| Number            | number        |
+    '+-------------------+---------------+
+    '| True              | true          |
+    '+-------------------+---------------+
+    '| False             | false         |
+    '+-------------------+---------------+
+    '| Null              | null          |
+    '+-------------------+---------------+
+    Public Function Encode(ByRef obj)
+        Dim buf, i, c, g
+        Set buf = CreateObject("Scripting.Dictionary")
+        Select Case VarType(obj)
+            Case vbNull
+                buf.Add buf.Count, "null"
+            Case vbBoolean
+                If obj Then
+                    buf.Add buf.Count, "true"
+                Else
+                    buf.Add buf.Count, "false"
+                End If
+            Case vbInteger, vbLong, vbSingle, vbDouble
+                buf.Add buf.Count, obj
+            Case vbString
+                buf.Add buf.Count, """"
+                For i = 1 To Len(obj)
+                    c = Mid(obj, i, 1)
+                    Select Case c
+                        Case """" buf.Add buf.Count, "\"""
+                        Case "\"  buf.Add buf.Count, "\\"
+                        Case "/"  buf.Add buf.Count, "/"
+                        Case b    buf.Add buf.Count, "\b"
+                        Case f    buf.Add buf.Count, "\f"
+                        Case r    buf.Add buf.Count, "\r"
+                        Case n    buf.Add buf.Count, "\n"
+                        Case t    buf.Add buf.Count, "\t"
+                        Case Else
+                            If AscW(c) >= 0 And AscW(c) <= 31 Then
+                                c = Right("0" & Hex(AscW(c)), 2)
+                                buf.Add buf.Count, "\u00" & c
+                            Else
+                                buf.Add buf.Count, c
+                            End If
+                    End Select
+                Next
+                buf.Add buf.Count, """"
+            Case vbArray + vbVariant
+                g = True
+                buf.Add buf.Count, "["
+                For Each i In obj
+                    If g Then g = False Else buf.Add buf.Count, ","
+                    buf.Add buf.Count, Encode(i)
+                Next
+                buf.Add buf.Count, "]"
+            Case vbObject
+                If TypeName(obj) = "Dictionary" Then
+                    g = True
+                    buf.Add buf.Count, "{"
+                    For Each i In obj
+                        If g Then g = False Else buf.Add buf.Count, ","
+                        buf.Add buf.Count, """" & i & """" & ":" & Encode(obj(i))
+                    Next
+                    buf.Add buf.Count, "}"
+                Else
+                    Err.Raise 8732,,"None dictionary object"
+                End If
+            Case Else
+                buf.Add buf.Count, """" & CStr(obj) & """"
+        End Select
+        Encode = Join(buf.Items, "")
+    End Function
+
+    'Return the VBScript representation of ``str(``
+    'Performs the following translations in decoding
+    '+---------------+-------------------+
+    '| JSON          | VBScript          |
+    '+===============+===================+
+    '| object        | Dictionary        |
+    '+---------------+-------------------+
+    '| array         | Array             |
+    '+---------------+-------------------+
+    '| string        | String            |
+    '+---------------+-------------------+
+    '| number        | Double            |
+    '+---------------+-------------------+
+    '| true          | True              |
+    '+---------------+-------------------+
+    '| false         | False             |
+    '+---------------+-------------------+
+    '| null          | Null              |
+    '+---------------+-------------------+
+    Public Function Decode(ByRef str)
+        Dim idx
+        idx = SkipWhitespace(str, 1)
+
+        If Mid(str, idx, 1) = "{" Then
+            Set Decode = ScanOnce(str, 1)
+        Else
+            Decode = ScanOnce(str, 1)
+        End If
+    End Function
+
+    Private Function ScanOnce(ByRef str, ByRef idx)
+        Dim c, ms
+
+        idx = SkipWhitespace(str, idx)
+        c = Mid(str, idx, 1)
+
+        If c = "{" Then
+            idx = idx + 1
+            Set ScanOnce = ParseObject(str, idx)
+            Exit Function
+        ElseIf c = "[" Then
+            idx = idx + 1
+            ScanOnce = ParseArray(str, idx)
+            Exit Function
+        ElseIf c = """" Then
+            idx = idx + 1
+            ScanOnce = ParseString(str, idx)
+            Exit Function
+        ElseIf c = "n" And StrComp("null", Mid(str, idx, 4)) = 0 Then
+            idx = idx + 4
+            ScanOnce = Null
+            Exit Function
+        ElseIf c = "t" And StrComp("true", Mid(str, idx, 4)) = 0 Then
+            idx = idx + 4
+            ScanOnce = True
+            Exit Function
+        ElseIf c = "f" And StrComp("false", Mid(str, idx, 5)) = 0 Then
+            idx = idx + 5
+            ScanOnce = False
+            Exit Function
+        End If
+
+        Set ms = NumberRegex.Execute(Mid(str, idx))
+        If ms.Count = 1 Then
+            idx = idx + ms(0).Length
+            ScanOnce = CDbl(ms(0))
+            Exit Function
+        End If
+
+        Err.Raise 8732,,"No JSON object could be ScanOnced"
+    End Function
+
+    Private Function ParseObject(ByRef str, ByRef idx)
+        Dim c, key, value
+        Set ParseObject = CreateObject("Scripting.Dictionary")
+        idx = SkipWhitespace(str, idx)
+        c = Mid(str, idx, 1)
+
+        If c = "}" Then
+            idx = idx + 1
+            Exit Function
+        ElseIf c <> """" Then
+            Err.Raise 8732,,"Expecting property name"
+        End If
+
+        idx = idx + 1
+
+        Do
+            key = ParseString(str, idx)
+
+            idx = SkipWhitespace(str, idx)
+            If Mid(str, idx, 1) <> ":" Then
+                Err.Raise 8732,,"Expecting : delimiter"
+            End If
+
+            idx = SkipWhitespace(str, idx + 1)
+            If Mid(str, idx, 1) = "{" Then
+                Set value = ScanOnce(str, idx)
+            Else
+                value = ScanOnce(str, idx)
+            End If
+            ParseObject.Add key, value
+
+            idx = SkipWhitespace(str, idx)
+            c = Mid(str, idx, 1)
+            If c = "}" Then
+                Exit Do
+            ElseIf c <> "," Then
+                Err.Raise 8732,,"Expecting , delimiter"
+            End If
+
+            idx = SkipWhitespace(str, idx + 1)
+            c = Mid(str, idx, 1)
+            If c <> """" Then
+                Err.Raise 8732,,"Expecting property name"
+            End If
+
+            idx = idx + 1
+        Loop
+
+        idx = idx + 1
+    End Function
+
+    Private Function ParseArray(ByRef str, ByRef idx)
+        Dim c, values, value
+        Set values = CreateObject("Scripting.Dictionary")
+        idx = SkipWhitespace(str, idx)
+        c = Mid(str, idx, 1)
+
+        If c = "]" Then
+            idx = idx + 1
+            ParseArray = values.Items
+            Exit Function
+        End If
+
+        Do
+            idx = SkipWhitespace(str, idx)
+            If Mid(str, idx, 1) = "{" Then
+                Set value = ScanOnce(str, idx)
+            Else
+                value = ScanOnce(str, idx)
+            End If
+            values.Add values.Count, value
+
+            idx = SkipWhitespace(str, idx)
+            c = Mid(str, idx, 1)
+            If c = "]" Then
+                Exit Do
+            ElseIf c <> "," Then
+                Err.Raise 8732,,"Expecting , delimiter"
+            End If
+
+            idx = idx + 1
+        Loop
+
+        idx = idx + 1
+        ParseArray = values.Items
+    End Function
+
+    Private Function ParseString(ByRef str, ByRef idx)
+        Dim chunks, content, terminator, ms, esc, char
+        Set chunks = CreateObject("Scripting.Dictionary")
+
+        Do
+            Set ms = StringChunk.Execute(Mid(str, idx))
+            If ms.Count = 0 Then
+                Err.Raise 8732,,"Unterminated string starting"
+            End If
+
+            content = ms(0).Submatches(0)
+            terminator = ms(0).Submatches(1)
+            If Len(content) > 0 Then
+                chunks.Add chunks.Count, content
+            End If
+
+            idx = idx + ms(0).Length
+
+            If terminator = """" Then
+                Exit Do
+            ElseIf terminator <> "\" Then
+                Err.Raise 8732,,"Invalid control character"
+            End If
+
+            esc = Mid(str, idx, 1)
+
+            If esc <> "u" Then
+                Select Case esc
+                    Case """" char = """"
+                    Case "\"  char = "\"
+                    Case "/"  char = "/"
+                    Case "b"  char = b
+                    Case "f"  char = f
+                    Case "n"  char = n
+                    Case "r"  char = r
+                    Case "t"  char = t
+                    Case Else Err.Raise 8732,,"Invalid escape"
+                End Select
+                idx = idx + 1
+            Else
+                char = ChrW("&H" & Mid(str, idx + 1, 4))
+                idx = idx + 5
+            End If
+
+            chunks.Add chunks.Count, char
+        Loop
+
+        ParseString = Join(chunks.Items, "")
+    End Function
+
+    Private Function SkipWhitespace(ByRef str, ByVal idx)
+        Do While idx <= Len(str) And _
+            InStr(Whitespace, Mid(str, idx, 1)) > 0
+            idx = idx + 1
+        Loop
+        SkipWhitespace = idx
+    End Function
+
+End Class
