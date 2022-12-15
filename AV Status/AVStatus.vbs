@@ -56,16 +56,48 @@ Dim strNormanregpath32, strNormanregpath64, strNormanrootpath, boolNormanversion
 Dim objFileToRead, objFileToWrite, node, UpToDateState, strFortiClientPath, FortiClientInstallPath, objApp, strKasperskyKESServerAVVersionPath, strSophosVirtualAVKeyPath, RawProtectionStatus, strPandaAdaptiveDefencePath64, strPandaAdaptiveDefencePath32
 Dim ProgramData, objFolder, objSubFolders, objSubFolder, oShell, oExec, sLine, sExecPath, sNewestFolder, sNewestFolderDate, dPrevDate, SCEPUninstallString, objXMLHTTP, objADOStream, S1HelperObj, S1AgentStatus, IndexOfAgentVersion, LenOfVersion
 Dim strCrowdStrikeStatusPath, CrowdStrikeUninstallPath, strCrowdStrikeRawAVDefDate, strCylancestatuspath, TempDir, EPSVersion, LatestEPSVersion, LatestDatContents
+dim wbemCimtypeSint8, wbemCimtypeUint8, wbemCimtypeSint16, wbemCimtypeUint16, wbemCimtypeSint32, wbemCimtypeSint64, wbemCimtypeUint64, wbemCimtypeReal32, wbemCimtypeReal64, wbemCimtypeDatetime, wbemCimtypeReference, wbemCimtypeChar16, wbemCimtypeObject
+Dim productStateStr, productStateVar, productStateHex, productTimeStamp
+
+
+Const msiInstallStateNotUsed      = -7
+Const msiInstallStateBadConfig    = -6
+Const msiInstallStateIncomplete   = -5
+Const msiInstallStateSourceAbsent = -4
+Const msiInstallStateInvalidArg   = -2
+Const msiInstallStateUnknown      = -1
+Const msiInstallStateBroken       =  0
+Const msiInstallStateAdvertised   =  1
+Const msiInstallStateRemoved      =  1
+Const msiInstallStateAbsent       =  2
+Const msiInstallStateLocal        =  3
+Const msiInstallStateSource       =  4
+Const msiInstallStateDefault      =  5
+
 
 ' Specify values for some of the variables
 
-Version = "2.45"
+Version = "2.46"
 
 HKEY_LOCAL_MACHINE = &H80000002
 strComputer = "."
-wbemCimtypeString = 8
+wbemCimtypeSint8 = 16
+wbemCimtypeUint8 = 17
+wbemCimtypeSint16 = 2
+wbemCimtypeUint16 = 18
+wbemCimtypeSint32 = 3
 wbemCimtypeUint32 = 19
+wbemCimtypeSint64 = 20
+wbemCimtypeUint64 = 21
+wbemCimtypeReal32 = 4
+wbemCimtypeReal64 = 5
 wbemCimtypeBoolean = 11
+wbemCimtypeString = 8
+wbemCimtypeDatetime = 101
+wbemCimtypeReference = 102
+wbemCimtypeChar16 = 103
+wbemCimtypeObject = 13
+
 Const wbemFlagReturnImmediately = &h10
 Const wbemFlagForwardOnly = &h20 
 Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
@@ -1079,6 +1111,161 @@ Sub DetectInstalledAV
   
 End Sub  
 
+Function FindPackageGUID(PackageName)
+  ' Connect to Windows Installer object
+  On Error Resume Next
+  Dim installer : Set installer = Nothing
+  Set installer = Wscript.CreateObject("WindowsInstaller.Installer") : CheckError
+
+
+  ' Check for ?, and show help message if found
+  Dim productName:productName = PackageName
+  If InStr(1, productName, "?", vbTextCompare) > 0 Then
+    Wscript.Echo "Windows Installer utility to list registered products and product information" &_
+      vbNewLine & " Lists all installed and advertised products if no arguments are specified" &_
+      vbNewLine & " Else 1st argument is a product name (case-insensitive) or product ID (GUID)" &_
+      vbNewLine & " If 2nd argument is missing or contains 'p', then product properties are listed" &_
+      vbNewLine & " If 2nd argument contains 'f', features, parents, & installed states are listed" &_
+      vbNewLine & " If 2nd argument contains 'c', installed components for that product are listed" &_
+      vbNewLine & " If 2nd argument contains 'd', HKLM ""SharedDlls"" count for key files are listed" &_
+      vbNewLine &_
+      vbNewLine & "Copyright (C) Microsoft Corporation.  All rights reserved."
+    Wscript.Quit 1
+  End If
+
+  ' If Product name supplied, need to search for product code
+  Dim productCode, property, value, message
+  If Left(productName, 1) = "{" And Right(productName, 1) = "}" Then
+    If installer.ProductState(productName) <> msiInstallStateUnknown Then productCode = UCase(productName)
+  Else
+    For Each productCode In installer.Products : CheckError
+      If LCase(installer.ProductInfo(productCode, "ProductName")) = LCase(productName) Then Exit For
+    Next
+  End If
+  If IsEmpty(productCode) Then Wscript.Echo "Product is not registered: " & productName : Wscript.Quit 2
+
+  ' Check option argument for type of information to display, default is properties
+  Dim optionFlag : If argcount > 1 Then optionFlag = LCase(Wscript.Arguments(1)) Else optionFlag = "p"
+  If InStr(1, optionFlag, "*", vbTextCompare) > 0 Then optionFlag = "pfcd"
+
+  If InStr(1, optionFlag, "p", vbTextCompare) > 0 Then
+    message = "ProductCode = " & productCode
+    For Each property In Array(_
+        "Language",_
+        "ProductName",_
+        "PackageCode",_
+        "Transforms",_
+        "AssignmentType",_
+        "PackageName",_
+        "InstalledProductName",_
+        "VersionString",_
+        "RegCompany",_
+        "RegOwner",_
+        "ProductID",_
+        "ProductIcon",_
+        "InstallLocation",_
+        "InstallSource",_
+        "InstallDate",_
+        "Publisher",_
+        "LocalPackage",_
+        "HelpLink",_
+        "HelpTelephone",_
+        "URLInfoAbout",_
+        "URLUpdateInfo") : CheckError
+      value = installer.ProductInfo(productCode, property) ': CheckError
+      If Err <> 0 Then Err.Clear : value = Empty
+      If (property = "Version") Then value = DecodeVersion(value)
+      If value <> Empty Then message = message & vbNewLine & property & " = " & value
+    Next
+    Wscript.Echo message
+  End If
+
+  If InStr(1, optionFlag, "f", vbTextCompare) > 0 Then
+    Dim feature, features, parent, state, featureInfo
+    Set features = installer.Features(productCode)
+    message = "---Features in product " & productCode & "---"
+    For Each feature In features
+      parent = installer.FeatureParent(productCode, feature) : CheckError
+      If Len(parent) Then parent = " {" & parent & "}"
+      state = installer.FeatureState(productCode, feature)
+      Select Case(state)
+        Case msiInstallStateBadConfig:    state = "Corrupt"
+        Case msiInstallStateIncomplete:   state = "InProgress"
+        Case msiInstallStateSourceAbsent: state = "SourceAbsent"
+        Case msiInstallStateBroken:       state = "Broken"
+        Case msiInstallStateAdvertised:   state = "Advertised"
+        Case msiInstallStateAbsent:       state = "Uninstalled"
+        Case msiInstallStateLocal:        state = "Local"
+        Case msiInstallStateSource:       state = "Source"
+        Case msiInstallStateDefault:      state = "Default"
+        Case Else:                        state = "Unknown"
+      End Select
+      message = message & vbNewLine & feature & parent & " = " & state
+    Next
+    Set features = Nothing
+    Wscript.Echo message
+  End If 
+
+  If InStr(1, optionFlag, "c", vbTextCompare) > 0 Then
+    Dim component, components, client, clients, path
+    Set components = installer.Components : CheckError
+    message = "---Components in product " & productCode & "---"
+    For Each component In components
+      Set clients = installer.ComponentClients(component) : CheckError
+      For Each client In Clients
+        If client = productCode Then
+          path = installer.ComponentPath(productCode, component) : CheckError
+          message = message & vbNewLine & component & " = " & path
+          Exit For
+        End If
+      Next
+      Set clients = Nothing
+    Next
+    Set components = Nothing
+    Wscript.Echo message
+  End If
+
+  If InStr(1, optionFlag, "d", vbTextCompare) > 0 Then
+    Set components = installer.Components : CheckError
+    message = "---Shared DLL counts for key files of " & productCode & "---"
+    For Each component In components
+      Set clients = installer.ComponentClients(component) : CheckError
+      For Each client In Clients
+        If client = productCode Then
+          path = installer.ComponentPath(productCode, component) : CheckError
+          If Len(path) = 0 Then path = "0"
+          If AscW(path) >= 65 Then  ' ignore registry key paths
+            value = installer.RegistryValue(2, "SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls", path)
+            If Err <> 0 Then value = 0 : Err.Clear
+            message = message & vbNewLine & value & " = " & path
+          End If
+          Exit For
+        End If
+      Next
+      Set clients = Nothing
+    Next
+    Set components = Nothing
+    Wscript.Echo message
+  End If
+End Function
+
+
+Function DecodeVersion(version)
+	version = CLng(version)
+	DecodeVersion = version\65536\256 & "." & (version\65535 MOD 256) & "." & (version Mod 65536)
+End Function
+
+Sub CheckError
+	Dim message, errRec
+	If Err = 0 Then Exit Sub
+	message = Err.Source & " " & Hex(Err) & ": " & Err.Description
+	If Not installer Is Nothing Then
+		Set errRec = installer.LastErrorRecord
+		If Not errRec Is Nothing Then message = message & vbNewLine & errRec.FormatText
+	End If
+	Wscript.Echo message
+	Wscript.Quit 2
+End Sub
 
 ' *****************************  
 ' Function: ObtainTrendMicroData
@@ -1648,15 +1835,20 @@ Sub CreateWMIClass
     'Define the Properties of the WMI Class
     objClassCreator.Path_.Class = "" & strWMIClassNoQuotes
     
-    objClassCreator.Properties_.add "Displayname", wbemCimtypeString
+    objClassCreator.Properties_.add "displayName", wbemCimtypeString
+    objClassCreator.Properties_.add "instanceGuid", wbemCimtypeString
     objClassCreator.Properties_.add "onAccessScanningEnabled", wbemCimtypeBoolean
+    objClassCreator.Properties_.add "pathToSignedProductExe", wbemCimtypeString
+    objClassCreator.Properties_.add "pathToSignedReportingExe", wbemCimtypeString
+    objClassCreator.Properties_.add "productState", wbemCimtypeUint32
+    objClassCreator.Properties_.add "timestamp", wbemCimtypeString
     objClassCreator.Properties_.add "ProductUpToDate", wbemCimtypeBoolean
     objClassCreator.Properties_.add "VersionNumber", wbemCimtypeString
     objClassCreator.Properties_.add "ScriptExecutionTime", wbemCimtypeString
                 
                 
     ' Make the 'InstalledAV' property a 'key' (or index) property
-    objClassCreator.Properties_("Displayname").Qualifiers_.add "key", true
+    objClassCreator.Properties_("displayName").Qualifiers_.add "key", true
                 
     ' Write the new class to the 'root\SecurityCenter' namespace in the repository
     ' output.writeline "- Creating the WMI class"
@@ -1707,7 +1899,86 @@ Function WMIClassExists(strWMINamespace, strComputer, strWMIClassWithQuotes)
                 Set colClasses = Nothing
 End Function  
   
-     
+
+
+
+' *****************************  
+' Function: Convert Str to Hex
+' *****************************
+Function s2a(s)
+  ReDim a(Len(s) - 1)
+  Dim i
+  For i = 0 To UBound(a)
+      a(i) = Mid(s, i + 1, 1)
+  Next
+  s2a = a
+End Function
+
+
+Function s2h(s)
+  Dim a : a = s2a(s)
+  Dim i
+  For i = 0 To UBound(a)
+      a(i) = Right(00 & Hex(Asc(a(i))), 2)
+  Next
+  s2h = Join(a)
+End Function
+
+
+
+Function ConvertToUTCTime(sTime)
+
+          Dim od, ad, oShell, atb, offsetMin
+          Dim sHour, sMinute, sMonth, sDay
+
+od = sTime
+'if you passed sTime as sting, comment the above line and
+'uncomment the below line.
+'od = CDate(sTime)
+
+'Create Shell object to read registry
+Set oShell = CreateObject("WScript.Shell")
+
+atb = "HKEY_LOCAL_MACHINESystemCurrentControlSet" & _
+"ControlTimeZoneInformationActiveTimeBias"
+offsetMin = oShell.RegRead(atb) 'Reading the registry
+
+'Convert the local time to UTC time
+ad = dateadd("n", offsetMin, od)
+
+' If Month is single digit value, add zero
+sMonth = Month(CDate(ad))
+If Len(sMonth) = 1 Then
+            sMonth = "0" & sMonth
+End If
+
+'If Day is single digit, add zero
+sDay = Day(CDate(ad))
+If Len(sDay) = 1 Then
+          sDay = "0" & sDay
+End If
+
+'if Hour is single digit, add zero
+sHour = Hour(CDate(ad))
+If Len(sHour) = 1 Then
+          sHour = "0" & sHour
+End If
+
+'if Minute is single digit, add zero
+sMinute = Minute(CDate(ad))
+If Len(sMinute) = 1 Then
+         sMinute = "0" & sMinute
+End If
+
+'Assign the reutrn value in UTC format as 2006-11-07T18:00:000Z
+ConvertToUTCTime = Year(CDate(ad)) & "-" & _
+sMonth & "-" & _
+sDay & "T" & _
+sHour & ":" & _
+sMinute & ":00Z"
+
+End Function
+' End of Function ConvertToUTCTime
 
     
 ' *****************************  
@@ -1728,11 +1999,30 @@ Sub PopulateWMIClass
     End If  
    End If
    
-   'Debug code, if needed
+   productStateStr = "04"
+
+   if onAccessScanningEnabled = TRUE then
+    productStateStr = productStateStr & "10"
+   Else
+    productStateStr = productStateStr & "00"
+   End If
+
+   if ProductUpToDate = TRUE then
+    productStateStr = productStateStr & "00"
+   Else
+    productStateStr = productStateStr & "10"
+   End If
+   
+   productStateHex = s2h(productStateStr)
+   productStateVar = CLng("&H" & productStateStr)
+
+
+      'Debug code, if needed
    ' output.writeline "- Version Number: " & FormattedAVVersion
    ' output.writeline "- Installed AV: " & InstalledAV
    ' output.writeline "- On-Access Scanning: " & OnAccessScanningEnabled
    ' output.writeline "- Product Up-to-Date: " & ProductUpToDate
+    output.writeline "- Product Timestamp: " & productTimeStamp
    
    
 	 'Create an instance of the WMI class using SpawnInstance_
@@ -1743,6 +2033,8 @@ Sub PopulateWMIClass
     objNewInstance.displayName = InstalledAV
     objNewInstance.onAccessScanningEnabled = OnAccessScanningEnabled
     objNewInstance.ProductUpToDate = ProductUpToDate
+    objNewInstance.productState = productStateVar
+    objNewInstance.timestamp = productTimeStamp
     objNewInstance.ScriptExecutionTime = FormatDateTime(Date & " " & Time)
     output.writeline "- Populating the WMI Class with the data."
     
@@ -2055,6 +2347,8 @@ Sub ObtainKaspersky2012AVData
   FormattedPatternAge = DateAdd("s", AVDatVersion, #1/1/1970#)
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Kasperky was updated was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
+
 
 
      
@@ -2093,6 +2387,7 @@ Sub ObtainKaspersky60AVData
   FormattedPatternAge = DateAdd("s", AVDatVersion, #1/1/1970#)
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Kasperky was updated was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
 
      
@@ -2210,6 +2505,7 @@ Sub ObtainSecurityEssentialsAVData
   CurrentDate = Year(Now) & "/" & Month (Now) & "/" & Day (Now)
   CalculatedPatternAge = DateDiff("d",dtmDate,CurrentDate)
   output.writeline "- The last time " & InstalledAV & " was updated was " & CalculatedPatternAge & " days ago."                                
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
 
      
@@ -2230,6 +2526,7 @@ Sub ObtainKES8Data
   FormattedPatternAge = DateAdd("s", AVDatVersion, #1/1/1970#)
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Kasperky was updated was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
 
 
@@ -2271,6 +2568,8 @@ Sub ObtainESETAVData
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time " & InstalledAV & " was updated was " & CalculatedPatternAge & " days ago."
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
+
 
 
 End Sub
@@ -2337,6 +2636,8 @@ Sub ObtainESETFSData
   ' Let's figure out how long it's been since ESET was updated
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time " & InstalledAV & " was updated was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
+
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
 
@@ -2424,6 +2725,7 @@ Sub ObtainKESServerData
 	  output.writeline "- The current date is: " & CurrentDate
 	  CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
       output.writeline "- The last time Kaspersky was updated was " & CalculatedPatternAge & " days ago."
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 	
     Else 'If the registry value isn't Null, let's use it to figure things out
     
@@ -2450,6 +2752,7 @@ Sub ObtainKESServerData
       output.writeline "- According to Kaspersky, A/V definitions were last updated on: " & FormattedPatternAge
       CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
       output.writeline "- The last time Kaspersky was updated was " & CalculatedPatternAge & " days ago."
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
    
     End If
   End If
@@ -2544,6 +2847,8 @@ Sub ObtainKasperskySOSata
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Kaspersky was updated was on " & FormattedPatternAge & ", which was " & CalculatedPatternAge & " days ago."
+      productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
+
 
 
 
@@ -2580,6 +2885,7 @@ Sub ObtainKasperskySO3Sata
   FormattedPatternAge = DateAdd("s", AVDatVersion, #1/1/1970#)
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Kaspersky was updated was on " & FormattedPatternAge & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -2643,6 +2949,7 @@ Sub ObtainTotalDefenseAVData
   output.writeline "- The current date is: " & CurrentDate
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
   output.writeline "- The last time Total Defense r12 was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -2694,6 +3001,7 @@ Sub ObtainAviraAVData
 
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
  output.writeline "- The last time Avira was updated was " & CalculatedPatternAge & " days ago."
+ productTimeStamp = FormatDateTime(RawAVDate,1) & " " & FormatDateTime(RawAVDate,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -2792,6 +3100,7 @@ Sub ObtainFSecureAVData
     output.writeline "- The current date is: " & CurrentDate
     CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
     output.writeline "- The last time F-Secure was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
     
     CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -2855,6 +3164,7 @@ Sub ObtainSEPCloudData
   output.writeline "- The current date is: " & CurrentDate
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
   output.writeline "- The last time SEP Cloud was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -2919,6 +3229,7 @@ Sub ObtainPandaCloudOfficeData
     output.writeline "- The current date is: " & CurrentDate
     CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
     output.writeline "- The last time " & InstalledAV & " was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
     CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -2961,6 +3272,7 @@ Sub ObtainAVG2013Data
   output.writeline "- The current date is: " & CurrentDate
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
   output.writeline "- The last time AVG 2013 was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -3006,6 +3318,7 @@ Sub ObtainAVG2014Data
   output.writeline "- The current date is: " & CurrentDate
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
   output.writeline "- The last time " & InstalledAV & " was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -3042,6 +3355,7 @@ Sub ObtainAvastData
   output.writeline "- The current date is: " & CurrentDate
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
   output.writeline "- The last time Avast! was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
   	
@@ -3068,6 +3382,7 @@ Sub ObtainMalwarebytesCorporate
   FormattedPatternAge = Replace(AVDatVersion,".","/") 
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Malwarebytes Corporate Edition was updated was on " & FormattedPatternAge & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(FormattedPatternAge,1) & " " & FormatDateTime(FormattedPatternAge,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
 
@@ -3126,6 +3441,7 @@ Sub ObtainTMMSA
   FormattedPatternAge = recentFile.DateLastModified
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time Trend Micro Messaging Security Agent was updated was on " & FormattedPatternAge & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(FormattedPatternAge,1) & " " & FormatDateTime(FormattedPatternAge,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
   
@@ -3186,6 +3502,7 @@ Sub ObtainMcAfeeEndpointSecurity
   
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   output.writeline "- The last time McAfee Endpoint Security was updated was on " & FormattedPatternAge & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(FormattedPatternAge,1) & " " & FormatDateTime(FormattedPatternAge,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
   	
@@ -3251,6 +3568,7 @@ Sub ObtainMcAfeeEndpointSecurity101
   CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
   output.writeline "- The last time McAfee Endpoint Security was updated was on " & FormattedPatternAge & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(FormattedPatternAge,1) & " " & FormatDateTime(FormattedPatternAge,3)
 
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
   	
@@ -3417,6 +3735,7 @@ sub ObtainTrendMicroDeepSecurity
   AVDatVersion = newestfile 
   CalculatedPatternAge = DateDiff("d",newestfile,CurrentDate)
   output.writeline "- The last time Trend Micro Deep Security was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
   
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
  
@@ -3453,6 +3772,7 @@ sub ObtainMcAfeeMove
  
   CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
   output.writeline "- The last time the McAfee Move Agent was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
   
   CalculateAVAge 'Call the function to determine how old the A/V Definitions are
  
@@ -3527,6 +3847,7 @@ Sub ObtainNormanEndpointProtection
   Else
     AVDatVersion = objFile.DateLastModified
     output.writeline "- The last time Norman Endpoint Protection was updated was on " & AVDatVersion
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
   End If
   On Error Goto 0
  
@@ -3675,6 +3996,7 @@ Sub ObtainAVGBusinessSecurity
   ' Now that we have the line from the log file, let's grab the date at the very end
   AVDatVersion = Replace(Mid(LastUpdateDate,7,2) & "/" & Mid(LastUpdateDate,10,2) & "/" & Mid(LastUpdateDate,2,4),"-","/")
   output.writeline "- The last time AVG Business Security was updated was on " & AVDatVersion
+  productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
  
   CalculatedPatternAge = DateDiff("d",DateValue(AVDatVersion),CurrentDate)
   
@@ -3704,6 +4026,7 @@ Sub ObtainFortiClient
 	    output.writeline "- The current date is: " & CurrentDate
 	    CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
         output.writeline "- The last time FortiClient was updated was " & CalculatedPatternAge & " days ago."
+        productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
         CalculateAVAge 'Call the function to determine how old the A/V Definitions are
     Else
         output.writeline "- Unable to find the vir_high file. This is not a good thing."
@@ -3771,6 +4094,7 @@ Sub ObtainPandaAdaptiveDefenceData
     output.writeline "- The current date is: " & CurrentDate
     CalculatedPatternAge = DateDiff("d",AVDatVersion,CurrentDate)
     output.writeline "- The last time " & InstalledAV & " was updated was on " & AVDatVersion & ", which was " & CalculatedPatternAge & " days ago."
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
     output.writeline "- Is Real-Time Scanning Enabled? " & OnAccessScanningEnabled
 
     CalculateAVAge 'Call the function to determine how old the A/V Definitions are
@@ -3961,6 +4285,7 @@ Sub ObtainSophosVirtualAVData
     FormattedPatternAge = DateAdd("s", AVDatVersion, #1/1/1970#)
     CalculatedPatternAge = DateDiff("d",FormattedPatternAge,CurrentDate)
     output.writeline "- The last time Sophos for Virtual Environments was updated was " & CalculatedPatternAge & " days ago."
+    productTimeStamp = FormatDateTime(AVDatVersion,1) & " " & FormatDateTime(AVDatVersion,3)
     
     
 
