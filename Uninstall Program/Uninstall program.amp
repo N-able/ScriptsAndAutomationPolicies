@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Policy ID="7156f37d-d366-414d-ad14-0a67125fec4e" Name="Uninstall program" Description="VXNlcyB0aGUgbmFtZSBvciBwYXJ0IG9mIHRoZSBuYW1lIG9mIHRoZSBpbnN0YWxsZWQgYXBwbGljYXRpb24geW91IHdhbnQgdG8gdW5pbnN0YWxsLiBUaGUgYXBwbGljYXRpb24gbmFtZSBpcyB0aGUgbmFtZSBvZiB0aGUgcHJvZ3JhbSBhcyBmb3VuZCB1c2luZyB0aGUgU29mdHdhcmUgSW52ZW50b3J5IG9iamVjdC4=" Version="2.40.0.0" MinRequiredVersion="2.40.0.0" RemoteCategory="0" ExecutionType="Local" MinimumPSVersionRequired="3.0">
+  <Object ID="{c77809c2-a85b-4f48-840d-48867e346df3}" Type="{B6FA6D8B-EEAA-47A6-8463-7F9A4F5BBB6E}" Data="&lt;xml&gt;&lt;Parameters&gt;&lt;Parameter ParameterName=&quot;applicationName&quot; Label=&quot;Application name&quot; ParameterType=&quot;string&quot; Value=&quot;&quot; /&gt;&lt;/Parameters&gt;&lt;/xml&gt;" />
+  <LinkManager xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/PolicyExecutor">
+    <hashset xmlns:d2p1="http://schemas.datacontract.org/2004/07/System" />
+  </LinkManager>
+  <Diagnostics OriginalVersion="2.70.0.4" />
+  <Activity mc:Ignorable="sads sap" x:Class="Policy Builder" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:p="clr-namespace:PolicyExecutor;assembly=PolicyExecutionEngine" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <x:Members>
+      <x:Property Name="PolicyGUID" Type="InArgument(x:String)" />
+    </x:Members>
+    <sap:VirtualizedContainerService.HintSize>1302,2477</sap:VirtualizedContainerService.HintSize>
+    <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+    <p:PolicySequence DisplayName="Policy Builder" sap:VirtualizedContainerService.HintSize="1302,2477" MinRequiredVersion="2.40.0.0" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+      <p:PolicySequence.Activities>
+        <p:SoftwareInventory AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" DisplayName="Software Inventory" sap:VirtualizedContainerService.HintSize="1266,81" MinRequiredVersion="2.10.0.19" Moniker="8c475869-6b81-4199-87bc-fe8e13adcae7" Programs="[SoftwareInventory_Programs_1]" Result="[SoftwareInventory_Result_1]" ResultString="[SoftwareInventory_ResultString_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="SoftwareInventory" m_bTextLinkChange="False" />
+        <p:ForEachLoop CollectionName_Item="{x:Null}" CollectionName_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" CollectionName="[SoftwareInventory_Programs_1]" CollectionName_DisplayArg="Software Inventory.Programs" DisplayName="ForEach program" sap:VirtualizedContainerService.HintSize="1266,2133" ItemValue="[ForEachLoop_ItemValue]" MinRequiredVersion="2.10.0.19" Moniker="e8eecb1e-0615-4f1f-bb71-4ec795914a43" Result="[ForEachLoop_Result]" ResultString="[ForEachLoop_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="ForEachLoop" m_bTextLinkChange="False">
+          <p:ForEachLoop.Each>
+            <p:ForEachSequence DisplayName="Each" sap:VirtualizedContainerService.HintSize="1234,2033">
+              <p:ForEachSequence.Activities>
+                <p:IfObject CaseSensitive_Item="{x:Null}" CaseSensitive_ItemProp="{x:Null}" Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable="{x:Null}" VerboseOutput_Item="{x:Null}" VerboseOutput_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" CaseSensitive="False" CaseSensitive_DisplayArg="false" Condition="contains" Condition_DisplayArg="contains" DisplayName="If program name contains the software to uninstall" sap:VirtualizedContainerService.HintSize="1196,1883" MinRequiredVersion="2.19.0.1" Moniker="639e1d11-2e36-420d-a223-e7663ab1ec81" Result="[IfObject_Result]" ResultString="[IfObject_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value="[applicationName]" Value_DisplayArg="Input Parameters.Application name" Value_Type="x:String" Variable_DisplayArg="ForEach program.Software Inventory.Programs.Name" Variable_Item="[ForEachLoop_ItemValue]" Variable_ItemProp="Name" Variable_Type="x:String" VerboseOutput="False" VerboseOutput_DisplayArg="" m_bTextLinkChange="False">
+                  <p:IfObject.IfOption>
+                    <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="1164,1610" Name="SequenceActivity">
+                      <p:SequenceActivity.Activities>
+                        <p:IfElse CaseSensitive_Item="{x:Null}" CaseSensitive_ItemProp="{x:Null}" Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" CaseSensitive="False" CaseSensitive_DisplayArg="false" Condition="equals" Condition_DisplayArg="equals" DisplayName="If/Else the program has a silent uninstall registry key" sap:VirtualizedContainerService.HintSize="1126,1460" MinRequiredVersion="2.19.0.1" Moniker="f630d6f6-c9fe-485c-92f9-bdf146e04eb4" Result="[IfElse_Result]" ResultString="[IfElse_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfElse" Value_DisplayArg="true" Value_Type="x:String" Variable_DisplayArg="ForEach program.Software Inventory.Programs.Silent Uninstall Available" Variable_Item="[ForEachLoop_ItemValue]" Variable_ItemProp="SilentUninstallAvailable" Variable_Type="x:String" m_bTextLinkChange="False">
+                          <p:IfElse.ElseOption>
+                            <p:SequenceActivity DisplayName="Else" sap:VirtualizedContainerService.HintSize="506,672" Name="SequenceActivity">
+                              <p:SequenceActivity.Activities>
+                                <p:RunPowerShellScript AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" DisplayName="Run uninstaller with quiet parameters" sap:VirtualizedContainerService.HintSize="468,522" MinRequiredVersion="2.10.0.19" Moniker="5b6a3638-2bfb-489f-add3-7523e0246474" OutPut_64="[RunPowerShellScript_OutPut_64]" Result="[RunPowerShellScript_Result]" ResultString="[RunPowerShellScript_ResultString]" Results_x64="[RunPowerShellScript_Results_x64]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" genArgEvent="ef33f61b-300f-46f6-871c-32aa7d5bb4f0" m_bTextLinkChange="False" script="JAB1AG4AaQBuAHMAdABhAGwAbABvAGIAagBlAGMAdAAgAD0AIABHAGUAdAAtAEMAaABpAGwAZABJAHQAZQBtACAALQBQAGEAdABoACAAIgBIAEsATABNADoAXABTAE8ARgBUAFcAQQBSAEUAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABDAHUAcgByAGUAbgB0AFYAZQByAHMAaQBvAG4AXABVAG4AaQBuAHMAdABhAGwAbAAiACwAIAAiAEgASwBMAE0AOgBcAFMATwBGAFQAVwBBAFIARQBcAFcAbwB3ADYANAAzADIATgBvAGQAZQBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAEMAdQByAHIAZQBuAHQAVgBlAHIAcwBpAG8AbgBcAFUAbgBpAG4AcwB0AGEAbABsACIAIAB8ACAARwBlAHQALQBJAHQAZQBtAFAAcgBvAHAAZQByAHQAeQAgAHwAIABXAGgAZQByAGUALQBPAGIAagBlAGMAdAAgAHsAIAAkAF8ALgBEAGkAcwBwAGwAYQB5AE4AYQBtAGUAIAAtAGwAaQBrAGUAIAAiACoAJABhAHAAcABsAGkAYwBhAHQAaQBvAG4AKgAiACAAfQAgAHwAIABTAGUAbABlAGMAdAAtAE8AYgBqAGUAYwB0ACAALQBQAHIAbwBwAGUAcgB0AHkAIABEAGkAcwBwAGwAYQB5AE4AYQBtAGUALAAgAFUAbgBpAG4AcwB0AGEAbABsAFMAdAByAGkAbgBnACwAIABQAFMAQwBoAGkAbABkAE4AYQBtAGUADQAKAA0ACgBpAGYAKAAkAHUAbgBpAG4AcwB0AGEAbABsAG8AYgBqAGUAYwB0AC4AVQBuAGkAbgBzAHQAYQBsAGwAUwB0AHIAaQBuAGcAIAAtAGwAaQBrAGUAIAAiACoALgBlAHgAZQAqACIAIAAtAEEAbgBkACAAJAB1AG4AaQBuAHMAdABhAGwAbABvAGIAagBlAGMAdAAuAFUAbgBpAG4AcwB0AGEAbABsAFMAdAByAGkAbgBnACAALQBuAG8AdABsAGkAawBlACAAIgAqAE0AcwBpAEUAeABlAGMAKgAiACkAewANAAoACQAmACAAJAB1AG4AaQBuAHMAdABhAGwAbABvAGIAagBlAGMAdAAuAFUAbgBpAG4AcwB0AGEAbABsAFMAdAByAGkAbgBnACAAIgAvAHMAIgANAAoAfQANAAoAZQBsAHMAZQAgAHsADQAKAAkAVwByAGkAdABlAC0ASABvAHMAdAAgACQAdQBuAGkAbgBzAHQAYQBsAGwAbwBiAGoAZQBjAHQALgBQAFMAQwBoAGkAbABkAE4AYQBtAGUADQAKAAkAbQBzAGkAZQB4AGUAYwAuAGUAeABlACAALwB4ACAAIAAkAHUAbgBpAG4AcwB0AGEAbABsAG8AYgBqAGUAYwB0AC4AUABTAEMAaABpAGwAZABOAGEAbQBlACAALwBxAG4ADQAKAH0ADQAKAA==">
+                                  <p:RunPowerShellScript.InArgs>
+                                    <p:InArg Arg="{x:Null}" x:Key="application" ArgType="string" DisplayArg="ForEach program.Software Inventory.Programs.Name" DisplayName="Application name" ItemProp="Name" Name="application" isRequired="False">
+                                      <p:InArg.Item>
+                                        <InArgument x:TypeArguments="x:Object">[ForEachLoop_ItemValue]</InArgument>
+                                      </p:InArg.Item>
+                                    </p:InArg>
+                                  </p:RunPowerShellScript.InArgs>
+                                  <p:RunPowerShellScript.OutArgs>
+                                    <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+                                  </p:RunPowerShellScript.OutArgs>
+                                </p:RunPowerShellScript>
+                              </p:SequenceActivity.Activities>
+                              <p:SequenceActivity.Variables>
+                                <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64" />
+                                <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString" />
+                                <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64" />
+                                <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result" />
+                              </p:SequenceActivity.Variables>
+                            </p:SequenceActivity>
+                          </p:IfElse.ElseOption>
+                          <p:IfElse.IfOption>
+                            <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="576,1223" Name="SequenceActivity">
+                              <p:SequenceActivity.Activities>
+                                <p:DeleteSoftware ApplicationName="{x:Null}" ApplicationName_DisplayArg="ForEach program.Software Inventory.Programs.Name" ApplicationName_Item="[ForEachLoop_ItemValue]" ApplicationName_ItemProp="Name" AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" DisplayName="Uninstall Software with quiet uninstall string" sap:VirtualizedContainerService.HintSize="538,88" MinRequiredVersion="2.40.0.0" Moniker="c28bdaf6-8560-41a3-8d37-5f7a05512603" Result="[DeleteSoftware_Result]" ResultString="[DeleteSoftware_ResultString]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="DeleteSoftware" m_bTextLinkChange="False" />
+                                <p:IfObject CaseSensitive_Item="{x:Null}" CaseSensitive_ItemProp="{x:Null}" Condition_Item="{x:Null}" Condition_ItemProp="{x:Null}" Value_Item="{x:Null}" Value_ItemProp="{x:Null}" Variable_Item="{x:Null}" Variable_ItemProp="{x:Null}" VerboseOutput_Item="{x:Null}" VerboseOutput_ItemProp="{x:Null}" AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" CaseSensitive="False" CaseSensitive_DisplayArg="false" Condition="does not equal" Condition_DisplayArg="does not equal" DisplayName="If uninstall fails, try again with scripting" sap:VirtualizedContainerService.HintSize="538,945" MinRequiredVersion="2.19.0.1" Moniker="4cba9e64-041a-455b-a55c-f5a78aaf5a78" Result="[IfObject_Result_1]" ResultString="[IfObject_ResultString_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="None" TypeName="IfObject" Value_DisplayArg="0" Value_Type="x:String" Variable="[DeleteSoftware_ResultString]" Variable_DisplayArg="Uninstall Software with quiet uninstall string.Result String" Variable_Type="x:String" VerboseOutput="False" VerboseOutput_DisplayArg="" m_bTextLinkChange="False">
+                                  <p:IfObject.IfOption>
+                                    <p:SequenceActivity DisplayName="Then" sap:VirtualizedContainerService.HintSize="506,672" Name="SequenceActivity">
+                                      <p:SequenceActivity.Activities>
+                                        <p:RunPowerShellScript AssemblyName="PolicyExecutionEngine, Version=2.70.0.4, Culture=neutral, PublicKeyToken=null" DisplayName="Run PowerShell Script" sap:VirtualizedContainerService.HintSize="468,522" MinRequiredVersion="2.10.0.19" Moniker="8bc48a86-71e9-4d78-bc4a-4a65269e9c04" OutPut_64="[RunPowerShellScript_OutPut_64_1]" Result="[RunPowerShellScript_Result_1]" ResultString="[RunPowerShellScript_ResultString_1]" Results_x64="[RunPowerShellScript_Results_x64_1]" RunAsCurrentLoggedOnUser="False" ScriptExecutionMethod="ExecuteDebug" TypeName="RunPowerShellScript" genArgEvent="0a2d489a-d48f-4d6d-b253-b1b430403103" m_bTextLinkChange="False" script="JAB1AG4AaQBuAHMAdABhAGwAbABvAGIAagBlAGMAdAAgAD0AIABHAGUAdAAtAEMAaABpAGwAZABJAHQAZQBtACAALQBQAGEAdABoACAAIgBIAEsATABNADoAXABTAE8ARgBUAFcAQQBSAEUAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABDAHUAcgByAGUAbgB0AFYAZQByAHMAaQBvAG4AXABVAG4AaQBuAHMAdABhAGwAbAAiACwAIAAiAEgASwBMAE0AOgBcAFMATwBGAFQAVwBBAFIARQBcAFcAbwB3ADYANAAzADIATgBvAGQAZQBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAEMAdQByAHIAZQBuAHQAVgBlAHIAcwBpAG8AbgBcAFUAbgBpAG4AcwB0AGEAbABsACIAIAB8ACAARwBlAHQALQBJAHQAZQBtAFAAcgBvAHAAZQByAHQAeQAgAHwAIABXAGgAZQByAGUALQBPAGIAagBlAGMAdAAgAHsAIAAkAF8ALgBEAGkAcwBwAGwAYQB5AE4AYQBtAGUAIAAtAGwAaQBrAGUAIAAiACoAJABhAHAAcABsAGkAYwBhAHQAaQBvAG4AKgAiACAAfQAgAHwAIABTAGUAbABlAGMAdAAtAE8AYgBqAGUAYwB0ACAALQBQAHIAbwBwAGUAcgB0AHkAIABEAGkAcwBwAGwAYQB5AE4AYQBtAGUALAAgAFUAbgBpAG4AcwB0AGEAbABsAFMAdAByAGkAbgBnACwAIABQAFMAQwBoAGkAbABkAE4AYQBtAGUADQAKAA0ACgBpAGYAKAAkAHUAbgBpAG4AcwB0AGEAbABsAG8AYgBqAGUAYwB0AC4AVQBuAGkAbgBzAHQAYQBsAGwAUwB0AHIAaQBuAGcAIAAtAGwAaQBrAGUAIAAiACoALgBlAHgAZQAqACIAIAAtAEEAbgBkACAAJAB1AG4AaQBuAHMAdABhAGwAbABvAGIAagBlAGMAdAAuAFUAbgBpAG4AcwB0AGEAbABsAFMAdAByAGkAbgBnACAALQBuAG8AdABsAGkAawBlACAAIgAqAE0AcwBpAEUAeABlAGMAKgAiACkAewANAAoACQAmACAAJAB1AG4AaQBuAHMAdABhAGwAbABvAGIAagBlAGMAdAAuAFUAbgBpAG4AcwB0AGEAbABsAFMAdAByAGkAbgBnACAAIgAvAHMAIgANAAoAfQANAAoAZQBsAHMAZQAgAHsADQAKAAkAVwByAGkAdABlAC0ASABvAHMAdAAgACQAdQBuAGkAbgBzAHQAYQBsAGwAbwBiAGoAZQBjAHQALgBQAFMAQwBoAGkAbABkAE4AYQBtAGUADQAKAAkAbQBzAGkAZQB4AGUAYwAuAGUAeABlACAALwB4ACAAIAAkAHUAbgBpAG4AcwB0AGEAbABsAG8AYgBqAGUAYwB0AC4AUABTAEMAaABpAGwAZABOAGEAbQBlACAALwBxAG4ADQAKAH0ADQAKAA==">
+                                          <p:RunPowerShellScript.InArgs>
+                                            <p:InArg Arg="{x:Null}" x:Key="application" ArgType="string" DisplayArg="ForEach program.Software Inventory.Programs.Name" DisplayName="application" ItemProp="Name" Name="application" isRequired="False">
+                                              <p:InArg.Item>
+                                                <InArgument x:TypeArguments="x:Object">[ForEachLoop_ItemValue]</InArgument>
+                                              </p:InArg.Item>
+                                            </p:InArg>
+                                          </p:RunPowerShellScript.InArgs>
+                                          <p:RunPowerShellScript.OutArgs>
+                                            <scg:Dictionary x:TypeArguments="x:String, p:OutArg" />
+                                          </p:RunPowerShellScript.OutArgs>
+                                        </p:RunPowerShellScript>
+                                      </p:SequenceActivity.Activities>
+                                      <p:SequenceActivity.Variables>
+                                        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_OutPut_64_1" />
+                                        <Variable x:TypeArguments="x:String" Name="RunPowerShellScript_ResultString_1" />
+                                        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="RunPowerShellScript_Results_x64_1" />
+                                        <Variable x:TypeArguments="x:Double" Name="RunPowerShellScript_Result_1" />
+                                      </p:SequenceActivity.Variables>
+                                    </p:SequenceActivity>
+                                  </p:IfObject.IfOption>
+                                  <p:IfObject.Value>
+                                    <InArgument x:TypeArguments="x:Object">
+                                      <p:ObjectLiteral Value="0" />
+                                    </InArgument>
+                                  </p:IfObject.Value>
+                                </p:IfObject>
+                              </p:SequenceActivity.Activities>
+                              <p:SequenceActivity.Variables>
+                                <Variable x:TypeArguments="x:Double" Name="DeleteSoftware_Result" />
+                                <Variable x:TypeArguments="x:String" Name="DeleteSoftware_ResultString" />
+                                <Variable x:TypeArguments="x:String" Name="IfObject_ResultString_1" />
+                                <Variable x:TypeArguments="x:Double" Name="IfObject_Result_1" />
+                              </p:SequenceActivity.Variables>
+                            </p:SequenceActivity>
+                          </p:IfElse.IfOption>
+                          <p:IfElse.Value>
+                            <InArgument x:TypeArguments="x:Object">
+                              <p:ObjectLiteral Value="true" />
+                            </InArgument>
+                          </p:IfElse.Value>
+                        </p:IfElse>
+                      </p:SequenceActivity.Activities>
+                      <p:SequenceActivity.Variables>
+                        <Variable x:TypeArguments="x:Double" Name="IfElse_Result" />
+                        <Variable x:TypeArguments="x:String" Name="IfElse_ResultString" />
+                      </p:SequenceActivity.Variables>
+                    </p:SequenceActivity>
+                  </p:IfObject.IfOption>
+                </p:IfObject>
+              </p:ForEachSequence.Activities>
+              <p:ForEachSequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="IfObject_ResultString" />
+                <Variable x:TypeArguments="x:Double" Name="IfObject_Result" />
+              </p:ForEachSequence.Variables>
+            </p:ForEachSequence>
+          </p:ForEachLoop.Each>
+        </p:ForEachLoop>
+      </p:PolicySequence.Activities>
+      <p:PolicySequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="applicationName" />
+        <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="SoftwareInventory_Programs_1" />
+        <Variable x:TypeArguments="x:Double" Name="SoftwareInventory_Result_1" />
+        <Variable x:TypeArguments="x:String" Name="SoftwareInventory_ResultString_1" />
+        <Variable x:TypeArguments="x:Object" Name="ForEachLoop_ItemValue" />
+        <Variable x:TypeArguments="x:String" Name="ForEachLoop_ResultString" />
+        <Variable x:TypeArguments="x:Double" Name="ForEachLoop_Result" />
+      </p:PolicySequence.Variables>
+    </p:PolicySequence>
+  </Activity>
+</Policy>
