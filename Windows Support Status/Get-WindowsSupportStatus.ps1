@@ -1,5 +1,6 @@
 <#
-Get-WindowsSupportStatus 0.2.1.1 (29th October 2023)
+
+Get-WindowsSupportStatus 0.2.1.2 (29th October 2023)
 
 .SYNOPSIS
     Takes the windows build details from the device and determines the active support status and security support status
@@ -48,19 +49,18 @@ Support URL: https://learn.microsoft.com/en-us/windows-insider/flight-hub/
 
 #>
 
-$Version = "0.2.1.1 (29th October 2023)"
+$Version = "0.2.1.2 (29th October 2023)"
 
 $Source = "https://endoflife.date"
 $EndOfLifeUriWindows = 'https://endoflife.date/api/windows.json'
 $EndOfLifeUriServer = 'https://endoflife.date/api/windowsserver.json'
-$backupEndOfLifeUriWindows = "https://<NC SERVER URL>/download/repository/<GUID>/windows.json"
-$backupEndOfLifeUriServer = "https://<NC SERVER URL>/download/repository/<GUID>/windowsserver.json"
+$backupEndOfLifeUriWindows = "https://<nc server url>/download/repository/<guid>/windows.json"
+$backupEndOfLifeUriServer = "https://<nc server url>/download/repository/<guid>/windowsserver.json"
 
 
 Write-Host "Get-WindowsSupportStatus $Version" -ForegroundColor Green
 
 #region functions
-
 Function Get-InsiderBuildData {
 
     # Get the current build number
@@ -131,10 +131,11 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
         $EoLRequestParams = @{
             Method = 'GET'
         }
+
         #$ProductName = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name ProductName).ProductName
         $ProductName = $OSCaption                    
         if ($ProductName -match 'Home' -or $ProductName -match 'Pro') {
-            # $Edition = '(W'
+            # $Edition = '(W)'
             $Edition = 'W'
         } 
         else {
@@ -162,7 +163,6 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
             }
             $webClient = New-Object System.Net.WebClient
             $lifecycles = $webClient.DownloadString($EoLRequestParamsuri)
-            
         }
         else {
             try {
@@ -192,7 +192,6 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
                     }
                     $webClient = New-Object System.Net.WebClient
                     $lifecycles = $webClient.DownloadString($EoLRequestParams.uri)
-
                 }
             }
         }
@@ -208,13 +207,15 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
 
             #Added extra code to narrow down server differences between Perpetual and Subscription (e.g. Server 2019 and 1809)
             $LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and (($_.cycle -match [regex]::Escape($Edition)) -or ($IsServerOS -and ("$($ProductName -replace " ","-")" -like "*$($_.cycle)*"))) }
-
         }
         else {
             #$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and (($_.cycle -like "*$Edition*") -or ($IsServerOS)) }
-            $LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and ($_.cycle -match "$Edition*") }
+            #$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and ($_.cycle -match "$Edition*") }
             #$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and $_.cycle -match [regex]::Escape($Edition) }
-
+            $LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and (($_.releaseLabel -like "*$Edition*") -or ($IsServerOS -and ("$($ProductName -replace " ","-")" -like "*$($_.cycle)*"))) }
+            #Try with Version info only again if cannot find edition
+            if (!$LifeCycle) {$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion}}
+            
         }
 
             if ($LifeCycle) {
