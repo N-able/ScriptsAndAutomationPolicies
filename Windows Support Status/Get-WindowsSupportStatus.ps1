@@ -1,5 +1,5 @@
 <#
-Get-WindowsSupportStatus 0.2.0 (21st July 2023)
+Get-WindowsSupportStatus 0.2.1 (29th October 2023)
 
 .SYNOPSIS
     Takes the windows build details from the device and determines the active support status and security support status
@@ -12,7 +12,9 @@ Get-WindowsSupportStatus 0.2.0 (21st July 2023)
     Then Update the links below/input parameters in the AMP accordingly.
 
     Thanks to Homotechsual as this was adapted from his base idea: https://homotechsual.dev/2022/12/22/NinjaOne-custom-fields-endless-possibilities#windows-os-support-status
-    Additional thanks to Darren Chapman for some needed tweaks to the Server Lookup
+    Additional thanks to:
+    Darren Chapman for some needed tweaks to the Server Lookup
+    Andrew H for identifying some changes in the JSON formatting
 
 .EXAMPLE
 
@@ -46,7 +48,7 @@ Support URL: https://learn.microsoft.com/en-us/windows-insider/flight-hub/
 
 #>
 
-$Version = "0.2.0 (21st July 2023)"
+$Version = "0.2.1 (29th October 2023)"
 
 $Source = "https://endoflife.date"
 $EndOfLifeUriWindows = 'https://endoflife.date/api/windows.json'
@@ -132,10 +134,12 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
         #$ProductName = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name ProductName).ProductName
         $ProductName = $OSCaption                    
         if ($ProductName -match 'Home' -or $ProductName -match 'Pro') {
-            $Edition = '(W)'
+            # $Edition = '(W)'
+            $Edition = '-W'
         } 
         else {
-            $Edition = '(E)'
+            # $Edition = '(E)'
+            $Edition = '-E'
         }
         if ($ProductName -like '*Server*') {
             $EoLRequestParams.Uri = $EndOfLifeUriServer
