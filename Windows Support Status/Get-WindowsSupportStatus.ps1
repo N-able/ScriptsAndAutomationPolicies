@@ -1,5 +1,5 @@
 <#
-Get-WindowsSupportStatus 0.2.1 (29th October 2023)
+Get-WindowsSupportStatus 0.2.1.1 (29th October 2023)
 
 .SYNOPSIS
     Takes the windows build details from the device and determines the active support status and security support status
@@ -48,7 +48,7 @@ Support URL: https://learn.microsoft.com/en-us/windows-insider/flight-hub/
 
 #>
 
-$Version = "0.2.1 (29th October 2023)"
+$Version = "0.2.1.1 (29th October 2023)"
 
 $Source = "https://endoflife.date"
 $EndOfLifeUriWindows = 'https://endoflife.date/api/windows.json'
@@ -134,12 +134,12 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
         #$ProductName = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name ProductName).ProductName
         $ProductName = $OSCaption                    
         if ($ProductName -match 'Home' -or $ProductName -match 'Pro') {
-            # $Edition = '(W)'
-            $Edition = '-W'
+            # $Edition = '(W'
+            $Edition = 'W'
         } 
         else {
             # $Edition = '(E)'
-            $Edition = '-E'
+            $Edition = 'E'
         }
         if ($ProductName -like '*Server*') {
             $EoLRequestParams.Uri = $EndOfLifeUriServer
@@ -212,8 +212,8 @@ Write-Host "`nOS: $OSDetails" -ForegroundColor Cyan
         }
         else {
             #$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and (($_.cycle -like "*$Edition*") -or ($IsServerOS)) }
-            #$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and ($_.cycle -match "$Edition*") }
-            $LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and $_.cycle -match [regex]::Escape($Edition) }
+            $LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and ($_.cycle -match "$Edition*") }
+            #$LifeCycle = $LifeCycles | Where-Object { $_.latest -eq $OSVersion -and $_.cycle -match [regex]::Escape($Edition) }
 
         }
 
