@@ -54,7 +54,7 @@ While ($rowid -lt $CustomerList.Count -and $found -eq $False)
             If($rowitem.key -eq "customer.registrationtoken")
             {
                 $RetrievedRegistrationToken = $rowitem.value
-                If($RetrievedRegistrationToken -eq "")
+                If([string]::IsNullOrWhitespace($RetrievedRegistrationToken))
                 {
                     "Note that a valid Registration Token was not returned even though the customer was found. This happens when an agent install has never been downloaded for that customer. Try to download an agent from the N-Central UI and run this script again"
                 }
