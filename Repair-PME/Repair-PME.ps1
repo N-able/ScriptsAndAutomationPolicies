@@ -1,7 +1,7 @@
 <#
    **********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.2.1.3 (24/05/2021)
+    Version:         0.2.1.4 (26/06/2024)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -116,30 +116,30 @@
                                install is pending as this is not reliable and caused the script to force the update rather than
                                gracefully wait until the $RepairAfterUpdateDays variable has passed.
                      0.1.8.2 - Incorporated changes made by Casper Stekelenburg of ICT-Concept B.V. :-
-                               - Applied parameter splatting in a number of places to reduce length of commands that were too 
+                               - Applied parameter splatting in a number of places to reduce length of commands that were too
                                  long to fit on a 24 inch display.
                                - Replaced Write-Host "Warning: ...." with Write-Warning "..."
                                - Modified Get-PMEConfig and Set-PMEConfig to use [xml] type casting
                                - Replaced double full file paths with variables
                                - Turned NCPM-4407 explanation in Set-PMEConfig into a comment-block rather than a single line.
-                             - Renamed functions 'Get-Certificate' and 'Test-Certificate' to 'Get-SWCertificate' and 
+                             - Renamed functions 'Get-Certificate' and 'Test-Certificate' to 'Get-SWCertificate' and
                                'Test-SWCertificate' to avoid warnings with cmdlets with the same name in PS 5.1.#
-                             - Updated 'Get-NCAgentVersion' and 'Confirm-PMEInstalled' functions to account for edge case 
+                             - Updated 'Get-NCAgentVersion' and 'Confirm-PMEInstalled' functions to account for edge case
                                situation where install date may not be present causing the script to halt with an exception.
-                     0.1.8.3 - New function 'Confirm-PMEServices' to check for edge cases where PME installer doesn't 
+                     0.1.8.3 - New function 'Confirm-PMEServices' to check for edge cases where PME installer doesn't
                                successfully install services but reports a successful exit code. Thanks to Prejay Shah
                                for reporting and code used from his Get-PMEService script for the new function.
                              - Updated functions 'Get-PMEConfig' and 'Set-PMEConfig' with a try/catch to allow the script
                                to continue if the xml files cannot be read i.e they are corrupt. The script will warn and
                                the reinstall should replace the files anyway. Thanks to Webster Massingham for reporting
                                and suggestion.
-                     0.1.8.4 - Fixed issue in 'Confirm-PMEUpdatePending' function where it was not correctly comparing 
+                     0.1.8.4 - Fixed issue in 'Confirm-PMEUpdatePending' function where it was not correctly comparing
                                against older versions of PME causing the script to halt. [version] type casting now used.
                                Thanks to Webster Massingham for reporting and suggestion.
                      0.1.9.0 - New function 'Confirm-PMERecentInstall' allows successful repair/self-healing when an auto-update
                                fails during the update pending window. It will now force repair if installed within the last 2 days.
                                This is controlled via the $ForceRepairRecentInstallDays variable in the settings section.
-                             - Updated 'Confirm-PMEUpdatePending', 'Confirm-PMEInstalled' and 'Get-OSArch' functions to support the 
+                             - Updated 'Confirm-PMEUpdatePending', 'Confirm-PMEInstalled' and 'Get-OSArch' functions to support the
                                new 'Confirm-PMERecentInstall' function.
                              - 'Confirm-PMEInstalled' function now also displays PME Cache Service and PME RPC Server Service info.
                              - Updated 'Restore-Date' function to account for situations where install dates are in YYYYMd format.
@@ -153,7 +153,7 @@
                              - New function 'Get-RepairPMEUpdate' to perform an update check of the Repair-PME script. By default
                                this is turned on and is controlled via the $UpdateCheck variable in the settings section. If you
                                are using self healing/scripting from within N-Central, notifications should be setup to notify on
-                               'Failure' and 'Send task output file in to email recipients' to alert if it is out of date. 
+                               'Failure' and 'Send task output file in to email recipients' to alert if it is out of date.
                                Connectivity to https://raw.githubusercontent.com is required for this feature.
                              - Renamed 'Get-PMEConfig' function to 'Get-PMEConfigMisconfigurations'.
                      0.2.1.0 - Updated 'Get-OSArch' function to support PME version 2.0+.
@@ -162,7 +162,7 @@
                              - Updated and optimized code for 'Stop-PMESetup' function to support PME version 2.0+.
                              - Updated and optimized code for 'Stop-PMEServices' function to support PME version 2.0+.
                              - Updated 'Install-PME' function to support PME version 2.0+.
-                             - Updated and optimized code 'Invoke-SolarwindsDiagnostics' function to support PME version 2.0+. 
+                             - Updated and optimized code 'Invoke-SolarwindsDiagnostics' function to support PME version 2.0+.
                                Function renamed to 'Invoke-PMEDiagnostics'.
                              - Updated and optimized code for 'Clear-PME' function to support PME version 2.0+.
                              - Updated 'Get-PMESetup' function to support PME version 2.0+.
@@ -175,25 +175,27 @@
                      0.2.1.1 - New function 'Clear-RepairPME' to remove old Repair-PME logs to avoid excessive disk usage.
                              - New function 'Invoke-Delay' to invoke a random delay to help prevent network congestion.
                                This is controlled via the $PreventNetworkCongestion variable in the settings section. Off by default.
-                             - Updated 'Stop-PMEServices' function to report if service is not already running. 
+                             - Updated 'Stop-PMEServices' function to report if service is not already running.
                              - Updated code to include retry logic for downloads rather than erroring out on the first attempt.
                              - Optimized code to use [Void] instead of Out-Null to improve performance.
                      0.2.1.2 - Updated 'Stop-PMEServices' function to resolve issue where it was unable to forcefully stop services.
                      0.2.1.3 - Updated 'Invoke-Delay' function to resolve issue where it was incorrectly calling an absent function.
                              - Updated 'Get-NableCertificate' and 'Test-NableCertificate' functions to include downloads retry logic.
                              - Updated to remove white space throughout script.
+                     0.2.1.4 - Updated to resolve issue where function 'Get-NCAgentVersion' did not detect the N-Central Agent where
+                               other software containing the name 'Windows Agent' was installed.
    **********************************************************************************************************************************
 #>
-$Version = '0.2.1.3'
-$VersionDate = '(24/05/2021)'
+$Version = '0.2.1.4'
+$VersionDate = '(26/06/2024)'
 
 # Settings
 # **********************************************************************************************************************************
-# Change this variable to number of days (must be a number!) to allow repair after new version of PME is released. 
+# Change this variable to number of days (must be a number!) to allow repair after new version of PME is released.
 # This is used for the update pending check. Default is 2.
 $RepairAfterUpdateDays = "2"
 
-# Change this variable to number of days (must be a number!) within a recent install to allow a force repair. 
+# Change this variable to number of days (must be a number!) within a recent install to allow a force repair.
 # This will bypass the update pending check. Default is 2. Ensure this is equal to $RepairAfterUpdateDays.
 $ForceRepairRecentInstallDays = "2"
 
@@ -370,7 +372,7 @@ Function Invoke-Delay {
 
 Function Get-RepairPMEUpdate {
     If ($UpdateCheck -eq "Yes") {
-        Write-Host "Checking if update is available for Repair-PME script..." -ForegroundColor Cyan    
+        Write-Host "Checking if update is available for Repair-PME script..." -ForegroundColor Cyan
         $RepairPMEVersionURI = "http://raw.githubusercontent.com/N-able/ScriptsAndAutomationPolicies/master/Repair-PME/LatestVersion.xml"
         $EventLogMessage = $null
         $CatchError = $null
@@ -577,7 +579,7 @@ Function Test-NableCertificate {
                 Write-Host "$($_.NotAfter)"
                 Write-EventLog @WriteEventLogErrorParams -Message "Certificate for ($($_.Subject)) expired on $($_.NotAfter) PME may have trouble downloading from https://sis.n-able.com, aborting.`nScript: Repair-PME.ps1"
                 Throw "Certificate for ($($_Subject)) expired on $($_.NotAfter) PME may have trouble downloading from https://sis.n-able.com, aborting."
-            } 
+            }
             Else {
                 Write-Host "OK: Certificate for ($($_.Subject)) is valid"  -ForegroundColor Green
             }
@@ -605,10 +607,11 @@ Function Get-NCAgentVersion {
     $IsNCAgentInstalled = ""
     $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall","HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
     $SOFTWARE = "Windows Agent"
+    $PUBLISHER = "N-able Technologies"
     ForEach ($path in $PATHS) {
         $installed = Get-ChildItem -Path $path |
         ForEach-Object { Get-ItemProperty $_.PSPath } |
-        Where-Object { $_.DisplayName -match $SOFTWARE } |
+        Where-Object { $_.DisplayName -match $DISPLAYNAME -and $PUBLISHER } |
         Select-Object -Property DisplayName, DisplayVersion, Publisher, InstallDate
 
         If ($null -ne $installed) {
@@ -626,7 +629,7 @@ Function Get-NCAgentVersion {
                     Write-Output "N-Central Agent Install Date: $InstallDateFormatted"
                     If ($($app.DisplayVersion) -ge "12.2.0.274") {
                         Write-Host "N-Central Agent PME Compatible: Yes" -ForegroundColor Green
-                    } 
+                    }
                     Else {
                         Write-Host "N-Central Agent PME Compatible: No" -ForegroundColor Red
                         Write-EventLog @WriteEventLogErrorParams -Message "Installed N-Central Agent ($($app.DisplayVersion)) is not compatible with PME, aborting.`nScript: Repair-PME.ps1"
@@ -687,7 +690,7 @@ Function Confirm-PMEInstalled {
                         Write-Output "Installed PME Patch Management Service Controller Date: $InstallDateFormatted"
                     }
                 }
-            } 
+            }
         }
     }
     If ($IsPMEAgentInstalled -ne "Yes") {
@@ -708,7 +711,7 @@ Function Confirm-PMEInstalled {
             If ($null -ne $installed) {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "Solarwinds MSP RPC Server") {
-                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion) 
+                        $PMERPCServerAppDisplayVersion = $($app.DisplayVersion)
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -755,7 +758,7 @@ Function Confirm-PMEInstalled {
             If ($null -ne $installed) {
                 ForEach ($app in $installed) {
                     If ($($app.DisplayName) -eq "SolarWinds MSP Cache Service") {
-                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion) 
+                        $PMECacheServiceAppDisplayVersion = $($app.DisplayVersion)
                         $InstallDate = $($app.InstallDate)
                         If ($null -ne $InstallDate -and $InstallDate -ne "") {
                             . Restore-Date
@@ -878,7 +881,7 @@ Function Confirm-PMERecentInstall {
         If ($null -ne $PMECacheUninstall) {
             $InstallDatePMECache = (Get-Item $PMECacheUninstall).LastWriteTime
         }
-        
+
         If ($null -ne $InstallDatePMEAgent) {
             $DaysInstalledPMEAgent = (New-TimeSpan -Start $InstallDatePMEAgent -End $Date).Days
         }
@@ -1276,7 +1279,7 @@ Function Install-PME {
                 Try {
                     Write-Output "Directory '$PMEProgramDataPath\Repair-PME' does not exist, creating directory"
                     [Void](New-Item -ItemType Directory -Path "$PMEProgramDataPath\Repair-PME" -Force)
-                } 
+                }
                 Catch {
                     Write-EventLog @WriteEventLogErrorParams -Message "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message).`nScript: Repair-PME.ps1"
                     Throw "Unable to create directory '$PMEProgramDataPath\Repair-PME' required for saving log capture. Error: $($_.Exception.Message)"
@@ -1296,12 +1299,12 @@ Function Install-PME {
             } ElseIf ($Install.ExitCode -eq 5) {
                 Write-EventLog @WriteEventLogErrorParams -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode).`nScript: Repair-PME.ps1"
                 Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed because access is denied, exit code $($Install.ExitCode)"
-            } 
+            }
             Else {
                 Write-EventLog @WriteEventLogErrorParams -Message "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'.`nScript: Repair-PME.ps1"
                 Throw "$($PMEDetails.Name) version $($PMEDetails.Version) was unable to be successfully installed, exit code $($Install.ExitCode) see 'https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-'"
             }
-        } 
+        }
         Else {
             Write-EventLog @WriteEventLogErrorParams -Message "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting.`nScript: Repair-PME.ps1"
             Throw "Hash of file downloaded ($($Download.SHA256Checksum)) does not equal hash ($($PMEDetails.SHA256Checksum)) from sis.n-able.com, aborting"
@@ -1319,7 +1322,7 @@ Function Confirm-PMEServices {
         Write-Output "PME Agent Status: $PMEAgentStatus"
         Write-Output "File Cache Service Agent Status: $FileCacheServiceAgentStatus"
         Write-Output "Request Handler Agent: $RequestHandlerAgentStatus"
-    
+
         If (($PMEAgentStatus -eq 'Running') -and ($FileCacheServiceAgentStatus -eq 'Running') -and ($RequestHandlerAgentStatus -eq 'Running')) {
             Write-Host "OK: All PME services are installed and running following installation" -Foregroundcolor Green
         }
