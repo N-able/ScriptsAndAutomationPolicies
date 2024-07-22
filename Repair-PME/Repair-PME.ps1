@@ -1,7 +1,7 @@
 <#
    **********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.2.1.4 (26/06/2024)
+    Version:         0.2.1.5 (22/07/2024)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -184,10 +184,12 @@
                              - Updated to remove white space throughout script.
                      0.2.1.4 - Updated to resolve issue where function 'Get-NCAgentVersion' did not detect the N-Central Agent where
                                other software containing the name 'Windows Agent' was installed.
+                     0.2.1.5 - Updated to resolve issue where function 'Get-NCAgentVersion' did not detect the N-Central Agent due to
+                               error in code in previous release.
    **********************************************************************************************************************************
 #>
-$Version = '0.2.1.4'
-$VersionDate = '(26/06/2024)'
+$Version = '0.2.1.5'
+$VersionDate = '(22/07/2024)'
 
 # Settings
 # **********************************************************************************************************************************
@@ -611,7 +613,7 @@ Function Get-NCAgentVersion {
     ForEach ($path in $PATHS) {
         $installed = Get-ChildItem -Path $path |
         ForEach-Object { Get-ItemProperty $_.PSPath } |
-        Where-Object { $_.DisplayName -match $DISPLAYNAME -and $PUBLISHER } |
+        Where-Object { $_.DisplayName -match $DISPLAYNAME -and $_.Publisher -match $PUBLISHER } |
         Select-Object -Property DisplayName, DisplayVersion, Publisher, InstallDate
 
         If ($null -ne $installed) {
