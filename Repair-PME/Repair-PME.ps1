@@ -1,7 +1,7 @@
 <#
    **********************************************************************************************************************************
     Name:            Repair-PME.ps1
-    Version:         0.2.1.5 (22/07/2024)
+    Version:         0.2.1.6 (24/07/2024)
     Purpose:         Install/Reinstall Patch Management Engine (PME)
     Created by:      Ashley How
     Thanks to:       Jordan Ritz for initial Get-PMESetup function code. Thanks to Prejay Shah for input into script.
@@ -186,10 +186,11 @@
                                other software containing the name 'Windows Agent' was installed.
                      0.2.1.5 - Updated to resolve issue where function 'Get-NCAgentVersion' did not detect the N-Central Agent due to
                                error in code in previous release.
+                     0.2.1.6 - Updated to resolve further defect in function 'Get-NCAgentVersion' did not detect the N-Central Agent.
    **********************************************************************************************************************************
 #>
-$Version = '0.2.1.5'
-$VersionDate = '(22/07/2024)'
+$Version = '0.2.1.6'
+$VersionDate = '(24/07/2024)'
 
 # Settings
 # **********************************************************************************************************************************
@@ -608,7 +609,7 @@ Function Get-NCAgentVersion {
     Write-Host "Checking if N-Central Agent is already installed..." -ForegroundColor Cyan
     $IsNCAgentInstalled = ""
     $PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall","HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
-    $SOFTWARE = "Windows Agent"
+    $DISPLAYNAME = "Windows Agent"
     $PUBLISHER = "N-able Technologies"
     ForEach ($path in $PATHS) {
         $installed = Get-ChildItem -Path $path |
